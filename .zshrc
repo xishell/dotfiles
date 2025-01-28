@@ -17,9 +17,6 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-# 1password github
-source $HOME/.config/op/plugins.sh
-
 # Add in powerlevel10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
