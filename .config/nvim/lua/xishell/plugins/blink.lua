@@ -1,116 +1,119 @@
+---@module "lazy"
+---@type LazySpec
 return {
-  "saghen/blink.cmp",
-  opts_extend = {
-    "sources.completion.enabled_providers",
-    "sources.compat",
-    "sources.default",
-  },
-  dependencies = {
-    "rafamadriz/friendly-snippets",
-    -- add blink.compat to dependencies
-    {
-      "saghen/blink.compat",
-      optional = true, -- make optional so it's only enabled if any extras need it
-      opts = {},
-    },
-  },
-  event = "InsertEnter",
+	"saghen/blink.cmp",
+	dependencies = { 'L3MON4D3/LuaSnip', version = 'v2.*' },
+	version = "*",
+	event = { "InsertEnter", "CmdlineEnter" },
 
-  ---@module 'blink.cmp'
-  ---@type blink.cmp.Config
-  opts = {
-    appearance = {
-      -- sets the fallback highlight groups to nvim-cmp's highlight groups
-      -- useful for when your theme doesn't support blink.cmp
-      -- will be removed in a future release, assuming themes add support
-      use_nvim_cmp_as_default = false,
-      -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-      -- adjusts spacing to ensure icons are aligned
-      nerd_font_variant = "mono",
-    },
-    completion = {
-      accept = {
-        -- experimental auto-brackets support
-        auto_brackets = {
-          enabled = true,
+	---@module 'blink.cmp'
+	---@type blink.cmp.Config
+	opts = {
+		appearance = {
+			use_nvim_cmp_as_default = false,
+			nerd_font_variant = "mono",
+		},
+		completion = {
+			accept = { auto_brackets = { enabled = true } },
+			documentation = {
+				auto_show = true,
+				auto_show_delay_ms = 250,
+				update_delay_ms = 50,
+				treesitter_highlighting = true,
+				window = { border = "rounded" },
+			},
+			list = {
+				selection = {
+					preselect = false,
+					auto_insert = false,
+				},
+			},
+			menu = {
+				border = "rounded",
+				draw = {
+					columns = {
+						{ "label", "label_description", gap = 1 },
+						{ "kind_icon", "kind", "source_name"},
+					},
+					treesitter = { "lsp" },
+				},
+			},
+		},
+
+		-- My super-TAB configuration
+		keymap = {
+			["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+			["<C-e>"] = { "hide", "fallback" },
+			["<CR>"] = { "accept", "fallback" },
+			["<Tab>"] = {
+				function(cmp)
+					return cmp.select_next()
+				end,
+				"snippet_forward",
+				"fallback",
+			},
+			["<S-Tab>"] = {
+				function(cmp)
+					return cmp.select_prev()
+				end,
+				"snippet_backward",
+				"fallback",
+			},
+			["<Up>"] = { "select_prev", "fallback" },
+			["<Down>"] = { "select_next", "fallback" },
+			["<C-p>"] = { "select_prev", "fallback" },
+			["<C-n>"] = { "select_next", "fallback" },
+			["<C-up>"] = { "scroll_documentation_up", "fallback" },
+			["<C-down>"] = { "scroll_documentation_down", "fallback" },
+		},
+
+		-- Experimental signature help support
+		signature = {
+			enabled = true,
+			window = { border = "rounded" },
+		},
+
+
+        snippets = {
+        preset = "luasnip",
         },
-      },
-      menu = {
-        draw = {
-          treesitter = { "lsp" },
-        },
-      },
-      documentation = {
-        auto_show = true,
-        auto_show_delay_ms = 200,
-      },
-      ghost_text = {
-        enabled = vim.g.ai_cmp,
-      },
-    },
-
-    -- experimental signature help support
-    -- signature = { enabled = true },
-
-    sources = {
-      -- adding any nvim-cmp sources here will enable them
-      -- with blink.compat
-      compat = {},
-      default = { "lsp", "path", "snippets", "buffer" },
-      cmdline = {},
-    },
-
-    keymap = {
-      preset = "enter",
-      ["<C-y>"] = { "select_and_accept" },
-    },
-  },
-  ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
-  config = function(_, opts)
-    -- setup compat sources
-    local enabled = opts.sources.default
-    for _, source in ipairs(opts.sources.compat or {}) do
-      opts.sources.providers[source] = vim.tbl_deep_extend(
-        "force",
-        { name = source, module = "blink.compat.source" },
-        opts.sources.providers[source] or {}
-      )
-      if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
-        table.insert(enabled, source)
-      end
-    end
-
-    -- Unset custom prop to pass blink.cmp validation
-    opts.sources.compat = nil
-
-    -- check if we need to override symbol kinds
-    for _, provider in pairs(opts.sources.providers or {}) do
-      ---@cast provider blink.cmp.SourceProviderConfig|{kind?:string}
-      if provider.kind then
-        local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
-        local kind_idx = #CompletionItemKind + 1
-
-        CompletionItemKind[kind_idx] = provider.kind
-        ---@diagnostic disable-next-line: no-unknown
-        CompletionItemKind[provider.kind] = kind_idx
-
-        ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[]): blink.cmp.CompletionItem[]
-        local transform_items = provider.transform_items
-        ---@param ctx blink.cmp.Context
-        ---@param items blink.cmp.CompletionItem[]
-        provider.transform_items = function(ctx, items)
-          items = transform_items and transform_items(ctx, items) or items
-          for _, item in ipairs(items) do
-            item.kind = kind_idx or item.kind
-          end
-          return items
-        end
-
-        -- Unset custom prop to pass blink.cmp validation
-        provider.kind = nil
-      end
-    end
-
-    require("blink.cmp").setup(opts)
-  end,
+		sources = {
+			default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+			cmdline = function()
+				local type = vim.fn.getcmdtype()
+				-- Search forward and backward
+				if type == "/" or type == "?" then
+					return { "buffer" }
+				end
+				-- Commands
+				if type == ":" then
+					return { "cmdline" }
+				end
+				return {}
+			end,
+			providers = {
+				lazydev = {
+					name = "LazyDev",
+					module = "lazydev.integrations.blink",
+					-- Make lazydev completions top priority (see `:h blink.cmp`)
+					score_offset = 100,
+				},
+				lsp = {
+					min_keyword_length = 2, -- Number of characters to trigger provider
+					score_offset = 0, -- Boost/penalize the score of the items
+				},
+				path = {
+					min_keyword_length = 0,
+				},
+				snippets = {
+                    name = "luasnip",
+					min_keyword_length = 2,
+				},
+				buffer = {
+					min_keyword_length = 4,
+					max_items = 5,
+				},
+			},
+		},
+	},
 }

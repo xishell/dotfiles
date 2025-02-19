@@ -1,3 +1,8 @@
 vim.g.mapleader = " "
-require("xishell.set")
+vim.g.maplocalleader = "'"
+vim.opt.termguicolors = true
+
 require("xishell.lazy_init")
+require("xishell.options")
+require("xishell.keymaps")
+require("xishell.auto")
