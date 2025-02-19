@@ -72,6 +72,8 @@ alias ls="eza -G --classify=auto --color=always --icons=always"
 alias la="eza -Gla --classify=auto --color=always --icons=always"
 alias lvim='NVIM_APPNAME="lazynvim" nvim'
 alias vim="nvim"
+alias winb="systemctl reboot --boot-loader-entry=Windows"
+
 
 # use y with yazi
 function y() {
