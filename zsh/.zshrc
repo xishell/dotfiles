@@ -70,10 +70,12 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --color=always --icons=
 
 # Aliases
 alias ls="eza -G --classify=auto --color=always --icons=always"
+alias lst="eza -GT --classify=auto --color=always --icons=always"
 alias la="eza -Gla --classify=auto --color=always --icons=always"
+alias lat="eza -GlaT --classify=auto --color=always --icons=always"
 alias lvim='NVIM_APPNAME="lazyvim" nvim'
 alias vim="nvim"
-
+alias lg="lazygit"
 # use y with yazi
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
