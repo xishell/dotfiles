@@ -1,0 +1,6 @@
+(^|/)\.git(/|$)
+(^|/)\.DS_Store$
+(^|/)README\.md$
+(^|/)LICENSE$
+(^|/)\.stow(rc|\-local\-ignore)$
+(^|/)bootstrap\.sh$

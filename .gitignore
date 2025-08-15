@@ -1,0 +1,41 @@
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Vim / Neovim swap & backup files ---
+*.swp
+*.swo
+*.swx
+*~
+
+# --- Emacs backup files ---
+\#*#
+.#*
+
+# --- Temporary / cache directories ---
+.cache/
+tmp/
+*.tmp
+
+# --- Logs ---
+*.log
+
+# --- Backups ---
+*.bak
+
+# --- Compiled files ---
+*.pyc
+*.o
+*.out
+
+# --- LaTeX build artifacts ---
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.toc
+*.pdf
+
+# --- Local-only Stow ignore files (keep global ones tracked) ---
+.stow-local-ignore.local
