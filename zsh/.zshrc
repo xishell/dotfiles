@@ -5,6 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 export PATH="$PATH:/opt/homebrew/bin"
+export JAVA_HOME=$(/usr/libexec/java_home)
+export PATH="$JAVA_HOME/bin:$PATH"
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -76,6 +78,10 @@ alias lat="eza -GlaT --classify=auto --color=always --icons=always"
 alias vim="nvim"
 alias lg="lazygit"
 alias nvx='NVIM_APPNAME=nvimx nvim'
+
+# dotfile aliases
+alias zrc="vim ~/dotfiles/zsh/.zshrc"
+alias orc="source ~/.zshrc"
 
 # use y with yazi
 function y() {
