@@ -73,9 +73,10 @@ alias ls="eza -G --classify=auto --color=always --icons=always"
 alias lst="eza -GT --classify=auto --color=always --icons=always"
 alias la="eza -Gla --classify=auto --color=always --icons=always"
 alias lat="eza -GlaT --classify=auto --color=always --icons=always"
-alias lvim='NVIM_APPNAME="lazyvim" nvim'
 alias vim="nvim"
 alias lg="lazygit"
+alias nvx='NVIM_APPNAME=nvimx nvim'
+
 # use y with yazi
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd

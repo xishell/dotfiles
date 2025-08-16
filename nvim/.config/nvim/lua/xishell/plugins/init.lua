@@ -1,3 +1,1 @@
-return {
-  { 'folke/lazy.nvim', version = '*' },
-}
+return{}

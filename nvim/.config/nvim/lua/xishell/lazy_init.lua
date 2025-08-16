@@ -11,7 +11,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup {
-  spec = 'xishell.plugins',
+require('lazy').setup({
+  { import = 'xishell.plugins' },    -- pulls every file under lua/xishell/plugins/
+}, {
   change_detection = { notify = false },
-}
+})
