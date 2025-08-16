@@ -61,7 +61,8 @@ return {
                 "vimdoc",
                 "yaml",
                 "c",
-                "make"
+                "make",
+                "java",
             },
         })
     end,
