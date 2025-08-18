@@ -1,7 +1,7 @@
 # --- Look and Feel ---
 theme = tokyonight_night
 font-family = "FiraCode Nerd Font"
-font-size = 13
+font-size = 14
 cursor-style = block
 cursor-style-blink = false
 
@@ -10,6 +10,10 @@ window-padding-x = 6
 window-padding-y = 6
 window-padding-balance = true
 
+# Mouse and interaction improvements
+mouse-hide-while-typing = true
+copy-on-select = true
+confirm-close-surface = false
 
 macos-titlebar-style = native
 
