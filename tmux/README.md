@@ -1,77 +1,89 @@
-# 🌀 Tmux Config
+# Tmux Configuration
 
-This repository contains a **Neovim-friendly tmux configuration**, themed with
-[Tokyo Night](https://github.com/janoamaral/tokyo-night-tmux), tuned for smooth
-pane navigation, mouse support, and clipboard integration.
+Terminal multiplexer configuration with vim-style navigation and modern workflow enhancements.
 
-> Config originally created by **Elliott Minns**  
-> a.k.a [Dreams of Code](https://github.com/elliottminns).
+## Features
 
----
+- **Vim integration**: Seamless navigation between tmux panes and vim splits
+- **Modern keybinds**: Intuitive pane splitting and window management
+- **Tokyo Night theme**: Consistent dark aesthetics with customizations
+- **Plugin system**: TPM (Tmux Plugin Manager) with essential plugins
 
-## 🚀 Features
+## Key Bindings
 
-- Prefix remapped to **Ctrl-Space** (instead of Ctrl-b)
-- Vim-style pane navigation (`h/j/k/l`)
-- Seamless Neovim ↔ tmux pane movement (via `vim-tmux-navigator`)
-- Truecolor and mouse support
-- Start windows/panes at index 1
-- Tokyo Night themed statusline
-- Easy yanking with `tmux-yank`
+### Prefix Key
+- **Prefix**: `Ctrl-a` (instead of default Ctrl-b)
 
----
+### Pane Navigation
+- **Vim keys**: `h/j/k/l` (with prefix)
+- **Alt + arrows**: Navigate without prefix
+- **Alt + h/l**: Switch windows without prefix
 
-## 📖 Keybind Cheat Sheet
+### Window Management
+- **Shift + arrows**: Switch windows
+- **Alt + H/L**: Switch windows (vim-style)
 
-**Prefix key:** `Ctrl-Space`
+### Pane Management
+- **Split vertical**: `prefix + |`
+- **Split horizontal**: `prefix + -`
+- **New window**: `prefix + c` (opens in current directory)
+- **Kill pane**: `prefix + x`
+- **Kill window**: `prefix + &`
 
-### 🔲 Panes
+### Copy Mode (Vi-style)
+- **Enter copy mode**: `prefix + [`
+- **Begin selection**: `v`
+- **Rectangle selection**: `Ctrl-v`
+- **Copy selection**: `y`
 
-| Key          | Action                                |
-| ------------ | ------------------------------------- |
-| `Prefix + h` | Move left                             |
-| `Prefix + j` | Move down                             |
-| `Prefix + k` | Move up                               |
-| `Prefix + l` | Move right                            |
-| `Prefix + L` | Clear screen (send Ctrl-L)            |
-| `Prefix + "` | Split horizontally (below, same path) |
-| `Prefix + %` | Split vertically (right, same path)   |
+## Plugins
 
-**Without prefix**  
-| Key | Action |
-|-----|--------|
-| `Alt + ←` | Move left |
-| `Alt + →` | Move right |
-| `Alt + ↑` | Move up |
-| `Alt + ↓` | Move down |
+- **TPM**: Plugin manager
+- **tmux-sensible**: Sensible default settings
+- **vim-tmux-navigator**: Seamless vim/tmux navigation
+- **tokyo-night-tmux**: Dark theme with customizations
+- **tmux-yank**: Enhanced copy/paste functionality
 
----
+## Theme Customization
 
-### 🗔 Windows
+- Path display: Enabled (relative format)
+- Window ID style: Double square brackets
+- Git integration: Disabled
+- DateTime: Disabled for clean status bar
 
-| Key               | Action                 |
-| ----------------- | ---------------------- |
-| `Prefix + c`      | New window (same path) |
-| `Shift + ←`       | Previous window        |
-| `Shift + →`       | Next window            |
-| `Alt + Shift + H` | Previous window        |
-| `Alt + Shift + L` | Next window            |
+## Installation
 
----
+1. Install TPM:
+   ```bash
+   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+   ```
 
-### 📋 Copy Mode (vi-style)
+2. Symlink config:
+   ```bash
+   ln -sf ~/dotfiles/tmux/.config/tmux ~/.config/
+   ```
 
-Enter copy mode: `Prefix + [`
+3. Reload tmux and install plugins:
+   ```bash
+   tmux source-file ~/.config/tmux/tmux.conf
+   # Press prefix + I to install plugins
+   ```
 
-| Key      | Action                |
-| -------- | --------------------- |
-| `v`      | Begin selection       |
-| `Ctrl-v` | Rectangular selection |
-| `y`      | Yank (copy + exit)    |
+## Performance Optimizations
 
----
+- **Escape time**: 0ms for instant vim responsiveness
+- **Focus events**: Enabled for better vim integration
+- **True color**: Full 24-bit color support
+- **Mouse support**: Enabled for modern workflow
 
-## 🔌 Plugins Used
+## Workflow Tips
+
+- Use `Ctrl-a + L` to clear screen (preserves tmux history)
+- Windows and panes start at index 1 for easier access
+- Automatic window renumbering keeps indices sequential
+- All splits open in current working directory
+
+## Plugins Used
 
 - [tmux-plugins/tpm](https://github.com/tmux-plugins/tpm) – plugin manager
 - [tmux-plugins/tmux-sensible](https://github.com/tmux-plugins/tmux-sensible) – sane defaults
