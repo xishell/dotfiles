@@ -28,10 +28,12 @@ $xelatex  = 'xelatex  -interaction=nonstopmode -synctex=1 %O %S';
 add_cus_dep('bcf', 'bbl', 0, 'biber_aux');
 
 sub biber_aux {
-  print STDERR "\n==== RUNNING GLOBAL BIBER ====\n";
-  print STDERR "Aux dir : $aux_dir\n";
-  print STDERR "Out dir : $out_dir\n";
-  print STDERR "Command : biber --input-directory=$aux_dir --output-directory=$aux_dir @_\n\n";
+  if ($ENV{LATEXMK_DEBUG} || $diagnostics > 1) {
+    print STDERR "\n==== RUNNING GLOBAL BIBER ====\n";
+    print STDERR "Aux dir : $aux_dir\n";
+    print STDERR "Out dir : $out_dir\n";
+    print STDERR "Command : biber --input-directory=$aux_dir --output-directory=$aux_dir @_\n\n";
+  }
 
   system("biber --input-directory=$aux_dir --output-directory=$aux_dir @_");
 }
@@ -42,6 +44,7 @@ $bibtex = "biber --input-directory=$aux_dir --output-directory=$aux_dir %B";
 # --- Robustness ---
 $max_repeat  = 8;   # allow plenty of passes for xrefs
 $diagnostics = 1;   # show file destinations in logs
+$recorder = 1;      # enable dependency tracking for better rebuilds
 
 # --- Cleaning rules ---
 push @clean_ext, qw(
@@ -51,6 +54,11 @@ push @clean_ext, qw(
 push @clean_full_ext, qw(
   bbl bcf blg pdf
 );
+
+# --- Modern engine support ---
+# Tectonic (modern, self-contained TeX engine)
+# $pdf_mode = 1;
+# $pdflatex = 'tectonic -X compile --synctex --keep-logs --keep-intermediates %S';
 
 # --- Optional shell-escape ---
 # $pdflatex = 'pdflatex -interaction=nonstopmode -synctex=1 -shell-escape %O %S';
