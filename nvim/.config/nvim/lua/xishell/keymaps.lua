@@ -50,3 +50,7 @@ map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 -- commenting
 map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
 map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
+
+-- Insert mode escape keymaps
+map("i", "jj", "<esc>", { desc = "Exit Insert Mode" })
+map("i", "jk", "<esc>", { desc = "Exit Insert Mode" })
