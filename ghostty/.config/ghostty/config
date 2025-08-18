@@ -1,0 +1,27 @@
+# --- Look and Feel ---
+theme = tokyonight_night
+font-family = "FiraCode Nerd Font"
+font-size = 13
+cursor-style = block
+cursor-style-blink = false
+
+# Subtle padding and crisp rendering
+window-padding-x = 6
+window-padding-y = 6
+window-padding-balance = true
+
+
+macos-titlebar-style = native
+
+macos-option-as-alt = left
+
+# Disable all tab keybinds
+keybind = cmd+t=unbind
+keybind = cmd+w=unbind
+keybind = cmd+shift+[=unbind
+keybind = cmd+shift+]=unbind
+# keybind = cmd+shift+comma=decrease_font_size
+# keybind = cmd+shift+period=increase_font_size
+# keybind = cmd+0=reset_font_size
+# Quick terminal (macOS: grant Accessibility perms)
+keybind = global:cmd+grave_accent=toggle_quick_terminal
