@@ -14,33 +14,34 @@ export PATH="$JAVA_HOME/bin:$PATH"
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 # Download Zinit, if it's not there yet
-if [ ! -d "$ZINIT_HOME" ]; then
-   mkdir -p "$(dirname $ZINIT_HOME)"
+if [ ! -d "$ZINIT_HOME" ] && command -v git >/dev/null 2>&1; then
+   mkdir -p "$(dirname "$ZINIT_HOME")"
    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
 # Source/Load zinit
-source "${ZINIT_HOME}/zinit.zsh"
+if [ -s "${ZINIT_HOME}/zinit.zsh" ]; then
+  source "${ZINIT_HOME}/zinit.zsh"
+fi
 
 # Add in powerlevel10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 #eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 export PATH="${PATH}:${HOME}/.local/bin/"
-# Add in zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
+# Add in zsh plugins (ensure highlighting loads last)
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
+zinit light zsh-users/zsh-syntax-highlighting
 
 # Add in snippets
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-zinit snippet OMZP::archlinux
 zinit snippet OMZP::command-not-found
 
-# Load completions
-autoload -Uz compinit && compinit
+# Load completions (use cached compdump when possible)
+autoload -Uz compinit && compinit -C
 
 zinit cdreplay -q
 

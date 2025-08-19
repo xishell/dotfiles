@@ -49,7 +49,7 @@
 [diff]
     context = 3
     renames = copies
-    inteHunkContext = 10
+    interHunkContext = 10
 [pager]
     diff = diff-so-fancy | $PAGER
 [diff-so-fancy]
