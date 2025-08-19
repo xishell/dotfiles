@@ -91,6 +91,9 @@ alias orc="source ~/.zshrc"
 alias gs="git status --short"
 alias gl="git log --graph --all --pretty=format:'%C(magenta)%h %C(white) %an  %ar%C(auto)  %D%n%s%n'"
 
+# mac specific aliases
+alias cf="caffeinate"
+
 # use y with yazi
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
