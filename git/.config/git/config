@@ -1,0 +1,25 @@
+[user]
+	email = 26227374+xishell@users.noreply.github.com
+	name = XiShell
+[core]
+    compression = 9
+    whitespace = error
+    preloadindex = true
+[init]
+	defaultBranch = main
+[status]
+    branch = true
+    showStash = true
+    showUntrackedFiles = all
+[diff]
+    context = 3
+    renames = copies
+    inteHunkContext = 10
+[pager]
+    diff = diff-so-fancy | $PAGER
+[diff-so-fancy]
+    markEmptyLines = false
+[url "git@github.com:xishell/"]
+    insteadOf = "xi:"
+[url "git@github.com:"]
+    insteadOf = "gh:"
