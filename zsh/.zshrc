@@ -88,7 +88,7 @@ alias orc="source ~/.zshrc"
 
 # git aliases
 alias gs="git status --short"
-
+alias gl="git log --graph --all --pretty=format:'%C(magenta)%h %C(white) %an  %ar%C(auto)  %D%n%s%n'"
 
 # use y with yazi
 function y() {

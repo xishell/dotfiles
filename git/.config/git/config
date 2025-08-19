@@ -1,12 +1,47 @@
+[color "branch"]
+    current  = magenta
+    local    = default
+    remote   = yellow
+    upstream = green
+    plain    = blue
+[color "decorate"]
+    HEAD = red
+    branch = blue
+    tag = yellow
+    remoteBranch = magenta
 [user]
 	email = 26227374+xishell@users.noreply.github.com
 	name = XiShell
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILseAsE+/F335EtsqPL/WV3Jo12iGKJuv5QAo5NQEW63
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+[commit]
+  gpgsign = true
 [core]
     compression = 9
     whitespace = error
     preloadindex = true
 [init]
 	defaultBranch = main
+[push]
+    autoSetupRemote = true
+    default = current
+    followTags = true
+[pull]
+    default = current
+    rebase = true
+[branch]
+    sort = -committerdate
+[tag]
+    sort = -taggerdate
+[log]
+    abbrevCommit = true
+    graphColors = blue,yellow,cyan,magenta,green,red
+[rebase]
+    autoStash = true
+    missingCommitsCheck = warn
 [status]
     branch = true
     showStash = true
