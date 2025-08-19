@@ -96,6 +96,16 @@ return {
             },
           })
         end,
+
+        tinymist = function()
+          lspconfig.tinymist.setup({
+            capabilities = capabilities,
+            settings = {
+              exportPdf = "onSave",
+              outputPath = "$root/target/$dir/$name",
+            },
+          })
+        end,
       },
     })
   end,

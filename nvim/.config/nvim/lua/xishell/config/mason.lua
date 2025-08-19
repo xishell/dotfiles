@@ -4,6 +4,7 @@ return {
         "ltex-ls",
 		"stylua",
 		"clangd",
-        "make"
+        "make",
+        "tinymist"
 	},
 }

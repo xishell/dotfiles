@@ -63,6 +63,7 @@ return {
                 "c",
                 "make",
                 "java",
+                "typst",
             },
         })
     end,

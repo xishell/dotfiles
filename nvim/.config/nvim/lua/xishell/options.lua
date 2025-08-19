@@ -50,7 +50,8 @@ o.wildmenu = true
 o.wildmode = "longest:full,full"
 o.wildoptions = "pum"
 o.winblend = 0
-o.wrap = false
+o.wrap = true
+o.colorcolumn = "120"
 opt.backspace = { "start", "eol", "indent" }
 opt.path:append({ "**" })
 opt.spelllang = { "en", "sv" }
