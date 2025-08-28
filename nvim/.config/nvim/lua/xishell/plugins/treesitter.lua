@@ -64,6 +64,7 @@ return {
                 "make",
                 "java",
                 "typst",
+                "norg",
             },
         })
     end,

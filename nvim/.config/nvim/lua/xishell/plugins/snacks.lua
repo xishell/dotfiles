@@ -100,6 +100,42 @@ return {
         { "<leader>uX",      function() Snacks.picker.colorschemes() end,    desc = "Colorschemes" },
         { "<leader>qp",      function() Snacks.picker.projects() end,        desc = "Projects" },
         { "<leader>fs",      function() Snacks.picker.spelling() end,        desc = "Spelling suggestions" },
+        { "<leader>fh",      function()
+            local harpoon = require("harpoon")
+            local files = {}
+            
+            -- Get harpooned files first
+            local harpoon_files = harpoon:list():display()
+            for i, file in ipairs(harpoon_files) do
+              if file and file ~= "" then
+                table.insert(files, {
+                  text = string.format("[%d] %s", i, file),
+                  file = file,
+                  priority = 10 - i, -- Higher priority for lower numbers
+                })
+              end
+            end
+            
+            -- Add recent files with lower priority
+            Snacks.picker.pick("files", {
+              items = files,
+              title = "Harpoon + Files",
+            })
+          end,
+          desc = "Harpoon Files + Finder" },
+        { "<leader>fH",      function()
+            local harpoon = require("harpoon")
+            Snacks.picker.pick("files", {
+              items = harpoon:list():display(),
+              title = "Harpoon Files",
+            })
+          end,
+          desc = "Harpoon Files Only" },
+        -- Neorg
+        { "<leader>nn", function() Snacks.picker.files({ cwd = vim.fn.expand("~/notes") }) end, desc = "Find Notes" },
+        { "<leader>nf", function() Snacks.picker.grep({ cwd = vim.fn.expand("~/notes") }) end, desc = "Search Notes" },
+        { "<leader>nw", function() Snacks.picker.files({ cwd = vim.fn.expand("~/notes/work") }) end, desc = "Work Notes" },
+        { "<leader>np", function() Snacks.picker.files({ cwd = vim.fn.expand("~/notes/personal") }) end, desc = "Personal Notes" },
         -- LSP
         { "gd",         function() Snacks.picker.lsp_definitions() end,      desc = "Goto Definition" },
         { "gr",         function() Snacks.picker.lsp_references() end,       nowait = true, desc = "References" },

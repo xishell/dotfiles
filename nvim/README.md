@@ -99,6 +99,16 @@ lua/xishell/
 | `<leader>/` | Live grep | Search in project |
 | `<leader>sg` | Grep | Search with options |
 | `<leader>sb` | Buffer lines | Search current buffer |
+| `<leader>fh` | Harpoon + Files | Harpooned files + fuzzy finder |
+| `<leader>fH` | Harpoon Files | Show only harpooned files |
+
+### Notes & Knowledge Management (Neorg)
+| Key | Action | Description |
+|-----|--------|-------------|
+| `<leader>nn` | Find Notes | Browse all notes |
+| `<leader>nf` | Search Notes | Search within notes |
+| `<leader>nw` | Work Notes | Browse work-specific notes |
+| `<leader>np` | Personal Notes | Browse personal notes |
 
 ### Git Integration (Snacks)
 | Key | Action | Description |
@@ -137,6 +147,16 @@ lua/xishell/
 | `<leader>sk` | Keymaps | Search available keymaps |
 | `<leader>sh` | Help pages | Search help documentation |
 
+### File Navigation (Harpoon)
+| Key | Action | Description |
+|-----|--------|-------------|
+| `<leader>a` | Add to harpoon | Mark current file for quick access |
+| `<C-e>` | Harpoon menu | Toggle harpoon quick menu |
+| `<C-h>` | Harpoon file 1 | Jump to first harpooned file |
+| `<C-t>` | Harpoon file 2 | Jump to second harpooned file |
+| `<C-n>` | Harpoon file 3 | Jump to third harpooned file |
+| `<C-s>` | Harpoon file 4 | Jump to fourth harpooned file |
+
 ### Search Enhancement
 | Key | Action | Description |
 |-----|--------|-------------|
@@ -162,6 +182,8 @@ lua/xishell/
 
 ### Navigation & Integration
 - **[Oil.nvim](https://github.com/stevearc/oil.nvim)**: Directory editor
+- **[Harpoon](https://github.com/ThePrimeagen/harpoon)**: Quick file navigation
+- **[Neorg](https://github.com/nvim-neorg/neorg)**: Note-taking and organization
 - **[vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator)**: Seamless tmux integration
 - **[Which-key](https://github.com/folke/which-key.nvim)**: Keybinding help
 
