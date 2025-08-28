@@ -55,7 +55,7 @@ return {
           java = { "google-java-format" },
 
           -- Go / Rust (use LSP fallback if tool missing)
-          -- go = { "gofumpt", "goimports", "gofmt" },
+          go = { "gofumpt", "goimports-reviser" },
           rust = { "rustfmt" },
 
           -- Misc
@@ -110,8 +110,8 @@ return {
         "isort",
         "clang-format",
         "google-java-format",
-        -- "gofumpt",
-        -- "goimports",
+        "gofumpt",
+        "goimports-reviser",
         "rustfmt",
         "taplo",
         "sql-formatter",
@@ -123,6 +123,7 @@ return {
         "markdownlint",
         "yamllint",
         "jsonlint",
+        "golangci-lint",
         -- "hadolint",
       },
       automatic_installation = true,

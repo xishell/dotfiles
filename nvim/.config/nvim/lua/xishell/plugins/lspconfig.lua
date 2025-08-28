@@ -106,6 +106,28 @@ return {
             },
           })
         end,
+
+        gopls = function()
+          lspconfig.gopls.setup({
+            capabilities = capabilities,
+            settings = {
+              gopls = {
+                analyses = {
+                  unusedparams = true,
+                },
+                staticcheck = true,
+                gofumpt = true,
+              },
+            },
+          })
+        end,
+
+        asm_lsp = function()
+          lspconfig.asm_lsp.setup({
+            capabilities = capabilities,
+            filetypes = { "asm", "s", "S" },
+          })
+        end,
       },
     })
   end,

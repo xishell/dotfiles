@@ -5,6 +5,11 @@ return {
 		"stylua",
 		"clangd",
         "make",
-        "tinymist"
+        "tinymist",
+        "gopls",
+        "gofumpt",
+        "goimports-reviser",
+        "golangci-lint",
+        "asm-lsp"
 	},
 }
