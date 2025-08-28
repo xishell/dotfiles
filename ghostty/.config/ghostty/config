@@ -15,8 +15,8 @@ mouse-hide-while-typing = true
 copy-on-select = true
 confirm-close-surface = false
 
-macos-titlebar-style = native
-
+macos-titlebar-style = transparent
+macos-titlebar-proxy-icon = hidden
 macos-option-as-alt = left
 
 # Disable all tab keybinds
