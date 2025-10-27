@@ -4,7 +4,12 @@ return {
     "stevearc/oil.nvim",
     dependencies = "echasnovski/mini.icons",
 
-    cmd = "Oil",
+    lazy = false,
+    init = function()
+        -- Disable netrw to fully replace it with oil.nvim
+        vim.g.loaded_netrw = 1
+        vim.g.loaded_netrwPlugin = 1
+    end,
     opts = {
         default_file_explorer = true,
         delete_to_trash = true,

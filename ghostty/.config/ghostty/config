@@ -1,5 +1,5 @@
 # --- Look and Feel ---
-theme = tokyonight_night
+theme = TokyoNight night
 font-family = "FiraCode Nerd Font"
 font-size = 14
 cursor-style = block

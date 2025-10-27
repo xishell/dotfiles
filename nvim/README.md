@@ -1,38 +1,39 @@
 # XiShell Neovim Configuration
 
-A modern, feature-rich Neovim configuration focused on development efficiency and seamless tmux integration.
+Modern Neovim configuration focused on development efficiency and seamless tmux integration.
 
-## ✨ Key Features
+## Key Features
 
-- **Modern Plugin Ecosystem**: Lazy.nvim package manager with carefully selected plugins
-- **Advanced Completion**: Blink.cmp for fast, intelligent code completion
-- **Seamless tmux Integration**: Unified navigation between Neovim and tmux panes
-- **LSP Support**: Full Language Server Protocol support with Mason for easy management
-- **Git Integration**: Comprehensive git workflow with Snacks and LazyGit
-- **Smart File Management**: Oil.nvim for intuitive directory editing
-- **Beautiful UI**: Tokyo Night theme with customized lualine and bufferline
+- Modern plugin ecosystem with Lazy.nvim
+- Fast completion with Blink.cmp
+- Full LSP support via Mason
+- Seamless tmux integration
+- Git workflow with Gitsigns and LazyGit
+- Smart navigation with Flash, Spider, and Harpoon
+- Advanced text objects with Mini.ai
+- Tokyo Night theme
 
-## 📦 Installation
+## Installation
 
-1. **Prerequisites**:
-   - Neovim 0.10+ 
-   - Git
-   - A Nerd Font (for icons)
-   - ripgrep (for searching)
-   - Node.js (for some LSP servers)
+**Prerequisites:**
+- Neovim 0.10+
+- Git
+- Nerd Font
+- ripgrep
+- Node.js
 
-2. **Install Configuration**:
-   ```bash
-   # Backup existing config if needed
-   mv ~/.config/nvim ~/.config/nvim.backup
-   
-   # Clone and link this configuration
-   ln -sf ~/dotfiles/nvim/.config/nvim ~/.config/nvim
-   ```
+**Setup:**
+```bash
+# Backup existing config
+mv ~/.config/nvim ~/.config/nvim.backup
 
-3. **First Launch**: Open Neovim - plugins will auto-install via Lazy.nvim
+# Link configuration
+ln -sf ~/dotfiles/nvim/.config/nvim ~/.config/nvim
+```
 
-## ⚙️ Configuration Structure
+**First launch:** Plugins auto-install via Lazy.nvim
+
+## Configuration Structure
 
 ```
 lua/xishell/
@@ -42,173 +43,239 @@ lua/xishell/
 ├── lazy_init.lua     # Plugin manager setup
 ├── auto.lua          # Autocommands
 └── plugins/          # Plugin configurations
-    ├── blink.lua     # Completion engine
-    ├── lspconfig.lua # Language servers
-    ├── snacks.lua    # File operations & git
-    ├── oil.lua       # Directory editor
-    └── ...
 ```
 
-## 🚀 Keybindings Reference
+## Keybindings Reference
 
-### Leader Keys
-- **Leader**: `<Space>`
-- **Local Leader**: `'`
+**Leader Keys:**
+- Leader: `<Space>`
+- Local Leader: `'`
 
 ### Core Movement & Editing
 
-#### Insert Mode
-| Key | Action | Description |
-|-----|--------|-------------|
-| `jj` / `jk` | `<Esc>` | Exit to normal mode |
-| `<A-j>` / `<A-k>` | Move line down/up | Move current line |
+**Insert Mode:**
+| Key | Action |
+|-----|--------|
+| `jk` | Exit to normal mode |
+| `<A-j>` / `<A-k>` | Move line down/up |
 
-#### Navigation
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<C-h/j/k/l>` | Window navigation | Move between splits (tmux-aware) |
-| `j` / `k` | Smart line movement | Display lines vs actual lines |
-| `<S-h>` / `<S-l>` | Buffer navigation | Previous/next buffer |
+**Navigation:**
+| Key | Action |
+|-----|--------|
+| `<C-h/j/k/l>` | Window navigation (tmux-aware) |
+| `j` / `k` | Smart line movement (display vs actual) |
+| `<S-h>` / `<S-l>` | Previous/next buffer |
+| `w` / `e` / `b` | Spider motions (camelCase/snake_case aware) |
 
-#### Text Manipulation
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<A-j>` / `<A-k>` | Move lines | Move selected lines up/down |
-| `x` / `X` | Delete without yank | No clipboard pollution |
-| `gco` / `gcO` | Add comment | Comment below/above current line |
+**Flash Navigation:**
+| Key | Action |
+|-----|--------|
+| `s{char}{char}` | Jump to two-character match |
+| `S` | Treesitter-aware jump |
+| `r` | Remote operation (e.g., `dra` deletes to 'a') |
+| `R` | Treesitter search (visual/operator mode) |
+
+**Text Manipulation:**
+| Key | Action |
+|-----|--------|
+| `<A-j>` / `<A-k>` | Move lines up/down |
+| `x` / `X` | Delete without yank |
+| `gco` / `gcO` | Add comment below/above |
+
+**Surrounding (Mini.surround):**
+| Key | Action |
+|-----|--------|
+| `sa` | Add surrounding (e.g., `saiw)` for word in parens) |
+| `sd` | Delete surrounding (e.g., `sd)` removes parens) |
+| `sr` | Replace surrounding (e.g., `sr)"` changes parens to quotes) |
+| `sn` / `sl` | Find next/previous surrounding |
+
+**Text Objects (Mini.ai):**
+| Key | Action |
+|-----|--------|
+| `vif` / `vaf` | Inside/around function |
+| `vic` / `vac` | Inside/around class |
+| `vio` / `vao` | Inside/around code block (if/for/while) |
+| `vit` / `vat` | Inside/around HTML/XML tags |
+| `vid` / `vad` | Inside/around digits |
+| `vie` / `vae` | Inside/around word with case (camelCase) |
+| `vig` / `vag` | Inside/around entire buffer |
+| `viu` / `vau` | Inside/around function call |
 
 ### Buffer & Tab Management
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>bb` | Switch buffer | Toggle between current and previous |
-| `<leader>bd` | Delete buffer | Smart buffer deletion |
-| `<leader>bD` | Delete buffer & window | Force deletion |
-| `[b` / `]b` | Buffer navigation | Previous/next buffer |
-| `<leader><tab><tab>` | New tab | Create new tab |
-| `<leader><tab>d` | Close tab | Delete current tab |
-| `<leader><tab>[` / `<leader><tab>]` | Tab navigation | Previous/next tab |
 
-### File Operations & Search (Snacks)
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader><space>` | Find files | Fuzzy file finder |
-| `<leader>ff` | Find files | Same as above |
-| `<leader>fg` | Git files | Find in git repository |
-| `<leader>fr` | Recent files | Recently opened files |
-| `<leader>fb` | Buffers | Switch between open buffers |
-| `<leader>/` | Live grep | Search in project |
-| `<leader>sg` | Grep | Search with options |
-| `<leader>sb` | Buffer lines | Search current buffer |
-| `<leader>fh` | Harpoon + Files | Harpooned files + fuzzy finder |
-| `<leader>fH` | Harpoon Files | Show only harpooned files |
+| Key | Action |
+|-----|--------|
+| `<leader>bb` | Toggle between current and previous buffer |
+| `<leader>bd` | Delete buffer |
+| `<leader>bD` | Delete buffer and window |
+| `[b` / `]b` | Previous/next buffer |
+| `<leader><tab><tab>` | New tab |
+| `<leader><tab>d` | Close tab |
+| `<leader><tab>[` / `]` | Previous/next tab |
 
-### Notes & Knowledge Management (Neorg)
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>nn` | Find Notes | Browse all notes |
-| `<leader>nf` | Search Notes | Search within notes |
-| `<leader>nw` | Work Notes | Browse work-specific notes |
-| `<leader>np` | Personal Notes | Browse personal notes |
+### File Operations & Search
 
-### Git Integration (Snacks)
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>gl` | LazyGit | Full git interface |
-| `<leader>gs` | Git status | Quick status overview |
-| `<leader>gb` | Git blame | Blame current line |
-| `<leader>gf` | File history | LazyGit file history |
-| `<leader>gw` | Git browse | Open in web browser |
+| Key | Action |
+|-----|--------|
+| `<leader><space>` | Find files |
+| `<leader>ff` | Find files |
+| `<leader>fg` | Git files |
+| `<leader>fr` | Recent files |
+| `<leader>fb` | Buffers |
+| `<leader>/` | Live grep |
+| `<leader>sg` | Grep with options |
+| `<leader>sb` | Search buffer lines |
+| `<leader>sw` | Grep word under cursor |
+| `<leader>sd` | Search diagnostics |
+| `<leader>sk` | Search keymaps |
+| `<leader>sh` | Search help pages |
+
+### Harpoon Navigation
+
+| Key | Action |
+|-----|--------|
+| `<leader>a` | Add file to harpoon |
+| `<C-e>` | Toggle harpoon menu |
+| `<leader>1` | Jump to harpoon file 1 |
+| `<leader>2` | Jump to harpoon file 2 |
+| `<leader>3` | Jump to harpoon file 3 |
+| `<leader>4` | Jump to harpoon file 4 |
+| `<leader>fh` | Harpoon files + fuzzy finder |
+| `<leader>fH` | Harpoon files only |
+
+### Git Integration
+
+**Snacks Git:**
+| Key | Action |
+|-----|--------|
+| `<leader>gl` | LazyGit |
+| `<leader>gs` | Git status |
+| `<leader>gb` | Git blame line |
+| `<leader>gf` | LazyGit file history |
+| `<leader>gw` | Git browse web |
+
+**Gitsigns:**
+| Key | Action |
+|-----|--------|
+| `]h` / `[h` | Next/previous hunk |
+| `]H` / `[H` | Last/first hunk |
+| `<leader>ghs` | Stage hunk |
+| `<leader>ghr` | Reset hunk |
+| `<leader>ghS` | Stage buffer |
+| `<leader>ghu` | Undo stage hunk |
+| `<leader>ghR` | Reset buffer |
+| `<leader>ghp` | Preview hunk inline |
+| `<leader>ghd` | Diff this |
+| `ih` | Select hunk (text object) |
 
 ### LSP & Development
-| Key | Action | Description |
-|-----|--------|-------------|
-| `gd` | Go to definition | Jump to symbol definition |
-| `gr` | Find references | Show all references |
-| `gI` | Go to implementation | Jump to implementation |
-| `gy` | Go to type definition | Jump to type definition |
-| `<leader>ss` | LSP symbols | Search project symbols |
-| `<leader>sd` | Diagnostics | Show diagnostics |
+
+| Key | Action |
+|-----|--------|
+| `gd` | Go to definition |
+| `gr` | Find references |
+| `gD` | Go to declaration |
+| `gI` | Go to implementation |
+| `gy` | Go to type definition |
+| `gi` | Go to implementation |
+| `K` | Hover documentation |
+| `gs` | Signature help |
+| `<leader>ca` | Code action |
+| `<leader>cr` | Rename |
+| `<leader>cf` | Format buffer |
+| `<leader>ss` | LSP symbols |
+| `[d` / `]d` | Previous/next diagnostic |
+| `gl` | Float diagnostic |
 
 ### Completion (Blink)
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<C-Space>` | Trigger completion | Manual completion trigger |
-| `<Tab>` | Accept/Next | Accept suggestion or next item |
-| `<S-Tab>` | Previous | Previous completion item |
-| `<C-e>` | Close | Close completion menu |
 
-### Utility & System
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>qq` | Quit all | Exit Neovim |
-| `<leader>z` | Zen mode | Distraction-free editing |
-| `<leader>Z` | Zoom | Zoom current window |
-| `<leader>n` | Notifications | Show notification history |
-| `<leader>sk` | Keymaps | Search available keymaps |
-| `<leader>sh` | Help pages | Search help documentation |
+| Key | Action |
+|-----|--------|
+| `<C-Space>` | Show completion |
+| `<Tab>` | Next item / snippet forward |
+| `<S-Tab>` | Previous item / snippet backward |
+| `<CR>` | Accept completion |
+| `<C-e>` | Hide completion |
 
-### File Navigation (Harpoon)
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>a` | Add to harpoon | Mark current file for quick access |
-| `<C-e>` | Harpoon menu | Toggle harpoon quick menu |
-| `<C-h>` | Harpoon file 1 | Jump to first harpooned file |
-| `<C-t>` | Harpoon file 2 | Jump to second harpooned file |
-| `<C-n>` | Harpoon file 3 | Jump to third harpooned file |
-| `<C-s>` | Harpoon file 4 | Jump to fourth harpooned file |
+### Notes (Neorg)
 
-### Search Enhancement
-| Key | Action | Description |
-|-----|--------|-------------|
-| `n` / `N` | Smart search | Context-aware next/previous |
-| `<leader>fs` | Spell suggestions | Spelling corrections |
+| Key | Action |
+|-----|--------|
+| `<leader>nn` | Find notes |
+| `<leader>nf` | Search notes |
+| `<leader>nw` | Work notes |
+| `<leader>np` | Personal notes |
 
-## 🔌 Plugin Overview
+### Utility
 
-### Core Plugins
-- **[Lazy.nvim](https://github.com/folke/lazy.nvim)**: Plugin manager
-- **[Blink.cmp](https://github.com/saghen/blink.cmp)**: Fast completion engine
-- **[Snacks.nvim](https://github.com/folke/snacks.nvim)**: File operations, git, and utilities
+| Key | Action |
+|-----|--------|
+| `<leader>qq` | Quit all |
+| `<leader>z` | Zen mode |
+| `<leader>Z` | Zoom window |
+| `<leader>n` | Notification history |
+| `<leader>un` | Dismiss notifications |
 
-### LSP & Development
-- **[nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)**: LSP configurations
-- **[Mason.nvim](https://github.com/williamboman/mason.nvim)**: LSP/tool installer
-- **[nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)**: Syntax highlighting
+## Plugin Overview
 
-### UI & Theme
-- **[Tokyo Night](https://github.com/folke/tokyonight.nvim)**: Color scheme
-- **[Lualine](https://github.com/nvim-lualine/lualine.nvim)**: Status line
-- **[Bufferline](https://github.com/akinsho/bufferline.nvim)**: Buffer tabs
+**Core:**
+- Lazy.nvim - Plugin manager
+- Blink.cmp - Completion engine
+- Snacks.nvim - File operations, git, utilities
 
-### Navigation & Integration
-- **[Oil.nvim](https://github.com/stevearc/oil.nvim)**: Directory editor
-- **[Harpoon](https://github.com/ThePrimeagen/harpoon)**: Quick file navigation
-- **[Neorg](https://github.com/nvim-neorg/neorg)**: Note-taking and organization
-- **[vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator)**: Seamless tmux integration
-- **[Which-key](https://github.com/folke/which-key.nvim)**: Keybinding help
+**LSP & Syntax:**
+- nvim-lspconfig - LSP configurations
+- Mason.nvim - LSP/tool installer
+- mason-tool-installer.nvim - Auto-install formatters/linters
+- nvim-treesitter - Syntax highlighting
+- Conform.nvim - Formatting with LSP fallback
 
-## 🎛️ Customization
+**Navigation:**
+- Flash.nvim - Fast two-character jump
+- nvim-spider - Smart word motions
+- Harpoon - Quick file marks
+- Oil.nvim - Directory editor
+- vim-tmux-navigator - Tmux integration
 
-### Adding New Keybindings
-Add custom keymaps to `lua/xishell/keymaps.lua`:
+**Text Objects & Editing:**
+- Mini.ai - Advanced text objects
+- Mini.surround - Surrounding operations
+- nvim-autopairs - Auto-close brackets/quotes
+
+**Git:**
+- Gitsigns.nvim - Git signs and hunk operations
+- Snacks.nvim - LazyGit integration
+
+**UI:**
+- Tokyo Night - Color scheme
+- Lualine - Status line
+- Bufferline - Buffer tabs
+- Which-key - Keybinding help
+
+**Other:**
+- Neorg - Note-taking
+- LuaSnip - Snippet engine
+- Lazydev - Lua development
+- VimTeX - LaTeX support
+
+## Customization
+
+**Add keybindings** in `lua/xishell/keymaps.lua`:
 ```lua
 local map = vim.keymap.set
-map("n", "<leader>custom", "<cmd>YourCommand<cr>", { desc = "Your Description" })
+map("n", "<leader>custom", "<cmd>YourCommand<cr>", { desc = "Description" })
 ```
 
-### Plugin Configuration
-Each plugin has its own file in `lua/xishell/plugins/`. Modify these files to customize plugin behavior.
+**Configure plugins** by editing files in `lua/xishell/plugins/`
 
-### Theme Customization
-Modify `lua/xishell/plugins/theme.lua` to change colors or switch themes.
+**Change theme** in `lua/xishell/plugins/theme.lua`
 
-## 🤝 Integration Notes
+## Integration Notes
 
-- **tmux**: Configured for seamless pane navigation with `<C-hjkl>`
-- **Shell**: Works best with zsh and modern terminal emulators
-- **Git**: Optimized workflow with LazyGit and built-in git operations
-- **File Management**: Oil.nvim provides vim-native directory editing
+- tmux: Seamless pane navigation with `<C-hjkl>`
+- Shell: Optimized for zsh and modern terminals
+- Git: LazyGit workflow + inline git signs
+- Clipboard: Auto-detects SSH and adjusts clipboard behavior
 
----
-
-*This configuration prioritizes speed, efficiency, and a clean development experience. All keybindings follow vim conventions while adding modern conveniences.*
+This configuration prioritizes speed, efficiency, and vim conventions with modern enhancements.

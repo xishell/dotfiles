@@ -1,11 +1,23 @@
 ---@module "lazy"
 ---@type LazySpec
 return {
-    { "nvim-lua/plenary.nvim", lazy = false, priority = 1000 },
+  { "nvim-lua/plenary.nvim", lazy = false, priority = 1000 },
+  { "williamboman/mason.nvim", opts = {} },
+
   -- Format-on-save engine
   {
     "stevearc/conform.nvim",
     event = { "BufReadPre", "BufNewFile" },
+    keys = {
+      {
+        "<leader>cf",
+        function()
+          require("conform").format({ async = true, lsp_fallback = true })
+        end,
+        mode = { "n", "v" },
+        desc = "Format buffer",
+      },
+    },
     opts = function()
       return {
         -- Run formatting on save (falls back to LSP if none configured)
@@ -67,6 +79,9 @@ return {
         formatters = {
           shfmt = { prepend_args = { "-i", "2", "-ci" } },
           stylua = { prepend_args = { "--search-parent-directories" } },
+          ["clang-format"] = {
+            prepend_args = { "--style={IndentWidth: 4, TabWidth: 4, UseTab: Never}" },
+          },
           ["google-java-format"] = {
             -- example: set style (leave empty to use default)
             -- prepend_args = { "--aosp" },
@@ -76,30 +91,10 @@ return {
     end,
   },
 
-  -- Diagnostics / code actions via external tools
+  -- Mason tool installer for formatters and linters
   {
-    "nvimtools/none-ls.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      local null = require("null-ls")
-      null.setup({
-        -- You can add manual sources if you want explicit control, but
-        -- with mason-null-ls we can let it auto-register most tools.
-        -- sources = { ... }
-      })
-
-      -- Optional: command to run diagnostics formatting manually
-      vim.api.nvim_create_user_command("Format", function()
-        require("conform").format({ async = true })
-      end, {})
-    end,
-  },
-
-  -- Mason + mason-null-ls → auto-install & auto-register tools
-  { "williamboman/mason.nvim", opts = {} },
-  {
-    "jay-babu/mason-null-ls.nvim",
-    dependencies = { "williamboman/mason.nvim", "nvimtools/none-ls.nvim" },
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
     opts = {
       ensure_installed = {
         -- formatters
@@ -116,7 +111,7 @@ return {
         "taplo",
         "sql-formatter",
 
-        -- diagnostics/linters
+        -- diagnostics/linters (for future use)
         "eslint_d",
         "ruff",
         "shellcheck",
@@ -124,10 +119,9 @@ return {
         "yamllint",
         "jsonlint",
         "golangci-lint",
-        -- "hadolint",
       },
-      automatic_installation = true,
-      handlers = {}, -- use defaults to auto-register everything
+      auto_update = false,
+      run_on_start = true,
     },
   },
 }

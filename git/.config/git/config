@@ -14,11 +14,11 @@
 	name = XiShell
     signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILseAsE+/F335EtsqPL/WV3Jo12iGKJuv5QAo5NQEW63
 [gpg]
-  format = ssh
+	format = ssh
 [gpg "ssh"]
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 [commit]
-  gpgsign = true
+	gpgsign = true
 [core]
     compression = 9
     whitespace = error
@@ -58,3 +58,5 @@
     insteadOf = "xi:"
 [url "git@github.com:"]
     insteadOf = "gh:"
+[url "git@gits-15.sys.kth.se:"]
+    insteadOf = "kth:"

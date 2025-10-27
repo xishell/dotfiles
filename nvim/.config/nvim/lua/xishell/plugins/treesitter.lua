@@ -2,7 +2,10 @@
 ---@type LazySpec
 return {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = "nvim-treesitter/nvim-treesitter-context",
+    dependencies = {
+        "nvim-treesitter/nvim-treesitter-context",
+        "nvim-treesitter/nvim-treesitter-textobjects",
+    },
     version = false,
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
@@ -11,7 +14,7 @@ return {
         { "<c-space>", desc = "Increment Selection" },
         { "<bs>", desc = "Decrement Selection", mode = "x" },
     },
-    opts = function()
+    config = function()
         require("nvim-treesitter.configs").setup({
             modules = {},
             sync_install = false,
@@ -26,10 +29,12 @@ return {
                 disable = {
                     "latex",
                     "bibtex",
+                    "asm", -- Disable treesitter for assembly files to avoid parsing issues
                 }
             },
             indent = {
                 enable = true,
+                disable = { "asm" }, -- Disable treesitter indent for assembly
             },
             incremental_selection = {
                 enable = true,
@@ -41,30 +46,35 @@ return {
                 },
             },
             ensure_installed = {
-                "latex",
-                "bibtex",
                 "bash",
+                "bibtex",
+                "c",
                 "comment",
                 "diff",
                 "git_config",
                 "git_rebase",
                 "gitcommit",
                 "gitignore",
+                "java",
+                "javascript",
+                "jsdoc",
+                "json",
+                "latex",
                 "lua",
                 "luadoc",
+                "make",
                 "markdown",
                 "markdown_inline",
+                "norg",
                 "python",
                 "regex",
                 "toml",
+                "tsx",
+                "typescript",
+                "typst",
                 "vim",
                 "vimdoc",
                 "yaml",
-                "c",
-                "make",
-                "java",
-                "typst",
-                "norg",
             },
         })
     end,

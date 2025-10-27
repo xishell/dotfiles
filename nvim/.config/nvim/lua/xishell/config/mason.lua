@@ -10,6 +10,7 @@ return {
         "gofumpt",
         "goimports-reviser",
         "golangci-lint",
-        "asm-lsp"
+        "typescript-language-server",
+-- "asm-lsp" -- Disabled: Causes conflicts with RISC-V syntax
 	},
 }

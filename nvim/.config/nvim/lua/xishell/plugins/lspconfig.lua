@@ -13,6 +13,7 @@ return {
 
     -- 1) Cache modules
     local lspconfig = require("lspconfig")
+    local configs = require("lspconfig.configs")
     local mason_lspconfig = require("mason-lspconfig")
 
     -- 2) Blink capabilities
@@ -70,6 +71,11 @@ return {
       severity_sort = true,
     })
 
+    -- 4.5) Completely disable asm_lsp to prevent conflicts with RISC-V assembly
+    if configs.asm_lsp then
+      configs.asm_lsp = nil
+    end
+
     -- 5) Mason-lspconfig: use `handlers` inside setup (portable across versions)
     mason_lspconfig.setup({
       ensure_installed = {},          -- you said mason-tool-installer handles this
@@ -122,12 +128,14 @@ return {
           })
         end,
 
-        asm_lsp = function()
-          lspconfig.asm_lsp.setup({
+        clangd = function()
+          lspconfig.clangd.setup({
             capabilities = capabilities,
-            filetypes = { "asm", "s", "S" },
+            filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }, -- Explicitly exclude "asm"
           })
         end,
+
+
       },
     })
   end,

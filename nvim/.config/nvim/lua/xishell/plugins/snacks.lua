@@ -18,7 +18,7 @@ return {
         indent = { enabled = true },
         input = { enabled = true },
         explorer = {
-            enabled = true,
+            enabled = false,
             hidden = true,
         },
         notifier = {
