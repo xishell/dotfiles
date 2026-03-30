@@ -12,25 +12,36 @@ Terminal multiplexer configuration with vim-style navigation and modern workflow
 ## Key Bindings
 
 ### Prefix Key
+
 - **Prefix**: `Ctrl-a` (instead of default Ctrl-b)
 
 ### Pane Navigation
-- **Vim keys**: `h/j/k/l` (with prefix)
-- **Alt + arrows**: Navigate without prefix
-- **Alt + h/l**: Switch windows without prefix
+
+- **Ctrl + h/j/k/l**: Navigate panes seamlessly across tmux and vim (via vim-tmux-navigator)
 
 ### Window Management
+
 - **Shift + arrows**: Switch windows
 - **Alt + H/L**: Switch windows (vim-style)
 
 ### Pane Management
+
 - **Split vertical**: `prefix + |`
 - **Split horizontal**: `prefix + -`
+- **Resize pane**: `prefix + arrow keys` (5 lines at a time)
 - **New window**: `prefix + c` (opens in current directory)
 - **Kill pane**: `prefix + x`
 - **Kill window**: `prefix + &`
 
+### Pop-up Windows
+
+- **Lazygit**: `prefix + Ctrl-y`
+- **Session switcher (fzf)**: `prefix + Ctrl-j`
+- **New named session**: `prefix + Ctrl-n`
+- **Quick shell**: `prefix + Ctrl-t`
+
 ### Copy Mode (Vi-style)
+
 - **Enter copy mode**: `prefix + [`
 - **Begin selection**: `v`
 - **Rectangle selection**: `Ctrl-v`
@@ -54,11 +65,13 @@ Terminal multiplexer configuration with vim-style navigation and modern workflow
 ## Installation
 
 1. Install TPM:
+
    ```bash
    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
    ```
 
 2. Symlink config:
+
    ```bash
    ln -sf ~/dotfiles/tmux/.config/tmux ~/.config/
    ```
@@ -78,7 +91,9 @@ Terminal multiplexer configuration with vim-style navigation and modern workflow
 
 ## Workflow Tips
 
-- Use `Ctrl-a + L` to clear screen (preserves tmux history)
+- Use `prefix + r` to reload config
+- Use `prefix + L` to clear screen (preserves tmux history)
+- Killing a session switches to another instead of detaching
 - Windows and panes start at index 1 for easier access
 - Automatic window renumbering keeps indices sequential
 - All splits open in current working directory
@@ -93,7 +108,7 @@ Terminal multiplexer configuration with vim-style navigation and modern workflow
 
 ---
 
-## 🙏 Credits
+## Credits
 
 Created by [**Elliott Minns**](https://github.com/elliottminns)  
 a.k.a **Dreams of Code**  
