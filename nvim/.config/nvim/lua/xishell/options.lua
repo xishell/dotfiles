@@ -31,7 +31,6 @@ o.maxmempattern = 5000
 o.mouse = "a"
 o.number = true
 o.pumblend = 0
-o.nu = true
 o.relativenumber = true
 o.scrolloff = 8
 o.showcmd = true
@@ -69,10 +68,6 @@ o.tabstop = 4
 o.shiftwidth = 4
 o.shiftround = true
 o.expandtab = true
-
--- Disable yank/copy for 'x' and 'X' (backward yank)
-vim.keymap.set("n", "x", '"_x', { noremap = true, silent = true })
-vim.keymap.set("n", "X", '"_X', { noremap = true, silent = true })
 
 -- Language providers
 vim.g.loaded_node_provider = 0

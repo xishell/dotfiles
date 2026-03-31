@@ -1,5 +1,6 @@
 ---@module "lazy"
 ---@type LazySpec
+
 return {
     "folke/snacks.nvim",
     priority = 1000,
@@ -132,15 +133,23 @@ return {
           end,
           desc = "Harpoon Files Only" },
         -- Neorg
-        { "<leader>nn", function() Snacks.picker.files({ cwd = vim.fn.expand("~/notes") }) end, desc = "Find Notes" },
-        { "<leader>nf", function() Snacks.picker.grep({ cwd = vim.fn.expand("~/notes") }) end, desc = "Search Notes" },
-        { "<leader>nw", function() Snacks.picker.files({ cwd = vim.fn.expand("~/notes/work") }) end, desc = "Work Notes" },
-        { "<leader>np", function() Snacks.picker.files({ cwd = vim.fn.expand("~/notes/personal") }) end, desc = "Personal Notes" },
-        -- LSP
-        { "gd",         function() Snacks.picker.lsp_definitions() end,      desc = "Goto Definition" },
-        { "gr",         function() Snacks.picker.lsp_references() end,       nowait = true, desc = "References" },
-        { "gI",         function() Snacks.picker.lsp_implementations() end,  desc = "Goto Implementation" },
-        { "gy",         function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
+        { "<leader>nn", function()
+            local cfg = require("xishell.config")
+            Snacks.picker.files({ cwd = cfg.get_path("notes.dir") })
+          end, desc = "Find Notes" },
+        { "<leader>nf", function()
+            local cfg = require("xishell.config")
+            Snacks.picker.grep({ cwd = cfg.get_path("notes.dir") })
+          end, desc = "Search Notes" },
+        { "<leader>nw", function()
+            local cfg = require("xishell.config")
+            Snacks.picker.files({ cwd = cfg.get_path("notes.work") })
+          end, desc = "Work Notes" },
+        { "<leader>np", function()
+            local cfg = require("xishell.config")
+            Snacks.picker.files({ cwd = cfg.get_path("notes.personal") })
+          end, desc = "Personal Notes" },
+        -- LSP (using picker for multi-result navigation)
         { "<leader>ss", function() Snacks.picker.lsp_symbols() end,          desc = "LSP Symbols" },
         -- stylua: ignore end
     },

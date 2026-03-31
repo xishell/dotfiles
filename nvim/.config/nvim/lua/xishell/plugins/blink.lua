@@ -6,11 +6,17 @@ return {
     version = "*",
     event = { "InsertEnter", "CmdlineEnter" },
 
-    -- dependencies: make LuaSnip a table so version applies to it
     dependencies = {
-      { "L3MON4D3/LuaSnip", version = "v2.*", build = "make install_jsregexp" },
-      -- optional, but nice to have:
-      -- "rafamadriz/friendly-snippets",
+      {
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
+        dependencies = { "rafamadriz/friendly-snippets" },
+        opts = {
+          history = true,
+          delete_check_events = "TextChanged",
+        },
+      },
     },
 
     ---@module 'blink.cmp'
@@ -45,7 +51,7 @@ return {
         },
       },
 
-      -- super-TAB
+      -- super-TAB with smart tabout
       keymap = {
         ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
         ["<C-e>"] = { "hide", "fallback" },
@@ -53,11 +59,43 @@ return {
         ["<Tab>"] = {
           function(cmp) return cmp.select_next() end,
           "snippet_forward",
+          function()
+            -- Smart tabout: only if cursor is after non-whitespace
+            local col = vim.fn.col(".") - 1
+            local line = vim.fn.getline(".")
+            local before_cursor = line:sub(1, col)
+            if before_cursor:match("^%s*$") then
+              -- At beginning/whitespace only: do normal indent
+              return false -- fallback to next action
+            end
+            -- Try tabout
+            local ok, tabout = pcall(require, "tabout")
+            if ok and tabout.tabout then
+              tabout.tabout()
+              return true
+            end
+            return false
+          end,
           "fallback",
         },
         ["<S-Tab>"] = {
           function(cmp) return cmp.select_prev() end,
           "snippet_backward",
+          function()
+            -- Smart tabout backwards: only if cursor is after non-whitespace
+            local col = vim.fn.col(".") - 1
+            local line = vim.fn.getline(".")
+            local before_cursor = line:sub(1, col)
+            if before_cursor:match("^%s*$") then
+              return false -- fallback to normal behavior
+            end
+            local ok, tabout = pcall(require, "tabout")
+            if ok and tabout.taboutBack then
+              tabout.taboutBack()
+              return true
+            end
+            return false
+          end,
           "fallback",
         },
         ["<Up>"] = { "select_prev", "fallback" },
@@ -78,11 +116,21 @@ return {
       -- regular sources stay here
       sources = {
         default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+        -- Add dadbod completion for SQL files
+        per_filetype = {
+          sql = { "dadbod", "buffer" },
+          mysql = { "dadbod", "buffer" },
+          plsql = { "dadbod", "buffer" },
+        },
         providers = {
           lazydev = {
             name = "LazyDev",
             module = "lazydev.integrations.blink",
             score_offset = 100,
+          },
+          dadbod = {
+            name = "Dadbod",
+            module = "vim_dadbod_completion.blink",
           },
           lsp = { min_keyword_length = 2, score_offset = 0 },
           path = { min_keyword_length = 0 },
@@ -110,8 +158,14 @@ return {
     },
 
     config = function(_, opts)
-      -- load VSCode snippets if you use them
-      pcall(function() require("luasnip.loaders.from_vscode").lazy_load() end)
+      -- Load snippets
+      -- VSCode-style snippets (from friendly-snippets)
+      require("luasnip.loaders.from_vscode").lazy_load()
+      -- Custom Lua snippets
+      require("luasnip.loaders.from_lua").lazy_load({
+        paths = { vim.fn.stdpath("config") .. "/lua/xishell/snippets" },
+      })
+
       require("blink.cmp").setup(opts)
     end,
   },

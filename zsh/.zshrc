@@ -18,7 +18,9 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 export PATH="$JAVA_HOME/bin:$PATH"
 export GOBIN="$HOME/.local/bin"
 export PATH="$GOBIN:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 export EDITOR="nvim"
+export PATH="/Users/elliot/.bun/bin:$PATH"
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -136,6 +138,8 @@ alias brewup="brew update && brew upgrade && brew cleanup"
 alias ports="lsof -i -P -n | grep LISTEN"
 alias wx="curl 'wttr.in/?M'"
 
+alias python=python3
+
 # Auto run Todo app
 function show_git_todos() {
   if git rev-parse --show-toplevel >/dev/null 2>&1; then
@@ -174,3 +178,7 @@ eval "$(zoxide init --cmd cd zsh)"
 if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
     exec tmux
 fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

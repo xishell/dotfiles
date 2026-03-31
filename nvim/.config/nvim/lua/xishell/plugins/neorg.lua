@@ -3,6 +3,7 @@ return {
   lazy = false,
   version = "*",
   config = function()
+    local cfg = require("xishell.config")
     require("neorg").setup({
       load = {
         ["core.defaults"] = {},
@@ -10,9 +11,9 @@ return {
         ["core.dirman"] = {
           config = {
             workspaces = {
-              notes = "~/notes",
-              work = "~/notes/work",
-              personal = "~/notes/personal",
+              notes = cfg.get("notes.dir"),
+              work = cfg.get("notes.work"),
+              personal = cfg.get("notes.personal"),
             },
             default_workspace = "notes",
           },

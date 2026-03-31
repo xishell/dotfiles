@@ -28,11 +28,12 @@ return {
         local buf_keymaps = {
           {"n","<leader>ca","<cmd>lua vim.lsp.buf.code_action()<CR>","CodeAction"},
           {"n","<leader>cr","<cmd>lua vim.lsp.buf.rename()<CR>","Rename"},
+          {"n","<leader>cd","<cmd>lua vim.diagnostic.setloclist()<CR>","Document diagnostics"},
+          {"n","<leader>cD","<cmd>lua vim.diagnostic.setqflist()<CR>","Workspace diagnostics"},
           {"n","<leader>q","<cmd>lua vim.diagnostic.setloclist()<CR>","Open diagnostics list"},
           {"n","K","<cmd>lua vim.lsp.buf.hover()<CR>","HoverDocumentation"},
           {"n","[d","<cmd>lua vim.diagnostic.goto_prev()<CR>","Prev diagnostic"},
           {"n","]d","<cmd>lua vim.diagnostic.goto_next()<CR>","Next diagnostic"},
-          {"n","cr","<cmd>lua vim.lsp.buf.rename()<CR>","Rename"},
           {"n","gD","<cmd>lua vim.lsp.buf.declaration()<CR>","GotoDeclaration"},
           {"n","gI","<cmd>lua vim.lsp.buf.incoming_calls()<CR>","IncomingCalls"},
           {"n","gO","<cmd>lua vim.lsp.buf.outgoing_calls()<CR>","OutgoingCalls"},

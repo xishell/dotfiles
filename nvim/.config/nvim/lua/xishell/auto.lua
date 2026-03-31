@@ -35,14 +35,3 @@ vim.api.nvim_create_autocmd("FileType", {
     end)
   end,
 })
-
--- Typst filetype detection
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-  group = augroup("typst_filetype"),
-  pattern = "*.typ",
-  callback = function()
-    vim.bo.filetype = "typst"
-  end,
-})
-
-
