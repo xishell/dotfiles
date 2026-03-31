@@ -32,8 +32,10 @@ return {
 		"jsonlint",
 		"golangci-lint",
 
-		-- Build tools
-		"make",
+		-- Debug adapters
+		"codelldb",
+		"debugpy",
+
 	},
 	auto_update = false,
 	run_on_start = true,

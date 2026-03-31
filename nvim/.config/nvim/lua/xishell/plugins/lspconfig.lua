@@ -30,7 +30,7 @@ return {
           {"n","<leader>cr","<cmd>lua vim.lsp.buf.rename()<CR>","Rename"},
           {"n","<leader>cd","<cmd>lua vim.diagnostic.setloclist()<CR>","Document diagnostics"},
           {"n","<leader>cD","<cmd>lua vim.diagnostic.setqflist()<CR>","Workspace diagnostics"},
-          {"n","<leader>q","<cmd>lua vim.diagnostic.setloclist()<CR>","Open diagnostics list"},
+
           {"n","K","<cmd>lua vim.lsp.buf.hover()<CR>","HoverDocumentation"},
           {"n","[d","<cmd>lua vim.diagnostic.goto_prev()<CR>","Prev diagnostic"},
           {"n","]d","<cmd>lua vim.diagnostic.goto_next()<CR>","Next diagnostic"},
