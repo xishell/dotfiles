@@ -5,7 +5,7 @@ eval "$(direnv hook zsh)"
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-$USER.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-$USER.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-$USER.zsh"
 fi
 
 # Exports
@@ -20,23 +20,25 @@ export GOBIN="$HOME/.local/bin"
 export PATH="$GOBIN:$PATH"
 export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 export EDITOR="nvim"
+export VISUAL="nvim"
 export PATH="/Users/elliot/.bun/bin:$PATH"
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 # Download Zinit, if it's not there yet
 if [ ! -d "$ZINIT_HOME" ] && command -v git >/dev/null 2>&1; then
-   mkdir -p "$(dirname "$ZINIT_HOME")"
-   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    mkdir -p "$(dirname "$ZINIT_HOME")"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
 # Source/Load zinit
 if [ -s "${ZINIT_HOME}/zinit.zsh" ]; then
-  source "${ZINIT_HOME}/zinit.zsh"
+    source "${ZINIT_HOME}/zinit.zsh"
 fi
 
 # Add in powerlevel10k
-zinit ice depth=1; zinit light romkatv/powerlevel10k
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
 
 #eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 export PATH="${PATH}:${HOME}/.local/bin/"
@@ -56,7 +58,7 @@ export PATH="$HOME/htb/tools:$PATH"
 
 # Add homebrew completions to fpath (must be before compinit)
 if type brew &>/dev/null; then
-  fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+    fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 fi
 
 # Add custom completions to fpath BEFORE compinit
@@ -76,9 +78,16 @@ zinit cdreplay -q
 
 setopt EXTENDED_GLOB
 # Keybindings
-bindkey -e
+bindkey -v
+
+# Restore useful keybinds in vi insert mode
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
+
+# Open command in $EDITOR with v from normal mode
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
 
 # History
 HISTSIZE=5000
@@ -106,10 +115,10 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 
-alias ls="eza -G --classify=auto --color=always --icons=always"
-alias lst="eza -GT --classify=auto --color=always --icons=always"
-alias la="eza -Gla --classify=auto --color=always --icons=always"
-alias lat="eza -GlaT --classify=auto --color=always --icons=always"
+alias ls="eza -G --classify=auto --color=auto --icons=auto"
+alias lst="eza -GT --group-directories-first --git-ignore --classify=auto --color=auto --icons=auto"
+alias la="eza -Gla --classify=auto --color=auto --icons=auto"
+alias lat="eza -GTa --classify=auto --color=auto --icons=auto"
 alias vim="nvim"
 alias lg="lazygit"
 alias nvx='NVIM_APPNAME=nvimx nvim'
@@ -127,8 +136,8 @@ alias gl="git log --graph --all --pretty=format:'%C(magenta)%h %C(white) %an  %a
 alias cf="caffeinate"
 
 # IP aliases
-alias vpnip='ifconfig | grep -A 2 "utun" | grep "inet " | awk "{print \$2}" | grep -v "127\." | tail -1'  # generic VPN IP
-alias htbip='ifconfig | grep -A 2 "utun" | grep "inet " | grep "10\.10\." | awk "{print \$2}" | head -1'  # HTB specific
+alias vpnip='ifconfig | grep -A 2 "utun" | grep "inet " | awk "{print \$2}" | grep -v "127\." | tail -1' # generic VPN IP
+alias htbip='ifconfig | grep -A 2 "utun" | grep "inet " | grep "10\.10\." | awk "{print \$2}" | head -1' # HTB specific
 alias htbipc='htbip | pbcopy && htbip'
 alias myip="curl -s ifconfig.me"
 alias localip="ipconfig getifaddr en0"
@@ -142,17 +151,17 @@ alias python=python3
 
 # Auto run Todo app
 function show_git_todos() {
-  if git rev-parse --show-toplevel >/dev/null 2>&1; then
-    local root
-    root=$(git rev-parse --show-toplevel 2>/dev/null)
-    local reponame
-    reponame=$(basename "$root")
-    if [[ -f "$root/todos.json" ]]; then
-      echo "📋 Todos for repo: $reponame"
-      godo --list "$root/todos.json"
-      echo
+    if git rev-parse --show-toplevel >/dev/null 2>&1; then
+        local root
+        root=$(git rev-parse --show-toplevel 2>/dev/null)
+        local reponame
+        reponame=$(basename "$root")
+        if [[ -f "$root/todos.json" ]]; then
+            echo "📋 Todos for repo: $reponame"
+            godo --list "$root/todos.json"
+            echo
+        fi
     fi
-  fi
 }
 
 autoload -U add-zsh-hook
@@ -162,23 +171,33 @@ show_git_todos
 
 # use y with yazi
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
 }
 
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
-# Auto-start tmux
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-    exec tmux
+# Auto-start tmux (skip inside IDE terminals and nested sessions)
+if command -v tmux &>/dev/null && [ -n "$PS1" ] &&
+    [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] &&
+    [ -z "$TMUX" ] && [ -z "$VSCODE_RESOLVING_ENVIRONMENT" ] &&
+    [ -z "$TERMINAL_EMULATOR" ]; then
+    tmux new-session -A -s main
 fi
 
+# Lazy-load nvm — only initializes on first use of node/npm/npx/nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+lazy_load_nvm() {
+    unset -f nvm node npm npx
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+for cmd in nvm node npm npx; do
+    eval "${cmd}() { lazy_load_nvm; ${cmd} \"\$@\"; }"
+done

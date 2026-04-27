@@ -1,0 +1,26 @@
+customCommands:
+  - key: "D"
+    description: "Open gh dash"
+    command: "gh dash"
+    context: "global"
+    subprocess: true
+  - key: "P"
+    description: "Create PR"
+    command: "gh pr create --web"
+    context: "localBranches"
+    subprocess: true
+  - key: "V"
+    description: "View PR for branch"
+    command: "gh pr view --web"
+    context: "localBranches"
+    subprocess: true
+  - key: "F"
+    description: "Fixup commit"
+    command: "git commit --fixup={{.SelectedLocalCommit.Hash}}"
+    context: "commits"
+    loadingText: "Creating fixup commit..."
+  - key: "R"
+    description: "Rebase with autosquash"
+    command: "git rebase -i --autosquash {{.SelectedLocalCommit.Hash}}~1"
+    context: "commits"
+    subprocess: true

@@ -3,42 +3,41 @@ source "$CONFIG_DIR/colors.sh"
 ITEM_DIR="$CONFIG_DIR/items"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
-FONT="SF Pro"
-ICON_FONT="SF Mono"
+FONT="FiraCode Nerd Font"
 PADDINGS=3
 
 bar=(
-  height=30
+  height=32
   color=$BAR_COLOR
-  shadow=on
   position=top
   sticky=on
-  padding_right=10
-  padding_left=10
-  corner_radius=9
-  y_offset=5
-  margin=5
-  blur_radius=20
-  notch_width=0
+  padding_right=12
+  padding_left=12
+  corner_radius=0
+  y_offset=0
+  margin=0
+  blur_radius=30
+  notch_width=200
+  shadow=off
+  topmost=window
 )
 
 sketchybar --bar "${bar[@]}"
 
-# Setting up default values
 defaults=(
   updates=when_shown
-  icon.font="$FONT:Regular:14.0"
+  icon.font="$FONT:Medium:14.0"
   icon.color=$ICON_COLOR
   icon.padding_left=$PADDINGS
   icon.padding_right=$PADDINGS
-  label.font="$FONT:Semibold:13.0"
+  label.font="$FONT:Medium:13.0"
   label.color=$LABEL_COLOR
   label.padding_left=$PADDINGS
   label.padding_right=$PADDINGS
   padding_right=$PADDINGS
   padding_left=$PADDINGS
-  background.height=30
-  background.corner_radius=9
+  background.height=28
+  background.corner_radius=8
   popup.background.border_width=2
   popup.background.corner_radius=9
   popup.background.border_color=$POPUP_BORDER_COLOR
@@ -48,13 +47,15 @@ defaults=(
 )
 
 sketchybar --default "${defaults[@]}"
-# Left
-source "$ITEM_DIR/apple.sh"
 
-# Right
-source "$ITEM_DIR/calendar.sh"
+# Left
+source "$ITEM_DIR/spaces.sh"
+
+# Right (order is right-to-left)
+source "$ITEM_DIR/control_center.sh"
+source "$ITEM_DIR/clock.sh"
 source "$ITEM_DIR/battery.sh"
-source "$ITEM_DIR/volume.sh"
-source "$ITEM_DIR/layout.sh"
-##### Force all scripts to run the first time (never do this in a script) #####
+source "$ITEM_DIR/network.sh"
+source "$ITEM_DIR/spotify.sh"
+
 sketchybar --update

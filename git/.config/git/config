@@ -23,6 +23,12 @@
     compression = 9
     whitespace = error
     preloadindex = true
+    pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    side-by-side = true
 [init]
 	defaultBranch = main
 [push]
@@ -50,10 +56,6 @@
     context = 3
     renames = copies
     interHunkContext = 10
-[pager]
-    diff = diff-so-fancy | $PAGER
-[diff-so-fancy]
-    markEmptyLines = false
 [url "git@github.com:xishell/"]
     insteadOf = "xi:"
 [url "git@github.com:"]

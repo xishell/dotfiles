@@ -22,11 +22,15 @@ return {
       local disabled_ft = cfg.get("format_disabled_ft") or {}
 
       -- Prettier-based filetypes (DRY)
+      local biome = { "biome", "prettierd", "prettier", stop_after_first = true }
+      local biome_fts = {
+        "javascript", "typescript", "javascriptreact", "typescriptreact",
+        "vue", "svelte", "css", "json", "jsonc",
+      }
       local prettier = { "prettierd", "prettier", stop_after_first = true }
       local prettier_fts = {
-        "javascript", "typescript", "javascriptreact", "typescriptreact",
-        "vue", "svelte", "css", "scss", "less", "html",
-        "json", "jsonc", "yaml", "markdown", "markdown.mdx",
+        "scss", "less", "html",
+        "yaml", "markdown", "markdown.mdx",
       }
 
       local formatters_by_ft = {
@@ -34,7 +38,7 @@ return {
         sh = { "shfmt" },
         bash = { "shfmt" },
         zsh = { "shfmt" },
-        python = { "isort", "black" },
+        python = { "ruff_fix", "ruff_format" },
         c = { "clang-format" },
         cpp = { "clang-format" },
         java = { "google-java-format" },
@@ -44,7 +48,11 @@ return {
         sql = { "sql-formatter" },
       }
 
-      -- Add prettier filetypes
+      -- Add biome filetypes (falls back to prettier if no biome config found)
+      for _, ft in ipairs(biome_fts) do
+        formatters_by_ft[ft] = biome
+      end
+      -- Add prettier-only filetypes
       for _, ft in ipairs(prettier_fts) do
         formatters_by_ft[ft] = prettier
       end

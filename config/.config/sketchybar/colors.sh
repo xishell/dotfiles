@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Color Palette
+# Color Palette (Catppuccin Macchiato)
 export BLACK=0xff181926
 export WHITE=0xffcad3f5
 export RED=0xffed8796
@@ -13,9 +13,9 @@ export GREY=0xff939ab7
 export TRANSPARENT=0x00000000
 
 # General bar colors
-export BAR_COLOR=0xa024273a
-export ICON_COLOR=$WHITE # Color of all icons
-export LABEL_COLOR=$WHITE # Color of all labels
+export BAR_COLOR=0xd0181926
+export ICON_COLOR=$WHITE
+export LABEL_COLOR=$WHITE
 export BACKGROUND_1=0x903c3e4f
 export BACKGROUND_2=0x90494d64
 
@@ -23,3 +23,7 @@ export POPUP_BACKGROUND_COLOR=0xff24273a
 export POPUP_BORDER_COLOR=$WHITE
 
 export SHADOW_COLOR=$BLACK
+
+# Workspace colors
+export SPACE_ACTIVE=$BLUE
+export SPACE_INACTIVE=$GREY

@@ -69,6 +69,9 @@ o.shiftwidth = 4
 o.shiftround = true
 o.expandtab = true
 
+-- Editorconfig
+g.editorconfig = true
+
 -- Language providers
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0

@@ -136,6 +136,23 @@ return {
           })
         end,
 
+        ltex = function()
+          lspconfig.ltex.setup({
+            capabilities = capabilities,
+            cmd_env = {
+              JAVA_OPTS = "-Djdk.xml.totalEntitySizeLimit=0",
+            },
+            settings = {
+              ltex = {
+                disabledRules = {
+                  ["en-US"] = { "MORFOLOGIK_RULE_EN_US" },
+                  ["en"]    = { "MORFOLOGIK_RULE_EN" },
+                },
+              },
+            },
+          })
+        end,
+
 
       },
     })
