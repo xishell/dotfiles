@@ -1,0 +1,104 @@
+/* Tokyo Night Theme for Hyprlauncher */
+
+/* Main window */
+window {
+  background-color: #1a1b26;
+  border-radius: 10px;
+  border: 2px solid #7aa2f7;
+}
+
+/* Search entry field */
+entry {
+  margin: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background-color: #1f2335;
+  color: #c0caf5;
+  caret-color: #7aa2f7;
+  font-size: 14px;
+  font-family: "FiraCode Nerd Font", monospace;
+  border: 1px solid #414868;
+  transition: all 200ms ease;
+}
+
+entry:focus {
+  background-color: #24283b;
+  border-color: #7aa2f7;
+  box-shadow: 0 0 8px rgba(122, 162, 247, 0.3);
+}
+
+/* List view container */
+listview {
+  background: transparent;
+  padding: 0 8px 8px 8px;
+}
+
+/* Individual list items */
+listview > row {
+  padding: 10px 12px;
+  margin: 2px 4px;
+  border-radius: 6px;
+  background: transparent;
+  transition: all 150ms ease;
+  border: 1px solid transparent;
+}
+
+listview > row:hover {
+  background-color: #24283b;
+  border-color: #414868;
+}
+
+listview > row:selected {
+  background-color: #7aa2f7;
+  border-color: #7aa2f7;
+}
+
+/* App name styling */
+.app-name {
+  color: #c0caf5;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "FiraCode Nerd Font", monospace;
+}
+
+listview > row:selected .app-name {
+  color: #1a1b26;
+  font-weight: 700;
+}
+
+/* App description styling */
+.app-description {
+  color: #565f89;
+  font-size: 11px;
+  font-family: "FiraCode Nerd Font", monospace;
+  margin-top: 2px;
+}
+
+listview > row:selected .app-description {
+  color: #1a1b26;
+  opacity: 0.8;
+}
+
+/* App path styling */
+.app-path {
+  color: #414868;
+  font-size: 11px;
+  font-family: "FiraCode Nerd Font", monospace;
+}
+
+listview > row:selected .app-path {
+  color: #1a1b26;
+  opacity: 0.7;
+}
+
+/* Icon styling */
+image {
+  margin-right: 10px;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 2px;
+}
+
+listview > row:selected image {
+  opacity: 0.95;
+}

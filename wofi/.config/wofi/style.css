@@ -1,0 +1,78 @@
+/* Tokyo Night Theme for Wofi */
+
+* {
+  font-family: "FiraCode Nerd Font", monospace;
+  font-size: 13px;
+}
+
+window {
+  margin: 0px;
+  border: 2px solid #7aa2f7;
+  border-radius: 10px;
+  background-color: #1a1b26;
+}
+
+#input {
+  margin: 12px;
+  padding: 10px 14px;
+  border: 1px solid #414868;
+  border-radius: 8px;
+  background-color: #1f2335;
+  color: #c0caf5;
+  caret-color: #7aa2f7;
+}
+
+#input:focus {
+  border-color: #7aa2f7;
+  box-shadow: 0 0 8px rgba(122, 162, 247, 0.3);
+}
+
+#inner-box {
+  margin: 0px;
+  padding: 0px 8px 8px 8px;
+  background-color: transparent;
+}
+
+#outer-box {
+  margin: 0px;
+  padding: 0px;
+  background-color: transparent;
+}
+
+#scroll {
+  margin: 0px;
+  padding: 0px;
+}
+
+#text {
+  margin: 0px;
+  padding: 0px;
+  color: #c0caf5;
+}
+
+#entry {
+  margin: 2px 4px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-color: transparent;
+}
+
+#entry:hover {
+  background-color: #24283b;
+  border-color: #414868;
+}
+
+#entry:selected {
+  background-color: #7aa2f7;
+  border-color: #7aa2f7;
+}
+
+#entry:selected #text {
+  color: #1a1b26;
+  font-weight: 700;
+}
+
+#entry image {
+  margin-right: 8px;
+}

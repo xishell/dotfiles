@@ -1,0 +1,309 @@
+# Alacritty Configuration
+# See: https://alacritty.org/config-alacritty.html
+
+# Import additional config files (optional)
+# import = ["~/.config/alacritty/themes/catppuccin.toml"]
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+# Window dimensions
+dimensions = { columns = 120, lines = 30 }
+
+# Window padding
+padding = { x = 8, y = 0 }
+
+# Spread additional padding evenly around the terminal content
+dynamic_padding = false
+
+# Window decorations
+decorations = "Full"  # Full, None, Transparent, Buttonless
+
+# Background opacity (0.0 - 1.0)
+opacity = 0.95
+
+# Startup mode
+# startup_mode = "Windowed"  # Windowed, Maximized, Fullscreen
+
+# Window title
+title = "Alacritty"
+
+# Allow terminal applications to change Alacritty's window title
+dynamic_title = true
+
+# Window class (Linux/BSD only)
+[window.class]
+instance = "Alacritty"
+general = "Alacritty"
+
+[scrolling]
+# Maximum number of lines in the scrollback buffer
+history = 10000
+
+# Scrolling distance multiplier
+multiplier = 3
+
+[font]
+# Font family
+normal = { family = "FiraCode Nerd Font", style = "Regular" }
+bold = { family = "FiraCode Nerd Font", style = "Bold" }
+italic = { family = "FiraCode Nerd Font", style = "Italic" }
+bold_italic = { family = "FiraCode Nerd Font", style = "Bold Italic" }
+
+# Font size in points
+size = 11.0
+
+# Offset is the extra space around each character
+offset = { x = 0, y = 0 }
+
+# Glyph offset determines the locations of the glyphs within their cells
+glyph_offset = { x = 0, y = 0 }
+
+# Use built-in font for box drawing characters
+builtin_box_drawing = true
+
+[colors]
+# Color scheme: Tokyo Night
+# You can change this to any color scheme you prefer
+
+[colors.primary]
+background = "#1a1b26"
+foreground = "#c0caf5"
+dim_foreground = "#565f89"
+bright_foreground = "#c0caf5"
+
+[colors.cursor]
+text = "#1a1b26"
+cursor = "#c0caf5"
+
+[colors.vi_mode_cursor]
+text = "#1a1b26"
+cursor = "#7aa2f7"
+
+[colors.search.matches]
+foreground = "#1a1b26"
+background = "#3d59a1"
+
+[colors.search.focused_match]
+foreground = "#1a1b26"
+background = "#9ece6a"
+
+[colors.footer_bar]
+foreground = "#c0caf5"
+background = "#1f2335"
+
+[colors.hints.start]
+foreground = "#1a1b26"
+background = "#e0af68"
+
+[colors.hints.end]
+foreground = "#1a1b26"
+background = "#3d59a1"
+
+[colors.selection]
+text = "#c0caf5"
+background = "#283457"
+
+[colors.normal]
+black = "#15161e"
+red = "#f7768e"
+green = "#9ece6a"
+yellow = "#e0af68"
+blue = "#7aa2f7"
+magenta = "#bb9af7"
+cyan = "#7dcfff"
+white = "#a9b1d6"
+
+[colors.bright]
+black = "#414868"
+red = "#f7768e"
+green = "#9ece6a"
+yellow = "#e0af68"
+blue = "#7aa2f7"
+magenta = "#bb9af7"
+cyan = "#7dcfff"
+white = "#c0caf5"
+
+[colors.dim]
+black = "#15161e"
+red = "#f7768e"
+green = "#9ece6a"
+yellow = "#e0af68"
+blue = "#7aa2f7"
+magenta = "#bb9af7"
+cyan = "#7dcfff"
+white = "#a9b1d6"
+
+[cursor]
+# Cursor style
+style = { shape = "Block", blinking = "On" }  # Block, Underline, Beam
+
+# Vi mode cursor style
+vi_mode_style = { shape = "Block", blinking = "Off" }
+
+# Cursor blinking interval in milliseconds
+blink_interval = 750
+
+# Time after which cursor stops blinking (in seconds)
+blink_timeout = 5
+
+# If true, the cursor will be rendered as a hollow box when unfocused
+unfocused_hollow = true
+
+# Thickness of the cursor relative to cell width (beam and underline only)
+thickness = 0.15
+
+[mouse]
+# Hide mouse cursor when typing
+hide_when_typing = true
+
+[hints]
+# Terminal hints (URL launcher)
+enabled = [
+  { regex = "(https?|ftp|file|git|ssh)://[^\\s<>\"{}|\\\\^`]+", command = "xdg-open", post_processing = true, mouse.enabled = true }
+]
+
+[selection]
+# Characters that are used as word separators for quick selection
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+
+# When set to true, selected text will be copied to the primary clipboard
+save_to_clipboard = true
+
+[bell]
+# Visual bell animation
+animation = "EaseOutExpo"  # Ease, EaseOut, EaseOutSine, EaseOutQuad, EaseOutCubic, EaseOutQuart, EaseOutQuint, EaseOutExpo, EaseOutCirc, Linear
+
+# Duration of the visual bell flash in milliseconds
+duration = 0
+
+# Visual bell color
+color = "#ffffff"
+
+# Bell command to run on bell
+# command = { program = "notify-send", args = ["Bell!"] }
+
+#################
+### KEYBINDINGS ###
+#################
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001b\r"
+
+# Copy/Paste
+[[keyboard.bindings]]
+key = "C"
+mods = "Control|Shift"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Control|Shift"
+action = "Paste"
+
+# Font size adjustment
+[[keyboard.bindings]]
+key = "Plus"
+mods = "Control"
+action = "IncreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Minus"
+mods = "Control"
+action = "DecreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Key0"
+mods = "Control"
+action = "ResetFontSize"
+
+# Vi mode
+[[keyboard.bindings]]
+key = "Space"
+mods = "Control|Shift"
+mode = "~Search"
+action = "ToggleViMode"
+
+# Search mode
+[[keyboard.bindings]]
+key = "F"
+mods = "Control|Shift"
+action = "SearchForward"
+
+[[keyboard.bindings]]
+key = "B"
+mods = "Control|Shift"
+action = "SearchBackward"
+
+# Clear screen and scrollback
+[[keyboard.bindings]]
+key = "K"
+mods = "Control|Shift"
+action = "ClearHistory"
+
+[[keyboard.bindings]]
+key = "K"
+mods = "Control|Shift"
+chars = "\f"
+
+# New window (same directory)
+[[keyboard.bindings]]
+key = "Return"
+mods = "Control|Shift"
+action = "SpawnNewInstance"
+
+# Scrolling
+[[keyboard.bindings]]
+key = "PageUp"
+mods = "Shift"
+action = "ScrollPageUp"
+
+[[keyboard.bindings]]
+key = "PageDown"
+mods = "Shift"
+action = "ScrollPageDown"
+
+[[keyboard.bindings]]
+key = "Home"
+mods = "Shift"
+action = "ScrollToTop"
+
+[[keyboard.bindings]]
+key = "End"
+mods = "Shift"
+action = "ScrollToBottom"
+
+# Vi mode navigation (when in vi mode)
+[[keyboard.bindings]]
+key = "K"
+mode = "Vi|~Search"
+action = "Up"
+
+[[keyboard.bindings]]
+key = "J"
+mode = "Vi|~Search"
+action = "Down"
+
+[[keyboard.bindings]]
+key = "H"
+mode = "Vi|~Search"
+action = "Left"
+
+[[keyboard.bindings]]
+key = "L"
+mode = "Vi|~Search"
+action = "Right"
+
+[[keyboard.bindings]]
+key = "G"
+mode = "Vi|~Search"
+action = "ScrollToTop"
+
+[[keyboard.bindings]]
+key = "G"
+mods = "Shift"
+mode = "Vi|~Search"
+action = "ScrollToBottom"

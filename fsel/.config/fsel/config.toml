@@ -1,0 +1,30 @@
+# Tokyo Night theme for fsel
+highlight_color = "rgb(122,162,247)"
+cursor = "█"
+terminal_launcher = "alacritty -e"
+hard_stop = false
+pin_color = "rgb(224,175,104)"
+pin_icon = "📌"
+
+# UI Customization
+rounded_borders = true
+
+# Border Colors - Tokyo Night comment/dark
+main_border_color = "rgb(86,95,137)"
+apps_border_color = "rgb(86,95,137)"
+input_border_color = "rgb(86,95,137)"
+
+# Text Colors - Tokyo Night foreground
+main_text_color = "rgb(192,202,245)"
+apps_text_color = "rgb(169,177,214)"
+input_text_color = "rgb(192,202,245)"
+
+# Fancy Mode
+fancy_mode = true
+
+# Header title color - Tokyo Night green
+header_title_color = "rgb(158,206,106)"
+
+# Layout Configuration
+title_panel_height_percent = 30
+input_panel_height = 3

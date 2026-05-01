@@ -1,0 +1,130 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 34,
+  "spacing": 6,
+  "margin-top": 0,
+  "margin-left": 0,
+  "margin-right": 0,
+
+  "modules-left": [
+    "hyprland/workspaces",
+    "hyprland/window"
+  ],
+
+  "modules-center": [
+    "clock"
+  ],
+
+  "modules-right": [
+    "network",
+    "pulseaudio",
+    "cpu",
+    "memory",
+    "temperature",
+    "idle_inhibitor",
+    "tray"
+  ],
+
+  "hyprland/workspaces": {
+    "disable-scroll": false,
+    "all-outputs": true,
+    "on-click": "activate",
+    "format": "{icon}",
+    "format-icons": {
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "urgent": "!",
+      "focused": "*",
+      "default": "o"
+    },
+    "persistent-workspaces": {
+      "*": 5
+    }
+  },
+
+  "hyprland/window": {
+    "format": "{}",
+    "max-length": 50,
+    "separate-outputs": true
+  },
+
+  "clock": {
+    "timezone": "Europe/Stockholm",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "format": "{:%a %b %d  %H:%M}",
+    "format-alt": "{:%Y-%m-%d %H:%M:%S}"
+  },
+
+  "idle_inhibitor": {
+    "format": "<span size='x-large'>{icon}</span>",
+    "format-icons": {
+      "activated": "󰒳",
+      "deactivated": "󰒲"
+    },
+    "markup": true,
+    "tooltip-format-activated": "Idle inhibitor: ON",
+    "tooltip-format-deactivated": "Idle inhibitor: OFF"
+  },
+
+  "temperature": {
+    "critical-threshold": 80,
+    "format": "<span size='x-large'>󰔏</span> {temperatureC}C",
+    "format-critical": "<span size='x-large'>󰔏</span> {temperatureC}C",
+    "markup": true,
+    "tooltip-format": "Temperature: {temperatureC}C"
+  },
+
+  "cpu": {
+    "format": "<span size='x-large'>󰍛</span> {usage}%",
+    "markup": true,
+    "tooltip-format": "CPU: {usage}%\nLoad: {load}",
+    "interval": 2,
+    "on-click": "alacritty -e btop"
+  },
+
+  "memory": {
+    "format": "<span size='x-large'></span> {}%",
+    "markup": true,
+    "tooltip-format": "Memory: {used:0.1f}G / {total:0.1f}G\nSwap: {swapUsed:0.1f}G / {swapTotal:0.1f}G",
+    "interval": 5,
+    "on-click": "alacritty -e btop"
+  },
+
+  "network": {
+    "format-wifi": "<span size='x-large'>󰤨</span> {signalStrength}%",
+    "format-ethernet": "<span size='x-large'>󰈀</span>",
+    "tooltip-format": "{ifname}\n{ipaddr}/{cidr}\nSignal: {signalStrength}%\nESSID: {essid}",
+    "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}\nSpeed: {bandwidthUpBits} up {bandwidthDownBits} down",
+    "format-linked": "<span size='x-large'>󰤩</span> {ifname}",
+    "format-disconnected": "<span size='x-large'>󰤭</span>",
+    "format-alt": "<span size='x-large'>󰤨</span> {essid}",
+    "markup": true,
+    "on-click-right": "nm-connection-editor"
+  },
+
+  "pulseaudio": {
+    "format": "<span size='x-large'></span> {volume}%",
+    "format-bluetooth": "<span size='x-large'></span> {volume}%",
+    "format-bluetooth-muted": "<span size='x-large'></span> <span size='x-large'>󰖁</span>",
+    "format-muted": "<span size='x-large'>󰖁</span>",
+    "markup": true,
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+    "tooltip-format": "{desc}\nVolume: {volume}%"
+  },
+
+  "tray": {
+    "icon-size": 16,
+    "spacing": 10
+  }
+}
