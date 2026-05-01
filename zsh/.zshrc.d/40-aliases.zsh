@@ -35,4 +35,6 @@ alias brewup="brew update && brew upgrade && brew cleanup"
 alias ports="lsof -i -P -n | grep LISTEN"
 alias wx="curl 'wttr.in/?M'"
 
+alias get_idf='. $HOME/esp/esp-idf/export.sh'
+
 alias python=python3
