@@ -1,0 +1,16 @@
+#!/bin/bash
+# cheat.sh lookup
+# Usage: cht <query>  e.g. cht c/printf, cht python/lambda, cht tar
+
+query="$*"
+
+if [ -z "$query" ]; then
+    echo "Usage: cht <query>"
+    echo "Examples: cht c/printf, cht python/lambda, cht tar"
+    read -r _
+    exit 1
+fi
+
+curl -s "cheat.sh/$query"
+read -r -p "
+Press Enter to exit" _

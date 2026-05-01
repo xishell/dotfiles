@@ -1,0 +1,6 @@
+[Unit]
+Description=Update weather cache from wttr.in
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/wttr-cache

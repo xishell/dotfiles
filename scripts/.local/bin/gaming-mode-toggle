@@ -1,0 +1,11 @@
+#!/bin/bash
+# Toggle between gaming mode and desktop mode
+
+# Check if HDMI monitor is currently enabled
+if hyprctl monitors | grep -q "Monitor HDMI-A-1.*disabled: false"; then
+    # HDMI is enabled, switch to desktop mode
+    gaming-mode-disable
+else
+    # HDMI is disabled, switch to gaming mode
+    gaming-mode-enable
+fi

@@ -1,0 +1,20 @@
+#!/bin/bash
+# Enable gaming mode: Activate TV and launch Steam Big Picture
+
+# Enable and configure the HDMI TV
+hyprctl keyword monitor "HDMI-A-1, 3840x2160@60, 0x0, 1"
+hyprctl keyword monitor "DP-1, 3440x1440@160, 3840x0, 1"
+
+# Wait for monitor configuration to apply
+sleep 1
+
+# Move to workspace 1 on the TV
+hyprctl dispatch focusmonitor HDMI-A-1
+hyprctl dispatch workspace 1
+
+# Launch Steam in Big Picture mode
+if command -v steam >/dev/null 2>&1; then
+    steam -bigpicture &
+else
+    notify-send "Gaming Mode" "Steam not found in PATH" -u critical
+fi

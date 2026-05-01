@@ -1,0 +1,6 @@
+#!/bin/sh
+# Cache weather data from wttr.in
+# Run periodically via systemd timer or cron
+cache="$HOME/.cache/wttr.txt"
+weather=$(curl -s --max-time 5 "wttr.in/?format=%c+%t+%w+%p&M")
+[ -n "$weather" ] && echo "$weather" > "$cache"

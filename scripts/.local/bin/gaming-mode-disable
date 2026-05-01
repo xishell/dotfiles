@@ -1,0 +1,18 @@
+#!/bin/bash
+# Disable gaming mode: Return to normal desktop setup
+
+# Close Steam if running
+pkill -f "steam.*bigpicture" || pkill steam
+
+# Wait a moment for Steam to close
+sleep 1
+
+# Restore original monitor configuration
+hyprctl keyword monitor "DP-1, 3440x1440@160, 0x0, 1"
+hyprctl keyword monitor "HDMI-A-1, disable"
+
+# Focus the main monitor
+hyprctl dispatch focusmonitor DP-1
+hyprctl dispatch workspace 1
+
+notify-send "Gaming Mode" "Disabled - Back to desktop" -t 3000
