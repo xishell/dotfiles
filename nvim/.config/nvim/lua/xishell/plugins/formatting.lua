@@ -83,8 +83,7 @@ return {
             prepend_args = { "--style={IndentWidth: 4, TabWidth: 4, UseTab: Never}" },
           },
           ["google-java-format"] = {
-            -- example: set style (leave empty to use default)
-            -- prepend_args = { "--aosp" },
+            prepend_args = { "--aosp" },
           },
         },
       }

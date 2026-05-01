@@ -4,3 +4,4 @@
 (^|/)LICENSE$
 (^|/)\.stow(rc|\-local\-ignore)$
 (^|/)bootstrap\.sh$
+(^|/)\.github(/|$)
