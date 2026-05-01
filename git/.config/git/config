@@ -13,10 +13,12 @@
 	email = 26227374+xishell@users.noreply.github.com
 	name = XiShell
     signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILseAsE+/F335EtsqPL/WV3Jo12iGKJuv5QAo5NQEW63
+[includeIf "hasconfig:remote.*.url:*gits-15.sys.kth.se*"]
+    path = ~/.gitconfig-kth
+[include]
+    path = ~/.config/git/config.local
 [gpg]
 	format = ssh
-[gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 [commit]
 	gpgsign = true
 [core]
@@ -48,6 +50,8 @@
 [rebase]
     autoStash = true
     missingCommitsCheck = warn
+[rerere]
+    enabled = true
 [status]
     branch = true
     showStash = true
