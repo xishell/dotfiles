@@ -11,7 +11,7 @@
     remoteBranch = magenta
 [user]
 	email = 26227374+xishell@users.noreply.github.com
-	name = XiShell
+	name = xishell
     signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILseAsE+/F335EtsqPL/WV3Jo12iGKJuv5QAo5NQEW63
 [includeIf "hasconfig:remote.*.url:*gits-15.sys.kth.se*"]
     path = ~/.gitconfig-kth
@@ -36,7 +36,7 @@
 [init]
 	defaultBranch = main
 [push]
-    autoSetupRemote = true
+	autoSetupRemote = true
     default = current
     followTags = true
 [pull]
