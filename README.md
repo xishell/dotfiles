@@ -70,9 +70,6 @@ OS-specific bits go under `os.darwin/` or `os.linux/`.
 `~/.gitconfig-kth`, and `~/.config/git/config.local` is included unconditionally
 for host-local overrides. Neither file is tracked here.
 
-**Commits** follow Conventional Commits. Lowercase, imperative, ≤72 chars.
-No `Co-Authored-By` trailers.
-
 ## Subdirectory READMEs
 
 A few packages have their own notes:
