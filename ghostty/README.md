@@ -1,37 +1,19 @@
-# Ghostty Terminal Configuration
+# ghostty
 
-Modern GPU-accelerated terminal emulator configuration.
+Tokyo Night, FiraCode Nerd Font 14pt, block cursor (no blink), copy-on-select.
 
-## Features
+`Cmd+\`` toggles the global quick terminal (needs macOS Accessibility
+permission). `Left Option` is mapped to Alt so meta-keybinds work in zsh and
+nvim.
 
-- **Theme**: Tokyo Night theme for consistent dark aesthetics
-- **Font**: FiraCode Nerd Font with ligatures and icon support
-- **Performance**: GPU acceleration for smooth rendering
-- **Productivity**: Quick terminal toggle and optimized keybinds
+Tab keybinds (`Cmd+T`, `Cmd+W`, `Cmd+Shift+[/]`) are unbound. I drive tabs from
+tmux, not Ghostty.
 
-## Key Settings
+## Install
 
-- Font size: 14pt for optimal readability
-- Block cursor without blinking for focus
-- Balanced window padding (6px)
-- Mouse hides while typing for clean experience
-- Copy-on-select for convenient text copying
-- No confirmation on close for reduced friction
+```sh
+stow ghostty       # from ~/dotfiles
+```
 
-## Installation
-
-1. Install Ghostty terminal
-2. Install FiraCode Nerd Font
-3. Symlink config: `ln -sf ~/dotfiles/ghostty/.config/ghostty ~/.config/`
-4. Grant Accessibility permissions for global quick terminal
-
-## Quick Terminal
-
-- **Toggle**: `Cmd + \`` (backtick)
-- Requires Accessibility permissions in System Preferences
-
-## Keybinds
-
-- Tab management disabled (Cmd+T, Cmd+W, etc.)
-- Uses native macOS shortcuts where possible
-- Left Option key acts as Alt
+Symlinks `.config/ghostty/` into `~/.config/`. Install FiraCode Nerd Font
+separately (`brew install --cask font-fira-code-nerd-font`).

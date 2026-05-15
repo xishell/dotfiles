@@ -1,115 +1,71 @@
-# Tmux Configuration
+# tmux
 
-Terminal multiplexer configuration with vim-style navigation and modern workflow enhancements.
+Prefix is `C-a`. Vim-style splits, OSC 52 clipboard, kitty graphics
+passthrough, and a handful of `display-popup` shortcuts.
 
-## Features
+## Keybinds
 
-- **Vim integration**: Seamless navigation between tmux panes and vim splits
-- **Modern keybinds**: Intuitive pane splitting and window management
-- **Tokyo Night theme**: Consistent dark aesthetics with customizations
-- **Plugin system**: TPM (Tmux Plugin Manager) with essential plugins
+Prefix: `C-a` (also sent through with `C-a C-a`).
 
-## Key Bindings
+| Key | Action |
+|---|---|
+| `C-h/j/k/l` | Move between panes and vim splits (vim-tmux-navigator) |
+| `prefix -` / `\|` | Split horizontal / vertical, inherits cwd |
+| `prefix c` | New window, inherits cwd |
+| `prefix h` / `l` | Previous / next window |
+| `prefix ←↑↓→` | Resize pane by 5 |
+| `prefix x` / `&` | Kill pane / window |
+| `prefix r` | Reload config |
+| `prefix L` | Send `^L` (C-l is taken by vim-tmux-navigator) |
 
-### Prefix Key
+### Popups
 
-- **Prefix**: `Ctrl-a` (instead of default Ctrl-b)
+| Key | Opens |
+|---|---|
+| `prefix C-y` | lazygit |
+| `prefix C-g` | `gh dash` |
+| `prefix C-j` | fzf session switcher |
+| `prefix C-n` | New named session |
+| `prefix C-t` | Throwaway shell |
+| `prefix C-p` | `spotify_player` |
 
-### Pane Navigation
+### Copy mode (vi)
 
-- **Ctrl + h/j/k/l**: Navigate panes seamlessly across tmux and vim (via vim-tmux-navigator)
+`prefix [` to enter. `v` selects, `C-v` rectangle, `y` copies and exits.
+Clipboard goes through OSC 52 (`set-clipboard on`) so yank works over SSH.
 
-### Window Management
+## Notable settings
 
-- **Shift + arrows**: Switch windows
-- **Alt + H/L**: Switch windows (vim-style)
-
-### Pane Management
-
-- **Split vertical**: `prefix + |`
-- **Split horizontal**: `prefix + -`
-- **Resize pane**: `prefix + arrow keys` (5 lines at a time)
-- **New window**: `prefix + c` (opens in current directory)
-- **Kill pane**: `prefix + x`
-- **Kill window**: `prefix + &`
-
-### Pop-up Windows
-
-- **Lazygit**: `prefix + Ctrl-y`
-- **Session switcher (fzf)**: `prefix + Ctrl-j`
-- **New named session**: `prefix + Ctrl-n`
-- **Quick shell**: `prefix + Ctrl-t`
-
-### Copy Mode (Vi-style)
-
-- **Enter copy mode**: `prefix + [`
-- **Begin selection**: `v`
-- **Rectangle selection**: `Ctrl-v`
-- **Copy selection**: `y`
+- `escape-time 0` so `<Esc>` and `C-hjkl` feel instant in nvim
+- `detach-on-destroy off` — killing the last session switches to another
+- `base-index 1`, `pane-base-index 1`, `renumber-windows on`
+- `allow-passthrough on` for kitty graphics
+- `focus-events on` for nvim autoread
 
 ## Plugins
 
-- **TPM**: Plugin manager
-- **tmux-sensible**: Sensible default settings
-- **vim-tmux-navigator**: Seamless vim/tmux navigation
-- **tokyo-night-tmux**: Dark theme with customizations
-- **tmux-yank**: Enhanced copy/paste functionality
+Managed by [TPM](https://github.com/tmux-plugins/tpm). After first stow:
 
-## Theme Customization
+```sh
+git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+tmux source-file ~/.config/tmux/tmux.conf
+# prefix + I to install plugins
+```
 
-- Path display: Enabled (relative format)
-- Window ID style: Double square brackets
-- Git integration: Disabled
-- DateTime: Disabled for clean status bar
+- [tmux-sensible](https://github.com/tmux-plugins/tmux-sensible)
+- [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator)
+- [tokyo-night-tmux](https://github.com/janoamaral/tokyo-night-tmux) — datetime/git
+  disabled, paths shown in relative form
+- [tmux-yank](https://github.com/tmux-plugins/tmux-yank)
 
-## Installation
+## Install
 
-1. Install TPM:
-
-   ```bash
-   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-   ```
-
-2. Symlink config:
-
-   ```bash
-   ln -sf ~/dotfiles/tmux/.config/tmux ~/.config/
-   ```
-
-3. Reload tmux and install plugins:
-   ```bash
-   tmux source-file ~/.config/tmux/tmux.conf
-   # Press prefix + I to install plugins
-   ```
-
-## Performance Optimizations
-
-- **Escape time**: 0ms for instant vim responsiveness
-- **Focus events**: Enabled for better vim integration
-- **True color**: Full 24-bit color support
-- **Mouse support**: Enabled for modern workflow
-
-## Workflow Tips
-
-- Use `prefix + r` to reload config
-- Use `prefix + L` to clear screen (preserves tmux history)
-- Killing a session switches to another instead of detaching
-- Windows and panes start at index 1 for easier access
-- Automatic window renumbering keeps indices sequential
-- All splits open in current working directory
-
-## Plugins Used
-
-- [tmux-plugins/tpm](https://github.com/tmux-plugins/tpm) – plugin manager
-- [tmux-plugins/tmux-sensible](https://github.com/tmux-plugins/tmux-sensible) – sane defaults
-- [christoomey/vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) – move between Vim & tmux panes
-- [janoamaral/tokyo-night-tmux](https://github.com/janoamaral/tokyo-night-tmux) – Tokyo Night theme
-- [tmux-plugins/tmux-yank](https://github.com/tmux-plugins/tmux-yank) – better yanking/clipboard
-
----
+```sh
+stow tmux          # from ~/dotfiles
+```
 
 ## Credits
 
-Created by [**Elliott Minns**](https://github.com/elliottminns)  
-a.k.a **Dreams of Code**  
-Check out his [YouTube channel](https://www.youtube.com/@dreamsofcode) for more great developer tooling content.
+Initial structure based on [Elliott Minns](https://github.com/elliottminns)'
+config ([Dreams of Code](https://www.youtube.com/@dreamsofcode)). Diverged
+substantially since.

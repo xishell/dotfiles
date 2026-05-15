@@ -1,54 +1,24 @@
-# XiShell Neovim Configuration
+# nvim
 
-Modern Neovim configuration focused on development efficiency and seamless tmux integration.
+My Neovim setup. Lazy.nvim, Mason-managed LSPs, Blink completion, Tokyo Night.
+Built around tmux navigation, Typst for academic writing, and `vim-dadbod` for
+SQL work.
 
-## Key Features
+The config lives under `lua/xishell/` and reads optional overrides from
+`~/.nvim.lua` or a project-local `.nvim.lua` (notes paths, database
+connections, per-filetype format toggles).
 
-- Fast startup with `vim.loader.enable()`
-- Modern plugin ecosystem with Lazy.nvim
-- Completion with Blink.cmp (including SQL autocomplete)
-- Full LSP support via Mason with auto-installed formatters/linters
-- Linting via nvim-lint (eslint_d, ruff, shellcheck, golangci-lint, etc.)
-- Debugging with nvim-dap (C/C++, Python, Go)
-- Integrated test runner with Neotest (Python, Go, Jest, Vitest, Java)
-- Session management with persistence.nvim
-- Database client with vim-dadbod (PostgreSQL, MySQL, SQLite, etc.)
-- Typst support with live preview, tinymist LSP, and ~80 snippets for math/academic writing
-- Seamless tmux integration
-- Git workflow with Gitsigns and LazyGit
-- Smart navigation with Flash, Spider, and Harpoon
-- Advanced text objects with Mini.ai
-- Central config with local override support
-- Tokyo Night theme
+## Install
 
-## Installation
+Requires Neovim 0.10+, git, a Nerd Font, ripgrep, and Node (for a couple of
+LSPs). `fd` and `lazygit` are nice-to-haves.
 
-**Prerequisites:**
-- Neovim 0.10+
-- Git
-- Nerd Font
-- ripgrep (`rg`)
-- Node.js (for some LSPs)
-
-**Optional:**
-- `fd` - Fast file finder
-- `lazygit` - Git TUI
-
-**Setup:**
-```bash
-# Backup existing config
-mv ~/.config/nvim ~/.config/nvim.backup
-
-# Link configuration
-ln -sf ~/dotfiles/nvim/.config/nvim ~/.config/nvim
+```sh
+stow nvim          # from ~/dotfiles, after moving any existing ~/.config/nvim aside
 ```
 
-**First launch:** Plugins auto-install via Lazy.nvim
-
-**Verify setup:**
-```vim
-:checkhealth xishell
-```
+First launch triggers a Lazy.nvim sync. Then `:checkhealth xishell` to verify
+external tools, LSP servers, clipboard, and undodir.
 
 ## Configuration Structure
 
@@ -114,7 +84,6 @@ return {
 | `j` / `k` | Smart line movement (display vs actual) |
 | `<S-h>` / `<S-l>` | Previous/next buffer |
 | `[b` / `]b` | Previous/next buffer |
-| `w` / `e` / `b` | Spider motions (camelCase/snake_case aware) |
 
 **Flash Navigation:**
 | Key | Action |
@@ -460,95 +429,41 @@ Auto-detects `include/` directories and Meson build systems.
 | `<leader>uT` | Toggle treesitter |
 | `<leader>uX` | Colorscheme picker |
 
-## Plugin Overview
+## Plugins
 
-**Core:**
-- Lazy.nvim - Plugin manager
-- Blink.cmp - Completion engine with LuaSnip + friendly-snippets
-- Snacks.nvim - Picker, git, notifications, zen mode, utilities
+Core: lazy.nvim, blink.cmp (+ LuaSnip, friendly-snippets), snacks.nvim
+(picker, git, notifications, zen).
 
-**LSP & Syntax:**
-- nvim-lspconfig - LSP configurations
-- Mason.nvim - LSP/tool installer
-- mason-tool-installer.nvim - Auto-install formatters/linters
-- nvim-treesitter - Syntax highlighting + textobjects + context
-- Conform.nvim - Formatting with LSP fallback
-- nvim-lint - Linting (eslint_d, ruff, shellcheck, golangci-lint, etc.)
+LSP / syntax: nvim-lspconfig, mason + mason-tool-installer, nvim-treesitter,
+conform.nvim, nvim-lint.
 
-**Development Tools:**
-- nvim-dap + dap-ui - Debugging (C/C++, Python, Go)
-- Neotest - Test runner (Python, Go, Jest, Vitest, Java)
-- vim-dadbod suite - Database client with UI and autocomplete
-- Lazydev - Lua/Neovim development
+Dev tools: nvim-dap + dap-ui (codelldb / debugpy / delve), neotest (pytest, go
+test, Jest, Vitest, JUnit), vim-dadbod suite, lazydev.
 
-**Navigation:**
-- Flash.nvim - Fast character jump (`s` / `S`)
-- nvim-spider - Smart word motions (camelCase aware)
-- Harpoon v2 - Quick file marks (`<C-g>` menu)
-- Oil.nvim - Directory editor
-- vim-tmux-navigator - Seamless tmux pane navigation
+Navigation: flash.nvim, harpoon v2, oil.nvim, vim-tmux-navigator.
 
-**Text Objects & Editing:**
-- Mini.ai - Advanced text objects (function, class, block, etc.)
-- Mini.surround - Surrounding operations (`ys`/`ds`/`cs`)
-- nvim-autopairs - Auto-close brackets/quotes
-- Tabout.nvim - Tab out of brackets/quotes
-- Comment.nvim - Line/block commenting
+Editing: mini.ai, mini.surround, nvim-autopairs, tabout.nvim, Comment.nvim.
 
-**Git:**
-- Gitsigns.nvim - Git signs and hunk operations
-- Snacks.nvim - LazyGit integration, blame, browse
+Git: gitsigns.nvim and snacks' LazyGit / blame / browse.
 
-**UI:**
-- Tokyo Night - Color scheme
-- Lualine - Status line
-- Bufferline - Buffer tabs
-- Which-key - Keybinding help with group labels
-- Mini.icons - File icons
+UI: Tokyo Night, lualine, bufferline, which-key, mini.icons.
 
-**Session & Workflow:**
-- persistence.nvim - Auto-save/restore sessions
+Sessions: persistence.nvim.
 
-**Language-specific:**
-- go.nvim - Go development
-- nvim-jdtls - Java development
-- VimTeX - LaTeX support
-- typst-preview.nvim - Typst live preview with tinymist LSP
-- Custom Typst snippets - Math, templates, theorem environments (~80 snippets)
-- Neorg - Note-taking system
+Language-specific: go.nvim, nvim-jdtls, vimtex, typst-preview.nvim with
+tinymist LSP, neorg, plus ~80 hand-written Typst snippets for math and
+academic templates.
 
-## Customization
+## Where to change things
 
-**Add keybindings** in `lua/xishell/keymaps.lua`:
-```lua
-local map = vim.keymap.set
-map("n", "<leader>custom", "<cmd>YourCommand<cr>", { desc = "Description" })
-```
+Keymaps in `lua/xishell/keymaps.lua`. Plugin specs in `lua/xishell/plugins/`.
+Mason tool list in `lua/xishell/config/mason.lua`. Theme in
+`lua/xishell/plugins/theme.lua`. User-facing defaults (notes paths, DB URLs,
+filetypes to skip formatting on) live in `~/.nvim.lua` — don't edit
+`config.lua` for these.
 
-**Configure plugins** by editing files in `lua/xishell/plugins/`
+## Behaviour notes
 
-**Override defaults** via `~/.nvim.lua` or project-local `.nvim.lua`
-
-**Change theme** in `lua/xishell/plugins/theme.lua`
-
-**Add/remove Mason tools** in `lua/xishell/config/mason.lua`
-
-## Health Check
-
-Run `:checkhealth xishell` to verify:
-- vim.loader status
-- Notes directory existence
-- External tools (git, rg, fd, lazygit, node)
-- Formatters and LSP servers
-- Plugin count and startup time
-- Clipboard, termguicolors, undodir
-
-## Integration Notes
-
-- **tmux:** Seamless pane navigation with `<C-hjkl>`
-- **Shell:** Optimized for zsh and modern terminals
-- **Git:** LazyGit workflow + inline git signs (loads only if git available)
-- **Clipboard:** Auto-detects SSH and adjusts clipboard behavior
-- **Database:** SQL autocomplete in SQL files when connected
-- **Testing:** Inline test results with multiple framework support
-- **Large files:** Formatting auto-disabled for files >1MB
+- Clipboard detects SSH and falls back accordingly
+- Formatting is disabled automatically on files >1MB
+- Git plugins are skipped when `git` isn't on `$PATH`

@@ -1,65 +1,54 @@
-# LaTeX Build Configuration
+# latexmk
 
-Global latexmk configuration for efficient LaTeX document compilation with VimTeX integration.
+Global `.latexmkrc` that keeps build artefacts out of the source tree and runs
+Biber automatically.
 
-## Features
-
-- **Clean builds**: Separates auxiliary and output files into `build/` directories
-- **Biber integration**: Automatic bibliography processing with proper directory handling
-- **Multi-engine support**: pdfLaTeX, LuaLaTeX, XeLaTeX with consistent settings
-- **VimTeX compatible**: Seamless integration with Neovim LaTeX editing
-
-## Directory Structure
+Outputs are split:
 
 ```
 project/
 ├── main.tex
-├── build/
-│   ├── aux/          # Auxiliary files (.aux, .log, etc.)
-│   └── out/          # Output files (.pdf, .synctex.gz)
+└── build/
+    ├── aux/   # .aux .log .bcf .bbl …
+    └── out/   # .pdf .synctex.gz
 ```
 
-## Build Engines
+`-auxdir` / `-outdir` on the command line override the defaults. VimTeX picks
+up the same config without further setup.
 
-- **Default**: pdfLaTeX with SyncTeX
-- **Alternative**: LuaLaTeX, XeLaTeX (uncomment in config)
-- **Modern**: Tectonic support (commented, requires installation)
+## Engines
 
-## Key Features
+`pdflatex` is the default. `lualatex` and `xelatex` are defined as `$lualatex` /
+`$xelatex` — switch by setting `$pdf_mode = 4` or `5`. A Tectonic command line
+is included but commented out.
 
-- **Robustness**: Up to 8 compilation passes for complex cross-references
-- **Dependency tracking**: `$recorder = 1` for optimal rebuilds
-- **Comprehensive cleaning**: Removes all auxiliary files automatically
-- **Debug output**: Conditional Biber logging (set `LATEXMK_DEBUG=1`)
+Shell-escape variants are commented at the bottom of the rc; uncomment if a
+package needs it.
+
+## Biber
+
+The rc registers a `bcf → bbl` custom dependency that calls Biber with
+`--input-directory` / `--output-directory` pointed at `$aux_dir`. This is
+needed because latexmk's `emulate-aux-dir` mode expects the `.bbl` in the aux
+dir, not next to the source.
+
+Set `LATEXMK_DEBUG=1` to print the Biber command and paths before each run.
+
+## Install
+
+```sh
+stow latexmk       # from ~/dotfiles
+```
+
+Symlinks `.latexmkrc` into `$HOME`. Biber ships with most TeX Live installs;
+otherwise `tlmgr install biber`.
 
 ## Usage
 
-### With VimTeX
-Configuration automatically detected by VimTeX plugin.
-
-### Command Line
-```bash
-# Basic compilation
-latexmk document.tex
-
-# Custom directories
-latexmk -auxdir=custom/aux -outdir=custom/out document.tex
-
-# Clean build files
-latexmk -c
-
-# Enable debug output
-LATEXMK_DEBUG=1 latexmk document.tex
+```sh
+latexmk document.tex                        # build
+latexmk -auxdir=custom/aux -outdir=out doc  # override dirs
+latexmk -c                                  # clean aux
+latexmk -C                                  # clean aux + pdf
+LATEXMK_DEBUG=1 latexmk document.tex        # trace Biber
 ```
-
-## Installation
-
-1. Symlink config: `ln -sf ~/dotfiles/latexmk/.latexmkrc ~/.latexmkrc`
-2. Ensure Biber is installed: `tlmgr install biber`
-3. For VimTeX: Configure Neovim with vimtex plugin
-
-## Troubleshooting
-
-- **Biber issues**: Check `.bcf` files in aux directory
-- **Missing fonts**: Use LuaLaTeX or XeLaTeX for system fonts
-- **Shell escape**: Uncomment shell-escape lines for packages requiring it
