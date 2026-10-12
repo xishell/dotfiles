@@ -65,9 +65,10 @@ def _reported_cwd(window) -> str:
     if not raw:
         return ""
     cwd = raw.decode("utf-8", "replace") if isinstance(raw, bytes) else str(raw)
-    # osc 7 sends file://host/path, keep the path
-    if cwd.startswith("file://"):
-        cwd = "/" + cwd[len("file://"):].partition("/")[2]
+    # osc 7 sends scheme://host/path, kitty's own integration uses kitty-shell-cwd://
+    scheme, sep, rest = cwd.partition("://")
+    if sep and "/" not in scheme:
+        cwd = "/" + rest.partition("/")[2]
     from urllib.parse import unquote
     return unquote(cwd)
 
@@ -101,14 +102,14 @@ def _draw_right(screen: Screen, tab: TabBarData) -> None:
     path = _active_cwd(tab)
     if not path:
         return
-    width = len(path) + 5
+    width = len(path) + 3
     start = screen.columns - width
     # no room left of the tabs, skip rather than overdraw them
     if start <= screen.cursor.x + 1:
         return
     screen.cursor.x = start
     _set(screen, BLUE, BG)
-    screen.draw("░ " + PATH_ICON + " ")
+    screen.draw(PATH_ICON + " ")
     _set(screen, BRIGHT_WHITE, BG)
     screen.draw(path + " ")
 
