@@ -1,42 +1,63 @@
-# session block, powerline tabs, active window's cwd on the right
+# tokyo-night-tmux status bar, rebuilt for kitty from the plugin's own formats
 import os
-from urllib.parse import unquote
 
 from kitty.boss import get_boss
 from kitty.fast_data_types import Screen
-from kitty.tab_bar import DrawData, ExtraData, TabBarData, as_rgb, color_as_int
+from kitty.tab_bar import DrawData, ExtraData, TabBarData, as_rgb
 
-# tokyonight night, same values as tokyonight_night.conf
-DARK = 0x16161E
-SESSION_BG = 0xBB9AF7
-ACTIVE_BG = 0x7AA2F7
-INACTIVE_BG = 0x292E42
-INACTIVE_FG = 0x545C7E
-PATH_FG = 0xA9B1D6
-ACTIVITY_FG = 0xE0AF68
-ALERT_FG = 0xF7768E
+# tokyo-night-tmux night palette
+BG = 0x1A1B26
+FG = 0xA9B1D6
+BLUE = 0x7AA2F7
+GREEN = 0x73DACA
+YELLOW = 0xE0AF68
+BBLACK = 0x2A2F41
+BRIGHT_WHITE = 0xC0CAF5
 
-ARROW = ""
-ARROW_LEFT = ""
+SESSION_IDLE = "\U000f0902"
+SESSION_PREFIX = "\U000f0820"
+TAB_ICON = ""
+ACTIVE_TAB_ICON = ""
+LAST_TAB = "\U000f006f"
+PATH_ICON = ""
+# @tokyo-night-tmux_window_id_style dsquare, pane ids in the default hsquare
+DSQUARE = "\U000f03a2\U000f03a5\U000f03a8\U000f03ab\U000f03b2\U000f03af\U000f03b4\U000f03b7\U000f03ba\U000f03bd"
+HSQUARE = "\U000f03a3\U000f03a6\U000f03a9\U000f03ac\U000f03ae\U000f03b0\U000f03b5\U000f03b8\U000f03bb\U000f03be"
+
+PREFIX_MODE = "prefix"
 HOME = os.path.expanduser("~")
 
 
-def _set(screen: Screen, fg: int, bg: int, bold: bool = False) -> None:
+def _set(screen: Screen, fg: int, bg: int, bold: bool = False, dim: bool = False) -> None:
     screen.cursor.fg = as_rgb(fg)
     screen.cursor.bg = as_rgb(bg)
     screen.cursor.bold = bold
+    screen.cursor.dim = dim
 
 
-def _tab_bg(tab: TabBarData) -> int:
-    return ACTIVE_BG if tab.is_active else INACTIVE_BG
+def _number(n: int, digits: str) -> str:
+    # custom-number.sh puts a space after every digit glyph
+    return "".join(digits[int(d)] + " " for d in str(n))
 
 
-def _short_path(path: str) -> str:
-    if path == HOME or path.startswith(HOME + os.sep):
-        path = "~" + path[len(HOME):]
-    parts = path.split(os.sep)
-    # deep paths keep the last two dirs so the tabs keep their room
-    return path if len(path) <= 40 else os.sep.join(["…", *parts[-2:]])
+def _kitty_tab(tab: TabBarData):
+    return get_boss().tab_for_id(tab.tab_id)
+
+
+def _pane_index(tab: TabBarData) -> int:
+    kitty_tab = _kitty_tab(tab)
+    return kitty_tab.windows.active_group_idx + 1 if kitty_tab else 1
+
+
+def _is_last_tab(tab: TabBarData) -> bool:
+    manager = get_boss().os_window_map.get(tab.os_window_id)
+    history = manager.active_tab_history if manager else None
+    return bool(history) and history[-1] == tab.tab_id
+
+
+def _prefix_held() -> bool:
+    mappings = getattr(get_boss(), "mappings", None)
+    return getattr(mappings, "current_keyboard_mode_name", "") == PREFIX_MODE
 
 
 def _reported_cwd(window) -> str:
@@ -47,43 +68,49 @@ def _reported_cwd(window) -> str:
     # osc 7 sends file://host/path, keep the path
     if cwd.startswith("file://"):
         cwd = "/" + cwd[len("file://"):].partition("/")[2]
+    from urllib.parse import unquote
     return unquote(cwd)
 
 
 def _active_cwd(tab: TabBarData) -> str:
-    kitty_tab = get_boss().tab_for_id(tab.tab_id)
+    kitty_tab = _kitty_tab(tab)
     window = kitty_tab.active_window if kitty_tab else None
     if window is None:
         return ""
     # shell-reported cwd first, oldest process beats a child like an lsp server
-    cwd = _reported_cwd(window) or window.get_cwd_of_child(oldest=True)
-    return _short_path(cwd) if cwd else ""
+    cwd = _reported_cwd(window) or window.get_cwd_of_child(oldest=True) or ""
+    # path_format relative only swaps $HOME for ~
+    return cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
 
 
 def _draw_session(screen: Screen, tab: TabBarData) -> None:
-    name = tab.session_name
-    if not name:
+    if not tab.session_name:
         return
-    _set(screen, DARK, SESSION_BG, bold=True)
-    screen.draw(f" {name} ")
-    _set(screen, SESSION_BG, _tab_bg(tab))
-    screen.draw(ARROW)
+    _set(screen, BBLACK, BLUE, bold=True)
+    screen.draw(" ")
+    if _prefix_held():
+        screen.draw(SESSION_PREFIX + " ")
+    else:
+        _set(screen, BBLACK, BLUE, bold=True, dim=True)
+        screen.draw(SESSION_IDLE + " ")
+        _set(screen, BBLACK, BLUE, bold=True)
+    screen.draw(tab.session_name + " ")
 
 
-def _draw_right(screen: Screen, draw_data: DrawData, tab: TabBarData) -> None:
-    text = _active_cwd(tab)
-    if not text:
+def _draw_right(screen: Screen, tab: TabBarData) -> None:
+    path = _active_cwd(tab)
+    if not path:
         return
-    width = len(text) + 3
+    width = len(path) + 5
     start = screen.columns - width
     # no room left of the tabs, skip rather than overdraw them
     if start <= screen.cursor.x + 1:
         return
     screen.cursor.x = start
-    _set(screen, INACTIVE_BG, color_as_int(draw_data.default_bg))
-    screen.draw(ARROW_LEFT)
-    _set(screen, PATH_FG, INACTIVE_BG)
-    screen.draw(f" {text} ")
+    _set(screen, BLUE, BG)
+    screen.draw("░ " + PATH_ICON + " ")
+    _set(screen, BRIGHT_WHITE, BG)
+    screen.draw(path + " ")
 
 
 def draw_tab(
@@ -99,33 +126,29 @@ def draw_tab(
     if index == 1:
         _draw_session(screen, tab)
 
-    bg = _tab_bg(tab)
-    fg = DARK if tab.is_active else INACTIVE_FG
-    marks = ""
-    if tab.layout_name == "stack" and tab.num_windows > 1:
-        marks += " ⤢"
+    zoomed = tab.layout_name == "stack" and tab.num_windows > 1
+    pane = _number(_pane_index(tab), DSQUARE if zoomed else HSQUARE)
     title = tab.title
-    room = max(1, max_tab_length - len(str(index)) - len(marks) - 5)
+    room = max(1, max_tab_length - 12)
     if len(title) > room:
         title = title[: room - 1] + "…"
 
-    _set(screen, fg, bg, bold=tab.is_active)
-    screen.draw(f" {index} {title}{marks}")
-    if tab.needs_attention:
-        _set(screen, ALERT_FG, bg, bold=True)
-        screen.draw(" !")
-    elif tab.has_activity_since_last_focus and not tab.is_active:
-        _set(screen, ACTIVITY_FG, bg)
-        screen.draw(" ●")
-    _set(screen, fg, bg)
-    screen.draw(" ")
-
-    next_tab = extra_data.next_tab
-    next_bg = _tab_bg(next_tab) if next_tab and not is_last else color_as_int(draw_data.default_bg)
-    _set(screen, bg, next_bg)
-    screen.draw(ARROW)
+    if tab.is_active:
+        _set(screen, GREEN, BBLACK)
+        screen.draw(" " + ACTIVE_TAB_ICON + "  ")
+        _set(screen, FG, BBLACK, bold=True)
+        screen.draw(_number(index, DSQUARE) + title)
+        _set(screen, FG, BBLACK)
+        screen.draw(" " + pane + " ")
+    else:
+        _set(screen, FG, BG)
+        screen.draw(" " + TAB_ICON + "  " + _number(index, DSQUARE) + title)
+        _set(screen, FG, BG, dim=True)
+        screen.draw(" " + pane)
+        _set(screen, YELLOW, BG, dim=True)
+        screen.draw(LAST_TAB + "  " if _is_last_tab(tab) else " ")
     end = screen.cursor.x
 
     if is_last:
-        _draw_right(screen, draw_data, tab)
+        _draw_right(screen, tab)
     return end
