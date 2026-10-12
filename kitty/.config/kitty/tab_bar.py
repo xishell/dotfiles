@@ -1,5 +1,6 @@
-# tokyo-night-tmux status bar, rebuilt for kitty from the plugin's own formats
+# tokyo-night-tmux layout, kitty's own per-tab state for the indicators
 import os
+from urllib.parse import unquote
 
 from kitty.boss import get_boss
 from kitty.fast_data_types import Screen
@@ -8,51 +9,72 @@ from kitty.tab_bar import DrawData, ExtraData, TabBarData, as_rgb
 # tokyo-night-tmux night palette
 BG = 0x1A1B26
 FG = 0xA9B1D6
+MUTED = 0x565F89
 BLUE = 0x7AA2F7
+CYAN = 0x7DCFFF
 GREEN = 0x73DACA
 YELLOW = 0xE0AF68
+RED = 0xF7768E
 BBLACK = 0x2A2F41
 BRIGHT_WHITE = 0xC0CAF5
 
 SESSION_IDLE = "\U000f0902"
 SESSION_PREFIX = "\U000f0820"
-TAB_ICON = ""
-ACTIVE_TAB_ICON = ""
-LAST_TAB = "\U000f006f"
 PATH_ICON = ""
-# @tokyo-night-tmux_window_id_style dsquare, pane ids in the default hsquare
+WINDOWS_ICON = "\U000f056e"
+ZOOM_ICON = "\U000f0293"
+BELL_ICON = "\U000f009e"
+ACTIVITY_ICON = "●"
+# @tokyo-night-tmux_window_id_style dsquare
 DSQUARE = "\U000f03a2\U000f03a5\U000f03a8\U000f03ab\U000f03b2\U000f03af\U000f03b4\U000f03b7\U000f03ba\U000f03bd"
-HSQUARE = "\U000f03a3\U000f03a6\U000f03a9\U000f03ac\U000f03ae\U000f03b0\U000f03b5\U000f03b8\U000f03bb\U000f03be"
+
+SHELL_ICON = ""
+# first match wins, so claude beats the caffeinate it spawns
+PROGRAM_ICONS = (
+    ("claude", "✳"),
+    ("nvim", ""),
+    ("vim", ""),
+    ("lazygit", ""),
+    ("git", ""),
+    ("ssh", "\U000f08c0"),
+    ("python", ""),
+    ("python3", ""),
+    ("node", ""),
+    ("cargo", ""),
+    ("spotify_player", "\U000f04c7"),
+)
+SHELLS = {"zsh", "-zsh", "bash", "-bash", "fish", "sh"}
 
 PREFIX_MODE = "prefix"
 HOME = os.path.expanduser("~")
 
 
-def _set(screen: Screen, fg: int, bg: int, bold: bool = False, dim: bool = False) -> None:
+def _set(screen: Screen, fg: int, bg: int, bold: bool = False) -> None:
     screen.cursor.fg = as_rgb(fg)
     screen.cursor.bg = as_rgb(bg)
     screen.cursor.bold = bold
-    screen.cursor.dim = dim
 
 
-def _number(n: int, digits: str) -> str:
-    # custom-number.sh puts a space after every digit glyph
-    return "".join(digits[int(d)] + " " for d in str(n))
+def _number(n: int) -> str:
+    return "".join(DSQUARE[int(d)] for d in str(n))
 
 
-def _kitty_tab(tab: TabBarData):
-    return get_boss().tab_for_id(tab.tab_id)
+def _active_window(tab: TabBarData):
+    kitty_tab = get_boss().tab_for_id(tab.tab_id)
+    return kitty_tab.active_window if kitty_tab else None
 
 
-def _pane_index(tab: TabBarData) -> int:
-    kitty_tab = _kitty_tab(tab)
-    return kitty_tab.windows.active_group_idx + 1 if kitty_tab else 1
-
-
-def _is_last_tab(tab: TabBarData) -> bool:
-    manager = get_boss().os_window_map.get(tab.os_window_id)
-    history = manager.active_tab_history if manager else None
-    return bool(history) and history[-1] == tab.tab_id
+def _program_icon(tab: TabBarData) -> str:
+    window = _active_window(tab)
+    try:
+        procs = window.child.foreground_processes if window else []
+    except Exception:
+        procs = []
+    names = {os.path.basename(p["cmdline"][0]) for p in procs if p.get("cmdline")}
+    for name, icon in PROGRAM_ICONS:
+        if name in names:
+            return icon
+    return SHELL_ICON
 
 
 def _prefix_held() -> bool:
@@ -69,41 +91,49 @@ def _reported_cwd(window) -> str:
     scheme, sep, rest = cwd.partition("://")
     if sep and "/" not in scheme:
         cwd = "/" + rest.partition("/")[2]
-    from urllib.parse import unquote
     return unquote(cwd)
 
 
 def _active_cwd(tab: TabBarData) -> str:
-    kitty_tab = _kitty_tab(tab)
-    window = kitty_tab.active_window if kitty_tab else None
+    window = _active_window(tab)
     if window is None:
         return ""
     # shell-reported cwd first, oldest process beats a child like an lsp server
     cwd = _reported_cwd(window) or window.get_cwd_of_child(oldest=True) or ""
-    # path_format relative only swaps $HOME for ~
-    return cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
+    return "~" + cwd[len(HOME):] if cwd.startswith(HOME) else cwd
 
 
 def _draw_session(screen: Screen, tab: TabBarData) -> None:
     if not tab.session_name:
         return
-    _set(screen, BBLACK, BLUE, bold=True)
-    screen.draw(" ")
-    if _prefix_held():
-        screen.draw(SESSION_PREFIX + " ")
-    else:
-        _set(screen, BBLACK, BLUE, bold=True, dim=True)
-        screen.draw(SESSION_IDLE + " ")
-        _set(screen, BBLACK, BLUE, bold=True)
-    screen.draw(tab.session_name + " ")
+    held = _prefix_held()
+    _set(screen, BBLACK, YELLOW if held else BLUE, bold=True)
+    screen.draw(f" {SESSION_PREFIX if held else SESSION_IDLE} {tab.session_name} ")
+
+
+def _draw_indicators(screen: Screen, tab: TabBarData, bg: int) -> None:
+    if tab.num_of_windows_with_progress:
+        _set(screen, CYAN, bg)
+        screen.draw(f" {tab.total_progress // tab.num_of_windows_with_progress}%")
+    if tab.layout_name == "stack" and tab.num_window_groups > 1:
+        _set(screen, YELLOW, bg)
+        screen.draw(f" {ZOOM_ICON}")
+    elif tab.num_window_groups > 1:
+        _set(screen, MUTED, bg)
+        screen.draw(f" {WINDOWS_ICON}{tab.num_window_groups}")
+    if tab.needs_attention:
+        _set(screen, RED, bg, bold=True)
+        screen.draw(f" {BELL_ICON}")
+    elif tab.has_activity_since_last_focus and not tab.is_active:
+        _set(screen, YELLOW, bg)
+        screen.draw(f" {ACTIVITY_ICON}")
 
 
 def _draw_right(screen: Screen, tab: TabBarData) -> None:
     path = _active_cwd(tab)
     if not path:
         return
-    width = len(path) + 3
-    start = screen.columns - width
+    start = screen.columns - len(path) - 3
     # no room left of the tabs, skip rather than overdraw them
     if start <= screen.cursor.x + 1:
         return
@@ -127,27 +157,21 @@ def draw_tab(
     if index == 1:
         _draw_session(screen, tab)
 
-    zoomed = tab.layout_name == "stack" and tab.num_windows > 1
-    pane = _number(_pane_index(tab), DSQUARE if zoomed else HSQUARE)
+    bg = BBLACK if tab.is_active else BG
     title = tab.title
-    room = max(1, max_tab_length - 12)
+    room = max(1, max_tab_length - 14)
     if len(title) > room:
         title = title[: room - 1] + "…"
 
-    if tab.is_active:
-        _set(screen, GREEN, BBLACK)
-        screen.draw(" " + ACTIVE_TAB_ICON + "  ")
-        _set(screen, FG, BBLACK, bold=True)
-        screen.draw(_number(index, DSQUARE) + title)
-        _set(screen, FG, BBLACK)
-        screen.draw(" " + pane + " ")
-    else:
-        _set(screen, FG, BG)
-        screen.draw(" " + TAB_ICON + "  " + _number(index, DSQUARE) + title)
-        _set(screen, FG, BG, dim=True)
-        screen.draw(" " + pane)
-        _set(screen, YELLOW, BG, dim=True)
-        screen.draw(LAST_TAB + "  " if _is_last_tab(tab) else " ")
+    _set(screen, GREEN if tab.is_active else MUTED, bg)
+    screen.draw(f" {_program_icon(tab)} ")
+    _set(screen, FG if tab.is_active else MUTED, bg, bold=tab.is_active)
+    screen.draw(f"{_number(index)} ")
+    _set(screen, BRIGHT_WHITE if tab.is_active else FG, bg, bold=tab.is_active)
+    screen.draw(title)
+    _draw_indicators(screen, tab, bg)
+    _set(screen, FG, bg)
+    screen.draw(" ")
     end = screen.cursor.x
 
     if is_last:
