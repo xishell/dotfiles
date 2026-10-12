@@ -4,6 +4,8 @@ sock="$1"
 origin="$2"
 mode="${3:-switch}"
 dir="$HOME/.config/kitty/sessions"
+# kitty actions launch with a bare PATH, fzf lives in homebrew
+PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 if [ "$mode" = new ]; then
     out=$(: | fzf --reverse --print-query --prompt 'new session > ' --info hidden)
