@@ -1,0 +1,4 @@
+new_tab jetlag-engine
+layout splits
+cd ~/projects/jetlag-engine
+launch

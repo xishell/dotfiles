@@ -1,0 +1,16 @@
+new_tab training
+layout splits
+cd ~/projects/training
+launch
+
+new_tab projects
+layout splits
+cd ~/projects
+launch
+
+new_tab projects
+layout splits
+cd ~/projects
+launch
+
+focus_tab 0

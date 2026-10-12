@@ -1,0 +1,11 @@
+new_tab thesis
+layout splits
+cd ~/courses/thesis
+launch
+
+new_tab outreach
+layout splits
+cd ~/courses/thesis/outreach
+launch
+
+focus_tab 0
