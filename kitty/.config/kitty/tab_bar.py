@@ -1,5 +1,6 @@
 # session block, powerline tabs, active window's cwd on the right
 import os
+from urllib.parse import unquote
 
 from kitty.boss import get_boss
 from kitty.fast_data_types import Screen
@@ -38,10 +39,24 @@ def _short_path(path: str) -> str:
     return path if len(path) <= 40 else os.sep.join(["…", *parts[-2:]])
 
 
+def _reported_cwd(window) -> str:
+    raw = window.screen.last_reported_cwd
+    if not raw:
+        return ""
+    cwd = raw.decode("utf-8", "replace") if isinstance(raw, bytes) else str(raw)
+    # osc 7 sends file://host/path, keep the path
+    if cwd.startswith("file://"):
+        cwd = "/" + cwd[len("file://"):].partition("/")[2]
+    return unquote(cwd)
+
+
 def _active_cwd(tab: TabBarData) -> str:
     kitty_tab = get_boss().tab_for_id(tab.tab_id)
     window = kitty_tab.active_window if kitty_tab else None
-    cwd = window.cwd_of_child if window else None
+    if window is None:
+        return ""
+    # shell-reported cwd first, oldest process beats a child like an lsp server
+    cwd = _reported_cwd(window) or window.get_cwd_of_child(oldest=True)
     return _short_path(cwd) if cwd else ""
 
 
