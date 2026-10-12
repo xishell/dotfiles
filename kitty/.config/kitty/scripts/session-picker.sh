@@ -6,12 +6,14 @@ mode="${3:-switch}"
 dir="$HOME/.config/kitty/sessions"
 # kitty actions launch with a bare PATH, fzf lives in homebrew
 PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+# panels have no window chrome, so fzf draws the frame in tokyonight blue
+style="--reverse --print-query --border=rounded --color=border:#7aa2f7,label:#7aa2f7,prompt:#7aa2f7"
 
 if [ "$mode" = new ]; then
-    out=$(: | fzf --reverse --print-query --prompt 'new session > ' --info hidden)
+    out=$(: | fzf $style --border-label ' new session ' --prompt '> ' --info hidden)
 else
     out=$(cd "$dir" && ls ./*.kitty-session 2>/dev/null | sed 's|^\./||; s|\.kitty-session$||' |
-        fzf --reverse --print-query --prompt 'session > ' \
+        fzf $style --border-label ' sessions ' --prompt '> ' \
             --header 'enter switch, a new name creates it')
 fi
 # 130 is esc or ctrl+c, anything typed then is abandoned
