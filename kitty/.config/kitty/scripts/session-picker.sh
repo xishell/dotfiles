@@ -1,9 +1,8 @@
 #!/bin/sh
-# floating session picker, args: main kitty socket, origin window id, switch|new|list|kill [name]
+# floating session picker, args: main kitty socket, origin window id, switch|new|list|kill|preview
 sock="$1"
 origin="$2"
 mode="${3:-switch}"
-# layout templates, loaded when a new session's name matches one
 dir="$HOME/.config/kitty/sessions"
 # ad hoc sessions are scratch files scoped to this kitty pid, gone with it
 run="${TMPDIR:-/tmp}/kitty-sessions-${sock##*-}"
@@ -11,40 +10,65 @@ run="${TMPDIR:-/tmp}/kitty-sessions-${sock##*-}"
 PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 # panels have no window chrome, so fzf draws the frame in tokyonight blue
 style="--reverse --print-query --border=rounded --color=border:#7aa2f7,label:#7aa2f7,prompt:#7aa2f7"
+tab="$(printf '\t')"
 
-is_live() {
-    kitten @ --to "$sock" ls --match-tab "session:^$1\$" >/dev/null 2>&1
+tabs_of() {
+    kitten @ --to "$sock" ls --match-tab "session:^$1\$" 2>/dev/null
 }
 
-# ls has no session field, so probe each known name and drop dead scratch files
-list() {
+# ls has no session field so probe each name, rows are kind/key/label for fzf
+sessions() {
     for f in "$dir"/*.kitty-session "$run"/*.kitty-session; do
         [ -e "$f" ] || continue
         name=$(basename "$f" .kitty-session)
-        if is_live "$name"; then
-            echo "$name"
+        if json=$(tabs_of "$name"); then
+            n=$(printf '%s' "$json" | jq '[.[].tabs[]] | length')
+            mark=" "
+            printf '%s' "$json" | jq -e --argjson w "$origin" 'any(.[].tabs[].windows[]; .id == $w)' >/dev/null && mark="●"
+            s=s; [ "$n" = 1 ] && s=
+            printf 's\t%s\t%s %s \033[90m%s tab%s\033[0m\n' "$name" "$mark" "$name" "$n" "$s"
         else
             case "$f" in "$run"/*) rm -f "$f" ;; esac
         fi
-    done | sort -u
+    done | sort -u -t "$tab" -k2,2
+}
+
+dirs() {
+    zoxide query -l 2>/dev/null | head -50 | while IFS= read -r d; do
+        printf 'd\t%s\t  \033[34m%s\033[0m\n' "$d" "$(printf '%s' "$d" | sed "s|^$HOME|~|")"
+    done
 }
 
 case "$mode" in
 list)
-    list
+    sessions
+    dirs
     exit 0
     ;;
 kill)
-    [ -n "$4" ] && kitten @ --to "$sock" close-tab --match "session:^$4\$" >/dev/null 2>&1
+    [ "$4" = s ] && kitten @ --to "$sock" close-tab --match "session:^$5\$" >/dev/null 2>&1
+    exit 0
+    ;;
+preview)
+    if [ "$4" = s ]; then
+        tabs_of "$5" | jq -r --arg home "$HOME" \
+            '.[].tabs[] | "\(.title)\t\(.windows[0].cwd | sub("^" + $home; "~"))\(if (.windows | length) > 1 then "  +\((.windows | length) - 1) splits" else "" end)"' |
+            column -t -s "$tab"
+    else
+        eza -1 --icons=always --group-directories-first --color=always "$5" 2>/dev/null || ls "$5"
+    fi
     exit 0
     ;;
 new)
     out=$(: | fzf $style --border-label ' new session ' --prompt '> ' --info hidden)
     ;;
 *)
-    out=$(list | fzf $style --border-label ' sessions ' --prompt '> ' \
+    self="'$0' '$sock' '$origin'"
+    out=$("$0" "$sock" "$origin" list | fzf $style --ansi --delimiter "$tab" --with-nth 3 \
+        --border-label ' sessions ' --prompt '> ' \
         --header 'enter switch, ctrl-x kill, a new name creates it' \
-        --bind "ctrl-x:execute-silent('$0' '$sock' '$origin' kill {})+reload('$0' '$sock' '$origin' list)")
+        --preview "$self preview {1} {2}" --preview-window 'right,45%,border-left' \
+        --bind "ctrl-x:execute-silent($self kill {1} {2})+reload($self list)")
     ;;
 esac
 # 130 is esc or ctrl+c, anything typed then is abandoned
@@ -52,17 +76,23 @@ esac
 
 query=$(printf '%s\n' "$out" | sed -n 1p)
 pick=$(printf '%s\n' "$out" | sed -n 2p)
-name=${pick:-$query}
+kind=$(printf '%s' "$pick" | cut -f1)
+key=$(printf '%s' "$pick" | cut -f2)
+cwd="$PWD"
+case "$kind" in
+s) name="$key" ;;
+# tmux-sessionizer naming, dots would turn the session match into a regex
+d) name=$(basename "$key" | tr ' .' '__'); cwd="$key" ;;
+*) name="$query" ;;
+esac
 [ -n "$name" ] || exit 0
 
 file="$dir/$name.kitty-session"
+[ -e "$file" ] || file="$run/$name.kitty-session"
 # live name just switches, matches tmux new-session -A
-if ! is_live "$name" && [ ! -e "$file" ]; then
-    file="$run/$name.kitty-session"
+if ! tabs_of "$name" >/dev/null && [ "$file" = "$run/$name.kitty-session" ]; then
     mkdir -p "$run"
-    printf 'new_tab %s\nlayout splits\ncd %s\nlaunch\n' "$name" "$PWD" > "$file"
-elif [ ! -e "$file" ]; then
-    file="$run/$name.kitty-session"
+    printf 'new_tab %s\nlayout splits\ncd %s\nlaunch\n' "$name" "$cwd" > "$file"
 fi
 
 # focus first so goto_session lands in the main os window, not this panel
