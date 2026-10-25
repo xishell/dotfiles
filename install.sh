@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 
 # Shared (mac + linux) and Linux-only stow packages
 SHARED=(zsh nvim tmux git kitty lazygit scripts)
-LINUX=(hypr ironbar walker elephant mako swayosd gtk fuzzel quickshell)
+LINUX=(hypr ironbar walker elephant mako swayosd mangohud gtk fuzzel quickshell)
 
 if [[ ${1:-} != --no-pkgs ]]; then
     command -v paru >/dev/null || { echo "install paru first (CachyOS: pacman -S paru)"; exit 1; }
@@ -22,6 +22,9 @@ theme/ember
 for pkg in "${SHARED[@]}" "${LINUX[@]}"; do
     [[ -d $pkg ]] && stow --restow "$pkg"
 done
+
+# MangoHud.conf is a symlink the `hud` script moves between layouts; start with "off"
+[ -e "$HOME/.config/MangoHud/MangoHud.conf" ] || scripts/.local/bin/hud off
 
 systemctl --user daemon-reload
 for unit in elephant.service walker.service; do

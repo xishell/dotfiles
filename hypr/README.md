@@ -71,7 +71,7 @@ Mod is `SUPER`.
 | `Mod + Shift + G` | `gaming-mode-toggle` |
 | `Mod + F12` | couch: sofa ↔ desk |
 | `Mod + F11` | Steam Big Picture (on the TV in sofa mode) |
-| `Mod + F10` | MangoHud on/off (games launched with `mangohud %command%`) |
+| `Mod + F10` | MangoHud layout: off → fps → compact → full (`hud`; games need `mangohud %command%`) |
 | `Mod + F9` | start/stop game clip (`game-clip`) |
 | `Mod + Escape` | power menu |
 | `Mod + Ctrl + L` | lock |

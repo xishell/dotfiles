@@ -1,0 +1,27 @@
+#!/bin/sh
+# Cycle the MangoHud layout: off → fps → compact → full → off (Super+F10).
+#   hud          next layout
+#   hud <name>   jump to one (off|fps|compact|full)
+# MangoHud.conf is a symlink to one of ~/.config/MangoHud/layouts/*.conf; a running game
+# reloads it over the control socket. Games need `mangohud %command%` in their launch options.
+dir="$HOME/.config/MangoHud"
+conf="$dir/MangoHud.conf"
+layouts=$(ls "$dir"/layouts/*.conf | sort)
+current=$(readlink "$conf" 2>/dev/null)
+
+if [ -n "$1" ]; then
+    next=$(printf '%s\n' "$layouts" | grep -- "-$1.conf\$" | head -1)
+    [ -n "$next" ] || { echo "hud: no layout '$1'" >&2; exit 2; }
+else
+    # the layout after the current one, wrapping round to the first
+    next=$(printf '%s\n' "$layouts" | awk -v cur="$current" '
+        NR == 1 { first = $0 }
+        done == 0 && seen { print; done = 1 }
+        $0 == cur { seen = 1 }
+        END { if (!done) print first }')
+fi
+
+ln -sfn "$next" "$conf"
+mangohudctl set reload_config 1 >/dev/null 2>&1   # no game running: nothing to reload
+name=$(basename "$next" .conf); name=${name#*-}
+swayosd-client --custom-message "hud: $name" --custom-icon utilities-system-monitor >/dev/null 2>&1 || true

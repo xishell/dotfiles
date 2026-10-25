@@ -109,7 +109,7 @@ hl.bind("SHIFT + Print", hl.dsp.exec_cmd("shot full"))
 -- Couch & gaming
 hl.bind(mainMod .. " + F12", hl.dsp.exec_cmd("couch toggle"))                          -- sofa <-> desk
 hl.bind(mainMod .. " + F11", hl.dsp.exec_cmd("steam steam://open/bigpicture"))         -- Big Picture (TV in sofa mode)
-hl.bind(mainMod .. " + F10", hl.dsp.exec_cmd("mangohudctl toggle no_display"))        -- MangoHud on/off
+hl.bind(mainMod .. " + F10", hl.dsp.exec_cmd("hud"))                                     -- MangoHud layout: off → fps → compact → full
 hl.bind(mainMod .. " + F9",  hl.dsp.exec_cmd("game-clip"))                            -- start/stop clip
 
 -- Lock (Ctrl so it doesn't clash with Super+L focus)
