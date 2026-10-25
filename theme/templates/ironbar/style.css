@@ -4,6 +4,7 @@
 * {
     font-family: "FiraCode Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 14px;
+    font-weight: 500;   /* Medium: holds up better than Regular at bar size */
     color: {{ fg }};
     box-shadow: none;
     text-shadow: none;
