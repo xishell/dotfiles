@@ -21,13 +21,13 @@ popup_autohide = true
 type = "workspaces"
 sort = "index"
 favorites = ["1", "2", "3", "4", "5"]   # always shown; empty ones dim
-name_map = { tv = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt" underline="single" underline_color="{{ magenta }}">󰔂</span>' }
+name_map = { tv = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt" underline="single" underline_color="{{ magenta }}">󰔂</span>' }
 
 [[monitors.DP-1.start]]
 type  = "label"
 name  = "layout"
 class = "mod"
-label = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt">󰯌</span>'
+label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰯌</span>'
 tooltip = "layout: master"
 
 # ── center: focused window ────────────────────────────────────────────────
@@ -97,7 +97,7 @@ tooltip = "8BitDo Ultimate 3: battery"
 type  = "label"
 name  = "chip-desk"
 class = "chip mod"
-label = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt">󰍹</span> desk'
+label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰍹</span> desk'
 show_if = "#couch_desk"
 tooltip = "Desk mode: Super+F12 for couch"
 on_click_left = "couch toggle"
@@ -106,7 +106,7 @@ on_click_left = "couch toggle"
 type  = "label"
 name  = "chip-couch"
 class = "chip mod"
-label = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt">󰒹</span> #couch_label'
+label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰒹</span> #couch_label'
 show_if = "#couch_on"
 tooltip = "Couch mode: Super+F12 for desk"
 on_click_left = "couch toggle"

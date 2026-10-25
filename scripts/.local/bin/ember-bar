@@ -23,7 +23,7 @@ MAGENTA = "#c49ae8"
 COMMENT = "#938a9b"
 # ember:end
 
-ICON = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt" color="{color}">{glyph}</span>'
+ICON = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt" color="{color}">{glyph}</span>'
 
 
 def show(glyph, icon_color, value, level=0, value_color=None):
