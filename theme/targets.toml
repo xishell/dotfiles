@@ -50,3 +50,23 @@ comment  = "#"
 template = "ironbar/style.css"
 output   = "ironbar/.config/ironbar/style.css"
 comment  = "/*"
+
+[[target]]
+template = "walker/style.css"
+output   = "walker/.config/walker/themes/ember/style.css"
+comment  = "/*"
+
+[[target]]
+template = "walker/layout.xml"
+output   = "walker/.config/walker/themes/ember/layout.xml"
+comment  = ""
+
+[[target]]
+template = "walker/style.css"
+output   = "walker/.config/walker/themes/ember-power/style.css"
+comment  = "/*"
+
+[[target]]
+template = "walker/layout-power.xml"
+output   = "walker/.config/walker/themes/ember-power/layout.xml"
+comment  = ""

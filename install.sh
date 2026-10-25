@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 
 # Shared (mac + linux) and Linux-only stow packages
 SHARED=(zsh nvim tmux git kitty lazygit scripts)
-LINUX=(hypr ironbar walker mako swayosd gtk fuzzel quickshell)
+LINUX=(hypr ironbar walker elephant mako swayosd gtk fuzzel quickshell)
 
 if [[ ${1:-} != --no-pkgs ]]; then
     command -v paru >/dev/null || { echo "install paru first (CachyOS: pacman -S paru)"; exit 1; }
@@ -24,7 +24,7 @@ for pkg in "${SHARED[@]}" "${LINUX[@]}"; do
 done
 
 systemctl --user daemon-reload
-for unit in elephant.service; do
+for unit in elephant.service walker.service; do
     systemctl --user list-unit-files "$unit" >/dev/null 2>&1 && systemctl --user enable --now "$unit" || true
 done
 echo "done. Log out and pick the Hyprland (uwsm) session."

@@ -1,8 +1,8 @@
 local mainMod     = "SUPER"
 local terminal    = "kitty"
 local fileManager = "dolphin"
-local menu        = "pkill -x fuzzel || fuzzel"
-local tools       = "pkill -x fuzzel || menu-tools"
+local menu        = "walker -H"   -- -H: no F-key chips; a second press closes it
+local tools       = "menu-tools"
 local browser     = "zen-browser"
 
 -- Core app launchers / window actions
@@ -15,8 +15,9 @@ hl.bind(mainMod .. " + E",           hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + B",           hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + T",           hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + G",           hl.dsp.group.toggle())
--- Clipboard history (moves to walker's clipboard provider in the launcher step)
-hl.bind(mainMod .. " + V",           hl.dsp.exec_cmd("cliphist list | fuzzel --dmenu --prompt 'clip ' | cliphist decode | wl-copy"))
+-- Clipboard history and power menu (walker providers)
+hl.bind(mainMod .. " + V",           hl.dsp.exec_cmd("walker -m clipboard"))
+hl.bind(mainMod .. " + Escape",      hl.dsp.exec_cmd("walker -m menus:power -t ember-power"))
 hl.bind(mainMod .. " + A",           hl.dsp.exec_cmd("qs -c mixer ipc call mixer toggle"))
 hl.bind(mainMod .. " + P",           hl.dsp.exec_cmd("qs -c media ipc call media toggle"))
 hl.bind(mainMod .. " + F",           hl.dsp.window.fullscreen())

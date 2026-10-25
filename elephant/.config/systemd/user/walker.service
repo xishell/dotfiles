@@ -1,0 +1,12 @@
+[Unit]
+Description=Walker launcher (resident, so Super+Space opens instantly)
+PartOf=graphical-session.target
+After=graphical-session.target elephant.service
+Wants=elephant.service
+
+[Service]
+ExecStart=/usr/bin/walker --gapplication-service
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target

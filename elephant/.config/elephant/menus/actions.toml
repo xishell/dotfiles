@@ -1,0 +1,61 @@
+# Desktop actions that show up in the normal Super+Space search
+name = "actions"
+name_pretty = "Action"
+icon = "system-run"
+hide_name_pretty_prefix = true
+
+[[entries]]
+text = "Couch: Steam on TV"
+subtext = "sofa mode"
+keywords = ["couch", "sofa", "tv", "steam", "big picture"]
+icon = "steam"
+actions = { sofa = "couch sofa" }
+
+[[entries]]
+text = "Couch: back to desk"
+subtext = "desk mode"
+keywords = ["couch", "desk", "monitor"]
+icon = "video-display"
+actions = { desk = "couch desk" }
+
+[[entries]]
+text = "Couch audio: soundbar / controller"
+subtext = "toggle sofa audio"
+keywords = ["couch", "audio", "soundbar", "controller", "headphones"]
+icon = "audio-speakers"
+actions = { audio = "couch audio toggle" }
+
+[[entries]]
+text = "Screenshot region"
+subtext = "annotate in satty"
+keywords = ["screenshot", "capture", "snip"]
+icon = "applets-screenshooter"
+actions = { region = "shot region" }
+
+[[entries]]
+text = "Screenshot screen"
+subtext = "annotate in satty"
+keywords = ["screenshot", "capture", "full"]
+icon = "applets-screenshooter"
+actions = { full = "shot full" }
+
+[[entries]]
+text = "Kill an app"
+subtext = "menu-tools"
+keywords = ["kill", "force quit"]
+icon = "process-stop"
+actions = { kill = "menu-tools kill" }
+
+[[entries]]
+text = "Search the ArchWiki"
+subtext = "menu-tools"
+keywords = ["arch", "wiki"]
+icon = "help-browser"
+actions = { wiki = "menu-tools wiki" }
+
+[[entries]]
+text = "Cheat sheet (cht.sh)"
+subtext = "menu-tools"
+keywords = ["cheat", "cht", "help"]
+icon = "accessories-text-editor"
+actions = { cheat = "menu-tools cheat" }

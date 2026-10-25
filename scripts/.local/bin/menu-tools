@@ -1,25 +1,15 @@
 #!/usr/bin/env bash
-# Super+X tools menu (fuzzel dmenu). Replaces the otter-launcher prefix modules.
+# Super+X tools menu (walker dmenu; power and clipboard open walker's own providers).
 # Usage: menu-tools [power|clipboard|kill|search|wiki|cheat|run]
 set -uo pipefail
 
-pick()  { fuzzel --dmenu --prompt="$1  " "${@:2}"; }
-ask()   { fuzzel --dmenu --prompt-only="$1  " </dev/null; }
+pick()  { walker --dmenu -H -p "$1" "${@:2}"; }
+ask()   { walker --dmenu --inputonly -p "$1" </dev/null; }
 urlenc() { jq -rn --arg q "$1" '$q|@uri'; }
 
-power() {
-    case "$(printf '%s\n' reboot windows shutdown logout suspend lock | pick 'Power')" in
-        reboot)   systemctl reboot ;;
-        windows)  sudo efibootmgr --bootnext "$(efibootmgr | sed -nE 's/^Boot([0-9A-F]{4})\* Windows Boot Manager.*/\1/p')" \
-                      && systemctl reboot ;;
-        shutdown) systemctl poweroff ;;
-        logout)   hyprctl dispatch exit ;;
-        suspend)  systemctl suspend ;;
-        lock)     hyprlock ;;
-    esac
-}
+power() { walker -m menus:power -t ember-power; }
 
-clipboard() { cliphist list | pick 'Clipboard' | cliphist decode | wl-copy; }
+clipboard() { walker -m clipboard; }
 
 kill_app() {
     local app

@@ -1,0 +1,14 @@
+#!/bin/sh
+# Screenshot → satty for annotation; satty saves to ~/Pictures/Screenshots and copies.
+#   shot region   pick an area (screen frozen while selecting)
+#   shot full     the focused monitor
+dir="$HOME/Pictures/Screenshots"
+mkdir -p "$dir"
+case "${1:-region}" in
+    region) target=area ;;
+    full)   target=output ;;
+    *) echo "usage: shot region|full" >&2; exit 2 ;;
+esac
+grimblast --freeze save "$target" - |
+    satty --filename - --output-filename "$dir/%Y-%m-%d_%H-%M-%S.png" \
+          --copy-command wl-copy --early-exit --initial-tool crop

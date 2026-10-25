@@ -1,0 +1,38 @@
+# Super+Escape (walker -m menus:power). F1-F6 pick an entry directly; fixed order keeps
+# those keys stable. "windows" reboots once into Windows (sudo: fingerprint popup).
+name = "power"
+name_pretty = "Power"
+icon = "system-shutdown"
+fixed_order = true
+hide_from_providerlist = false
+
+[[entries]]
+text = "lock"
+icon = "system-lock-screen"
+actions = { lock = "loginctl lock-session" }
+
+[[entries]]
+text = "suspend"
+icon = "system-suspend"
+actions = { suspend = "systemctl suspend" }
+
+[[entries]]
+text = "logout"
+icon = "system-log-out"
+actions = { logout = "uwsm stop" }
+
+[[entries]]
+text = "reboot"
+icon = "system-reboot"
+actions = { reboot = "systemctl reboot" }
+
+[[entries]]
+text = "windows"
+subtext = "reboot into Windows once"
+icon = "system-reboot"
+actions = { windows = "sudo efibootmgr --bootnext \"$(efibootmgr | sed -nE 's/^Boot([0-9A-F]{4})\\* Windows Boot Manager.*/\\1/p')\" && systemctl reboot" }
+
+[[entries]]
+text = "shutdown"
+icon = "system-shutdown"
+actions = { shutdown = "systemctl poweroff" }
