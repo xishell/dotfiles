@@ -80,3 +80,8 @@ comment  = "#"
 template = "swayosd/style.css"
 output   = "swayosd/.config/swayosd/style.css"
 comment  = "/*"
+
+[[target]]
+template = "hypr/hyprlock.conf"
+output   = "hypr/.config/hypr/hyprlock.conf"
+comment  = "#"

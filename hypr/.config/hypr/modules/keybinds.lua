@@ -109,6 +109,9 @@ hl.bind("SHIFT + Print", hl.dsp.exec_cmd("shot full"))
 -- Game clip: start / stop recording the focused monitor (gpu-screen-recorder)
 hl.bind(mainMod .. " + F9", hl.dsp.exec_cmd("game-clip"))
 
+-- Lock (Ctrl so it doesn't clash with Super+L focus)
+hl.bind(mainMod .. " + CTRL + L", hl.dsp.exec_cmd("loginctl lock-session"))
+
 -- Reload config
 hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd("hyprctl reload"))
 

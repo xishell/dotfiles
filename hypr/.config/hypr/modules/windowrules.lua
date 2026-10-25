@@ -94,6 +94,13 @@ hl.window_rule({
 -- Terminals stay opaque: Ember has blur off, so translucency would show the
 -- wallpaper sharply behind text.
 
+-- Any fullscreen window keeps the session awake (hypridle: no lock, no DPMS)
+hl.window_rule({
+    name  = "idle-inhibit-fullscreen",
+    match = { class = ".*" },
+    idle_inhibit = "fullscreen",
+})
+
 -- Gaming quality-of-life
 hl.window_rule({
     name  = "steam-game-focus",
