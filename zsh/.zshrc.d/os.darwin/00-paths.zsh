@@ -3,9 +3,12 @@
 # Homebrew (Apple Silicon)
 export PATH="$PATH:/opt/homebrew/bin"
 
-# Homebrew Ruby
+# Homebrew Ruby + gem-installed binaries (evil-winrm etc)
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
-export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
+# glob the newest gems bin so a ruby version bump doesn't strand gem executables
+_gembin=(/opt/homebrew/lib/ruby/gems/*/bin(Nn))
+(( ${#_gembin} )) && export PATH="${_gembin[-1]}:$PATH"
+unset _gembin
 
 # Homebrew Postgres
 export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
@@ -13,3 +16,6 @@ export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 # Java (uses macOS java_home helper)
 export JAVA_HOME=$(/usr/libexec/java_home)
 export PATH="$JAVA_HOME/bin:$PATH"
+
+# .NET global tools (ilspycmd etc.)
+export PATH="$PATH:$HOME/.dotnet/tools"
