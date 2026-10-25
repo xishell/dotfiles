@@ -70,3 +70,13 @@ comment  = "/*"
 template = "walker/layout-power.xml"
 output   = "walker/.config/walker/themes/ember-power/layout.xml"
 comment  = ""
+
+[[target]]
+template = "mako/config"
+output   = "mako/.config/mako/config"
+comment  = "#"
+
+[[target]]
+template = "swayosd/style.css"
+output   = "swayosd/.config/swayosd/style.css"
+comment  = "/*"

@@ -9,8 +9,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("ironbar")
     hl.exec_cmd("sh -c 'sleep 3; couch barsync'")
 
-    -- Notifications
+    -- Notifications + volume/brightness OSD
     hl.exec_cmd("mako")
+    hl.exec_cmd("swayosd-server")
 
     -- Quickshell mixer (IPC-triggered via Super+A or waybar pulseaudio click)
     hl.exec_cmd("qs -c mixer")

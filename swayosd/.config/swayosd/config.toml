@@ -1,0 +1,7 @@
+# swayosd: volume / brightness OSD (bottom centre). Style: style.css (generated).
+[server]
+top_margin = 0.9
+max_volume = 100          # no digital boost past 100 %
+show_percentage = true
+min_brightness = 5
+duration = 1200

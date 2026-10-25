@@ -1,0 +1,44 @@
+# mako: Tokyo Night Ember. 380 wide, top right under the bar, 10 from the edges,
+# 8 between cards, radius 10, padding 12 14, 1 px overlay border, 5 s timeout.
+# App line (dim) / bold title / body (fg_dim).
+
+font=FiraCode Nerd Font 10
+anchor=top-right
+layer=overlay
+outer-margin=10
+margin=0,0,8,0
+padding=12,14
+width=380
+border-size=1
+border-radius=10
+icons=1
+max-icon-size=40
+default-timeout=5000
+max-visible=4
+
+background-color={{ base }}
+text-color={{ fg }}
+border-color={{ overlay }}
+progress-color=over {{ selection }}
+format=<span size="small" color="{{ comment }}">%a</span>\n<b>%s</b>\n<span color="{{ fg_dim }}">%b</span>
+
+[urgency=low]
+border-color={{ surface }}
+
+[urgency=critical]
+border-size=2
+border-color={{ red }}
+default-timeout=0
+format=<span size="small" color="{{ red }}">%a · critical</span>\n<b>%s</b>\n<span color="{{ fg_dim }}">%b</span>
+
+# Couch/desk switches (couch.py)
+[app-name=couch]
+border-size=2
+border-color={{ orange }}
+format=<span size="small" color="{{ orange }}">%a</span>\n<b>%s</b>\n<span color="{{ fg_dim }}">%b</span>
+
+# Fingerprint prompt from the sudo PAM hook (/usr/local/bin/fprint-notify)
+[app-name=fingerprint]
+border-size=2
+border-color={{ yellow }}
+anchor=top-center

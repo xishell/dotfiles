@@ -1,0 +1,49 @@
+/* swayosd: Tokyo Night Ember. 320x52 pill (radius 26), base bg, overlay border,
+   icon magenta, track surface, fill orange; muted (disabled): icon, label and fill dim. */
+
+window#osd {
+  border-radius: 26px;
+  border: 1px solid {{ overlay }};
+  background: {{ base }};
+  min-width: 320px;
+  min-height: 52px;
+}
+window#osd #container { margin: 0 20px; }
+
+window#osd image { color: {{ magenta }}; -gtk-icon-size: 18px; }
+window#osd label {
+  color: {{ fg }};
+  font-family: "FiraCode Nerd Font", monospace;
+  font-size: 13px;
+  min-width: 36px;
+}
+
+window#osd progressbar,
+window#osd segmentedprogress {
+  min-height: 6px;
+  border-radius: 3px;
+  background: transparent;
+  border: none;
+  margin: 0 14px;
+}
+window#osd trough,
+window#osd segment {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: {{ surface }};
+}
+window#osd progress,
+window#osd segment.active {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: {{ orange }};
+}
+window#osd segment { margin-left: 8px; }
+window#osd segment:first-child { margin-left: 0; }
+
+/* muted */
+window#osd image:disabled { color: {{ comment }}; }
+window#osd label:disabled { color: {{ comment }}; }
+window#osd progressbar:disabled progress { background: {{ overlay }}; }
