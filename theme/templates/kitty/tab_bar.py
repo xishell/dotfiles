@@ -1,0 +1,10 @@
+CRUST = 0x{{ crust | bare }}  # tab strip, text on the session block
+BASE = 0x{{ base | bare }}  # active tab
+FG = 0x{{ fg | bare }}
+FG_DIM = 0x{{ fg_dim | bare }}
+COMMENT = 0x{{ comment | bare }}
+ORANGE = 0x{{ orange | bare }}  # session block, active tab number
+BLUE = 0x{{ blue | bare }}
+CYAN = 0x{{ cyan | bare }}
+YELLOW = 0x{{ yellow | bare }}  # session block while the ctrl+a prefix is held
+RED = 0x{{ red | bare }}

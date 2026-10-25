@@ -91,11 +91,8 @@ hl.window_rule({
     tile  = true,
 })
 
-hl.window_rule({
-    name  = "terminal-opacity",
-    match = { class = "^(Alacritty|kitty|foot)$" },
-    opacity = "0.95 0.85",
-})
+-- Terminals stay opaque: Ember has blur off, so translucency would show the
+-- wallpaper sharply behind text.
 
 -- Gaming quality-of-life
 hl.window_rule({

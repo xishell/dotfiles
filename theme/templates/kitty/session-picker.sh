@@ -1,0 +1,1 @@
+style="--reverse --print-query --border=rounded --color=border:{{ orange }},label:{{ fg }},prompt:{{ orange }},pointer:{{ orange }},hl:{{ orange }}:bold,hl+:{{ orange }}:bold,bg+:{{ selection }},fg+:{{ fg }}:bold,info:{{ comment }},gutter:-1"

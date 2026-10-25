@@ -7,3 +7,25 @@
 template = "hypr/palette.lua"
 output   = "hypr/.config/hypr/modules/palette.lua"
 comment  = "--"
+
+[[target]]
+template = "kitty/tab_bar.py"
+output   = "kitty/.config/kitty/tab_bar.py"
+comment  = "#"
+region   = true
+
+[[target]]
+template = "kitty/ember.conf"
+output   = "kitty/.config/kitty/ember.conf"
+comment  = "#"
+
+[[target]]
+template = "kitty/session-picker.sh"
+output   = "kitty/.config/kitty/scripts/session-picker.sh"
+comment  = "#"
+region   = true
+
+[[target]]
+template = "zsh/prompt.zsh"
+output   = "zsh/.zshrc.d/11-prompt.zsh"
+comment  = "#"

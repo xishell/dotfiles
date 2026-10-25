@@ -10,9 +10,9 @@ if [ -s "${ZINIT_HOME}/zinit.zsh" ]; then
     source "${ZINIT_HOME}/zinit.zsh"
 fi
 
-# powerlevel10k
-zinit ice depth=1
-zinit light romkatv/powerlevel10k
+# pure prompt (colours: 11-prompt.zsh, generated from theme/palette.toml)
+zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zinit light sindresorhus/pure
 
 # plugins (highlighting must load last)
 zinit light zsh-users/zsh-completions
