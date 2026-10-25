@@ -23,13 +23,13 @@ MAGENTA = "#c49ae8"
 COMMENT = "#938a9b"
 # ember:end
 
-ICON = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt" color="{color}">{glyph}</span>'
+ICON = '<span font_family="Symbols Nerd Font" size="12.5pt" rise="-1pt" color="{color}">{glyph}</span>'
 
 
 def show(glyph, icon_color, value, level=0, value_color=None):
     color = value_color or (RED if level == 2 else YELLOW if level == 1 else None)
     text = f'<span color="{color}" weight="bold">{value}</span>' if color else value
-    print(ICON.format(color=icon_color, glyph=glyph) + (f"  {text}" if text else ""), flush=True)
+    print(ICON.format(color=icon_color, glyph=glyph) + (f" {text}" if text else ""), flush=True)
 
 
 def level(v, warn, crit):
