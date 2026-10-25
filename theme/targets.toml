@@ -85,3 +85,8 @@ comment  = "/*"
 template = "hypr/hyprlock.conf"
 output   = "hypr/.config/hypr/hyprlock.conf"
 comment  = "#"
+
+[[target]]
+template = "mangohud/MangoHud.conf"
+output   = "mangohud/.config/MangoHud/MangoHud.conf"
+comment  = "#"

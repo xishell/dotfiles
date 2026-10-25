@@ -106,8 +106,11 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 hl.bind("Print",         hl.dsp.exec_cmd("shot region"))
 hl.bind("SHIFT + Print", hl.dsp.exec_cmd("shot full"))
 
--- Game clip: start / stop recording the focused monitor (gpu-screen-recorder)
-hl.bind(mainMod .. " + F9", hl.dsp.exec_cmd("game-clip"))
+-- Couch & gaming
+hl.bind(mainMod .. " + F12", hl.dsp.exec_cmd("couch toggle"))                          -- sofa <-> desk
+hl.bind(mainMod .. " + F11", hl.dsp.exec_cmd("steam steam://open/bigpicture"))         -- Big Picture (TV in sofa mode)
+hl.bind(mainMod .. " + F10", hl.dsp.exec_cmd("mangohudctl toggle no_display"))        -- MangoHud on/off
+hl.bind(mainMod .. " + F9",  hl.dsp.exec_cmd("game-clip"))                            -- start/stop clip
 
 -- Lock (Ctrl so it doesn't clash with Super+L focus)
 hl.bind(mainMod .. " + CTRL + L", hl.dsp.exec_cmd("loginctl lock-session"))

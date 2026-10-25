@@ -69,6 +69,12 @@ Mod is `SUPER`.
 | `Mod + F` | fullscreen |
 | `Mod + M` | `hyprshutdown` if installed, else exit Hyprland |
 | `Mod + Shift + G` | `gaming-mode-toggle` |
+| `Mod + F12` | couch: sofa ↔ desk |
+| `Mod + F11` | Steam Big Picture (on the TV in sofa mode) |
+| `Mod + F10` | MangoHud on/off (games launched with `mangohud %command%`) |
+| `Mod + F9` | start/stop game clip (`game-clip`) |
+| `Mod + Escape` | power menu |
+| `Mod + Ctrl + L` | lock |
 
 ### Focus and movement
 
