@@ -22,8 +22,9 @@ hl.on("hyprland.start", function()
     -- Sofa mode: hold both sticks in (L3 + R3) for 1.5 s to toggle sofa / desk
     hl.exec_cmd("couch listen")
 
-    -- Wallpaper
+    -- Wallpaper + night light (hyprsunset.conf profiles; couch stops it in sofa mode)
     hl.exec_cmd("hyprpaper")
+    hl.exec_cmd("hyprsunset")
 
     -- Clipboard history
     hl.exec_cmd("wl-paste --watch cliphist store")

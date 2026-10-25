@@ -81,7 +81,7 @@ class = "mod"
 mode = "watch"
 cmd  = "ember-bar net"
 tooltip = "Network"
-on_click_left = "kitty -e impala"
+on_click_left = "kitty -e nmtui"
 
 [[monitors.DP-1.end]]
 type = "script"

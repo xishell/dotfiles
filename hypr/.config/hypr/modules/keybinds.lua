@@ -102,8 +102,12 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
--- Screenshot region → clipboard + ~/Pictures/Screenshots/
-hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/Pictures/Screenshots/$(date +%F_%H-%M-%S).png | wl-copy'))
+-- Screenshots → satty (annotate, save to ~/Pictures/Screenshots, copy)
+hl.bind("Print",         hl.dsp.exec_cmd("shot region"))
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd("shot full"))
+
+-- Game clip: start / stop recording the focused monitor (gpu-screen-recorder)
+hl.bind(mainMod .. " + F9", hl.dsp.exec_cmd("game-clip"))
 
 -- Reload config
 hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd("hyprctl reload"))

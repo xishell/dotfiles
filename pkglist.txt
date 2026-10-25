@@ -280,7 +280,7 @@ hyprsunset
 satty
 gpu-screen-recorder
 bluetui
-impala
+networkmanager
 qt6ct
 git-delta
 papirus-icon-theme

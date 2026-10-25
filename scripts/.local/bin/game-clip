@@ -1,0 +1,14 @@
+#!/bin/sh
+# Super+F9 (game-clip): start / stop recording the focused monitor with gpu-screen-recorder (NVENC).
+# Clips land in ~/Videos/Clips; a mako card says when recording starts and where it saved.
+dir="$HOME/Videos/Clips"
+mkdir -p "$dir"
+if pid=$(pgrep -f '^gpu-screen-recorder .*-o '"$dir"); then
+    kill -INT $pid   # SIGINT: finish and save
+    notify-send -a clip -i media-record "Clip saved" "$dir"
+    exit 0
+fi
+mon=$(hyprctl activeworkspace -j | jq -r .monitor)
+file="$dir/$(date +%Y-%m-%d_%H-%M-%S).mp4"
+notify-send -a clip -i media-record "Recording $mon" "Super+F9 again to stop"
+exec gpu-screen-recorder -w "$mon" -f 60 -a default_output -k h264 -o "$file"
