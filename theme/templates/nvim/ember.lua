@@ -1,0 +1,22 @@
+-- Tokyo Night Ember palette for tokyonight.nvim's on_colors (see plugins/theme.lua)
+return {
+	crust = "{{ crust }}",
+	base = "{{ base }}",
+	surface = "{{ surface }}",
+	selection = "{{ selection }}",
+	overlay = "{{ overlay }}",
+	comment = "{{ comment }}",
+	fg_dim = "{{ fg_dim }}",
+	fg = "{{ fg }}",
+	orange = "{{ orange }}",
+	magenta = "{{ magenta }}",
+	red = "{{ red }}",
+	yellow = "{{ yellow }}",
+	green = "{{ green }}",
+	teal = "{{ teal }}",
+	cyan = "{{ cyan }}",
+	blue = "{{ blue }}",
+	black_bright = "{{ color8 }}",
+	cyan_bright = "{{ color14 }}",
+	magenta_bright = "{{ color13 }}",
+}

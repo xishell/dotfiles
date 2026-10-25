@@ -29,3 +29,8 @@ region   = true
 template = "zsh/prompt.zsh"
 output   = "zsh/.zshrc.d/11-prompt.zsh"
 comment  = "#"
+
+[[target]]
+template = "nvim/ember.lua"
+output   = "nvim/.config/nvim/lua/xishell/ember.lua"
+comment  = "--"
