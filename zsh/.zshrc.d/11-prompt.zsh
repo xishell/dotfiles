@@ -16,3 +16,7 @@ zstyle :prompt:pure:user:root             color '#f2798c'
 zstyle :prompt:pure:host                  color '#938a9b'
 zstyle :prompt:pure:virtualenv            color '#938a9b'
 zstyle :prompt:pure:suspended_jobs        color '#f2798c'
+
+# One line: pure joins its path/git line and the ❯ line with $prompt_newline; an empty
+# expansion (%666v, an unset psvar) plus a space puts them side by side
+prompt_newline='%666v '
