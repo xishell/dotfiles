@@ -3,4 +3,18 @@
 set -e
 here=$(cd "$(dirname "$0")" && pwd)
 cargo build --release --quiet --manifest-path "$here/gen/Cargo.toml"
-exec "$here/gen/target/release/ember-gen" --root "$here/.." "$@"
+"$here/gen/target/release/ember-gen" --root "$here/.." "$@"
+
+# Wallpapers: re-render when the palette or generator is newer than the PNG
+[ "$1" = --check ] && exit 0
+wall="$here/../hypr/.config/hypr/wall"
+for size in 3440x1440 3840x2160; do
+    png="$wall/ember-tokyonight_$size.png"
+    if [ ! -e "$png" ] || [ "$here/palette.toml" -nt "$png" ] || [ "$here/wallpaper/gen.py" -nt "$png" ]; then
+        command -v rsvg-convert >/dev/null || { echo "rsvg-convert missing (librsvg): wallpapers not rendered"; exit 0; }
+        svg=$(mktemp --suffix=.svg)
+        python3 -I "$here/wallpaper/gen.py" "${size%x*}" "${size#*x}" "$svg" >/dev/null
+        rsvg-convert "$svg" -o "$png" && rm -f "$svg"
+        echo "wrote  ${png#"$here/../"}"
+    fi
+done

@@ -49,13 +49,21 @@ impl Palette {
         for (section, table) in &doc {
             let table = table.as_table().ok_or_else(|| format!("[{section}] must be a table"))?;
             for (key, v) in table {
-                let s = v.as_str().ok_or_else(|| format!("{section}.{key} must be a string"))?;
-                let (name, value) = match section.as_str() {
-                    "colors" | "ansi" => (key.clone(), Value::Color(Rgb::parse(s).map_err(|e| format!("{section}.{key}: {e}"))?)),
-                    _ => (format!("{section}.{key}"), Value::Text(s.to_string())),
+                // Arrays become indexed tokens: wallpaper.sky.0, wallpaper.sky.1, …
+                let items: Vec<(String, &toml::Value)> = match v.as_array() {
+                    Some(a) => a.iter().enumerate().map(|(i, x)| (format!("{key}.{i}"), x)).collect(),
+                    None => vec![(key.clone(), v)],
                 };
-                if map.insert(name.clone(), value).is_some() {
-                    return Err(format!("token {name} is defined twice"));
+                for (key, v) in items {
+                    let s = v.as_str().ok_or_else(|| format!("{section}.{key} must be a string"))?;
+                    let (name, value) = match section.as_str() {
+                        "colors" | "ansi" => (key.clone(), Value::Color(Rgb::parse(s).map_err(|e| format!("{section}.{key}: {e}"))?)),
+                        // Other sections: hex strings are colours (filters work), the rest text
+                        _ => (format!("{section}.{key}"), Rgb::parse(s).map_or_else(|_| Value::Text(s.to_string()), Value::Color)),
+                    };
+                    if map.insert(name.clone(), value).is_some() {
+                        return Err(format!("token {name} is defined twice"));
+                    }
                 }
             }
         }

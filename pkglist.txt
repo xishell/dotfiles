@@ -299,6 +299,7 @@ greetd
 greetd-tuigreet
 mako
 stow
+librsvg
 btop
 bat
 fzf

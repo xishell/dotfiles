@@ -43,3 +43,11 @@ color12 = "#98b3ef"
 color13 = "#d2adf0"
 color14 = "#9dd6ea"
 color15 = "#ddd3d6"
+
+# Wallpaper shades (theme/wallpaper/gen.py): hand-tuned in-between values that are
+# not UI tokens. Sun, glow, stars and the magenta wash come from [colors].
+[wallpaper]
+sky_top = "#121016"
+sky     = ["#17141b", "#1d1721", "#2a1f25", "#3a2927"] # gradient stops at 38/62/82/100%
+sun_hi  = "#ffba86"                                    # sun disc centre
+ridges  = ["#4a3d46", "#352c37", "#241f29", "#16131a"] # far → near
