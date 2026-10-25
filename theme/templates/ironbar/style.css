@@ -1,0 +1,83 @@
+/* Ironbar: Tokyo Night Ember. Geometry from the Spec board: height 34, margin 10 10 0,
+   radius 10, padding 0 8, font 13, workspace pills 3/10 r6, module gap 18. */
+
+* {
+    font-family: "FiraCode Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 13px;
+    color: {{ fg }};
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.background { background-color: transparent; }
+
+#bar {
+    background-color: {{ base }};
+    border-radius: 10px;
+    padding: 0 8px;
+}
+
+/* module gap 18 */
+#bar .mod, #bar .tray { margin-left: 18px; }
+#layout label { color: {{ comment }}; }
+
+/* Drop the GTK theme's button chrome (focus ring, borders) */
+#bar button, #bar button:hover, #bar button:focus, #bar button:active,
+#bar button:focus-visible { all: unset; }
+
+/* ── workspaces ── */
+#bar .workspaces .item {
+    padding: 3px 10px;
+    border-radius: 6px;
+    min-width: 0;
+    color: {{ fg }};
+}
+#bar .workspaces .item:hover { background-color: {{ surface }}; }
+#bar .workspaces .item.focused {
+    background-color: {{ orange }};
+    font-weight: bold;
+}
+#bar .workspaces .item.focused label { color: {{ crust }}; }
+#bar .workspaces .item.urgent { background-color: {{ urgent_bg }}; font-weight: bold; }
+#bar .workspaces .item.urgent label { color: {{ red }}; }
+#bar .workspaces .item.inactive label { color: {{ comment }}; }
+
+/* ── center ── */
+.focused .label { color: {{ fg_dim }}; }
+
+/* ── couch chip ── */
+.chip {
+    padding: 3px 10px;
+    border-radius: 6px;
+}
+#chip-desk { background-color: {{ surface }}; color: {{ fg_dim }}; }
+#chip-desk label { color: {{ fg_dim }}; }
+#chip-couch { background-color: {{ orange }}; color: {{ crust }}; font-weight: bold; }
+#chip-couch label { color: {{ crust }}; }
+
+/* ── clock ── */
+/* the clock is a button; the reset above unsets it, so style its label */
+#bar .clock label { font-weight: 600; margin-left: 18px; }
+
+/* ── popups + tooltips: surface, overlay border, radius 8 ── */
+.popup, tooltip, popover > contents {
+    background-color: {{ surface }};
+    border: 1px solid {{ overlay }};
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+tooltip label { font-size: 12px; }
+
+.popup-clock .calendar-clock { font-size: 13px; font-weight: bold; color: {{ orange }}; }
+.popup-clock .calendar { background: none; border: none; color: {{ fg }}; }
+.popup-clock .calendar header { color: {{ orange }}; font-weight: bold; }
+.popup-clock .calendar .day-name { color: {{ fg_dim }}; }
+.popup-clock .calendar .other-month { color: {{ comment }}; }
+.popup-clock .calendar :selected {
+    background-color: {{ orange }};
+    color: {{ crust }};
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+#bar .tray .item { padding: 0 3px; }

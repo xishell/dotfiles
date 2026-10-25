@@ -1,0 +1,120 @@
+# Ironbar: Tokyo Night Ember. Desk monitor only; the TV runs Steam fullscreen.
+# Stats come from ~/.local/bin/ember-bar (icon + value, value yellow/red past warn/crit).
+# couch.py sets the couch_* ironvars on every mode switch (`couch barsync` at login).
+
+icon_theme = "Papirus-Dark"
+
+[ironvar_defaults]
+couch_desk  = "true"
+couch_on    = ""
+couch_label = "couch"
+
+[monitors.DP-1]
+position = "top"
+height   = 34
+margin   = { top = 10, left = 10, right = 10, bottom = 0 }
+popup_gap = 8
+popup_autohide = true
+
+# ── left: workspaces + layout ─────────────────────────────────────────────
+[[monitors.DP-1.start]]
+type = "workspaces"
+sort = "index"
+name_map = { tv = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt" underline="single" underline_color="{{ magenta }}">󰔂</span>' }
+
+[[monitors.DP-1.start]]
+type  = "label"
+name  = "layout"
+class = "mod"
+label = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt">󰯌</span>'
+tooltip = "layout: master"
+
+# ── center: focused window ────────────────────────────────────────────────
+[[monitors.DP-1.center]]
+type      = "focused"
+show_icon = false
+truncate  = { mode = "end", max_length = 70 }
+
+# ── right: stats, volume, net, pad, couch chip, tray, clock ───────────────
+[[monitors.DP-1.end]]
+type = "script"
+name = "cpu"
+class = "mod"
+mode = "watch"
+cmd  = "ember-bar cpu"
+tooltip = "CPU usage"
+on_click_left = "kitty -e btop"
+
+[[monitors.DP-1.end]]
+type = "script"
+name = "gpu"
+class = "mod"
+mode = "watch"
+cmd  = "ember-bar gpu"
+tooltip = "GPU temperature (RTX 3080)"
+
+[[monitors.DP-1.end]]
+type = "script"
+name = "mem"
+class = "mod"
+mode = "watch"
+cmd  = "ember-bar mem"
+tooltip = "Memory used"
+on_click_left = "kitty -e btop"
+
+[[monitors.DP-1.end]]
+type = "script"
+name = "vol"
+class = "mod"
+mode = "watch"
+cmd  = "ember-bar vol"
+tooltip = "Volume: click for the OpenXLR mixer, scroll to adjust"
+on_click_left   = "qs -c mixer ipc call mixer toggle"
+on_click_right  = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+on_scroll_up    = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 2%+"
+on_scroll_down  = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-"
+
+[[monitors.DP-1.end]]
+type = "script"
+name = "net"
+class = "mod"
+mode = "watch"
+cmd  = "ember-bar net"
+tooltip = "Network"
+on_click_left = "kitty -e impala"
+
+[[monitors.DP-1.end]]
+type = "script"
+name = "pad"
+class = "mod"
+mode = "watch"
+cmd  = "ember-bar pad"
+show_if = "[ -e /sys/class/power_supply/gip0.0 ]"
+tooltip = "8BitDo Ultimate 3: battery"
+
+[[monitors.DP-1.end]]
+type  = "label"
+name  = "chip-desk"
+class = "chip mod"
+label = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt">󰍹</span> desk'
+show_if = "#couch_desk"
+tooltip = "Desk mode: Super+F12 for couch"
+on_click_left = "couch toggle"
+
+[[monitors.DP-1.end]]
+type  = "label"
+name  = "chip-couch"
+class = "chip mod"
+label = '<span font_family="Symbols Nerd Font" size="12pt" rise="-1pt">󰒹</span> #couch_label'
+show_if = "#couch_on"
+tooltip = "Couch mode: Super+F12 for desk"
+on_click_left = "couch toggle"
+
+[[monitors.DP-1.end]]
+type = "tray"
+icon_size = 16
+
+[[monitors.DP-1.end]]
+type   = "clock"
+format = "%a %d %b %H:%M"
+format_popup = "%H:%M:%S"

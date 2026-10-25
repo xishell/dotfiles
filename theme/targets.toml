@@ -1,5 +1,5 @@
 # Template → output map for theme/gen. Paths are relative to the repo root.
-#   comment  line-comment prefix for the "generated" header ("" = no header, e.g. JSON)
+#   comment  comment prefix for the "generated" header ("" = none, e.g. JSON; "/*" is closed)
 #   region   true = only replace the block between `<comment> ember:begin` and
 #            `<comment> ember:end` in an existing hand-maintained file
 
@@ -34,3 +34,19 @@ comment  = "#"
 template = "nvim/ember.lua"
 output   = "nvim/.config/nvim/lua/xishell/ember.lua"
 comment  = "--"
+
+[[target]]
+template = "scripts/ember-bar.py"
+output   = "scripts/.local/bin/ember-bar"
+comment  = "#"
+region   = true
+
+[[target]]
+template = "ironbar/config.toml"
+output   = "ironbar/.config/ironbar/config.toml"
+comment  = "#"
+
+[[target]]
+template = "ironbar/style.css"
+output   = "ironbar/.config/ironbar/style.css"
+comment  = "/*"

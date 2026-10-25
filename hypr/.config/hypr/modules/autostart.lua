@@ -5,8 +5,9 @@ hl.on("hyprland.start", function()
     -- Cursor theme
     hl.exec_cmd("hyprctl setcursor win11-Dark 24")
 
-    -- Status bar
-    hl.exec_cmd("waybar")
+    -- Status bar (Ironbar); then show the current couch/desk mode on its chip
+    hl.exec_cmd("ironbar")
+    hl.exec_cmd("sh -c 'sleep 3; couch barsync'")
 
     -- Notifications
     hl.exec_cmd("mako")

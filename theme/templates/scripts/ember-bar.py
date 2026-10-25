@@ -1,0 +1,8 @@
+YELLOW = "{{ yellow }}"
+RED = "{{ red }}"
+GREEN = "{{ green }}"
+CYAN = "{{ cyan }}"
+BLUE = "{{ blue }}"
+TEAL = "{{ teal }}"
+MAGENTA = "{{ magenta }}"
+COMMENT = "{{ comment }}"
