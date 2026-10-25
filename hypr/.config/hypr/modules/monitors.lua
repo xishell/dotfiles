@@ -18,8 +18,9 @@ if sofa then
         position = "3440x0",
         scale    = 1,
         -- HDR (experimental on NVIDIA): 10-bit + HDR colour management. 4K120 10-bit
-        -- needs nvidia_modeset hdmi_deepcolor=0 (/etc/modprobe.d/nvidia-hdmi.conf);
-        -- 4K60 10-bit HDR works without it.
+        -- only gets a signal with nvidia_modeset hdmi_deepcolor=0
+        -- (/etc/modprobe.d/nvidia-hdmi.conf); without it this falls back to 4K60.
+        -- 119.88 is the TV's only 4K high-refresh mode (no 120.00 in its EDID).
         bitdepth = 10,
         cm       = "hdr",
     })
