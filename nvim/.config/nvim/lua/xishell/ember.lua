@@ -6,7 +6,7 @@ return {
 	surface = "#2a2530",
 	selection = "#3a3342",
 	overlay = "#48404f",
-	comment = "#877d90",
+	comment = "#938a9b",
 	fg_dim = "#b3a9b8",
 	fg = "#ddd3d6",
 	orange = "#ff9e64",
@@ -17,7 +17,7 @@ return {
 	teal = "#7cc7b2",
 	cyan = "#86c9e0",
 	blue = "#82a1e6",
-	black_bright = "#5e5568",
+	black_bright = "#766b82",
 	cyan_bright = "#9dd6ea",
 	magenta_bright = "#d2adf0",
 }

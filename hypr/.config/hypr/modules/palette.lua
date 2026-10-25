@@ -6,7 +6,7 @@ return {
     surface   = "rgb(2a2530)",
     selection = "rgb(3a3342)",
     overlay   = "rgb(48404f)",
-    comment   = "rgb(877d90)",
+    comment   = "rgb(938a9b)",
     fg_dim    = "rgb(b3a9b8)",
     fg        = "rgb(ddd3d6)",
     orange    = "rgb(ff9e64)",
