@@ -1,0 +1,9 @@
+# Template → output map for theme/gen. Paths are relative to the repo root.
+#   comment  line-comment prefix for the "generated" header ("" = no header, e.g. JSON)
+#   region   true = only replace the block between `<comment> ember:begin` and
+#            `<comment> ember:end` in an existing hand-maintained file
+
+[[target]]
+template = "hypr/palette.lua"
+output   = "hypr/.config/hypr/modules/palette.lua"
+comment  = "--"

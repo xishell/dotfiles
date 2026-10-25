@@ -38,3 +38,6 @@ tmp/
 
 # --- Local-only Stow ignore files (keep global ones tracked) ---
 .stow-local-ignore.local
+
+# --- Rust build output ---
+theme/gen/target/

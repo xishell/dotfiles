@@ -1,0 +1,6 @@
+#!/bin/sh
+# Regenerate every Ember consumer from theme/palette.toml (pass --check to only verify)
+set -e
+here=$(cd "$(dirname "$0")" && pwd)
+cargo build --release --quiet --manifest-path "$here/gen/Cargo.toml"
+exec "$here/gen/target/release/ember-gen" --root "$here/.." "$@"

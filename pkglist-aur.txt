@@ -1,0 +1,36 @@
+# AUR packages (install.sh: paru -S --needed). Base list: pacman -Qqem
+1password
+1password-cli
+apple_cursor
+fluxer-git
+fsel-git
+lib32-gst-plugins-base
+lib32-gst-plugins-good
+lug-helper
+nerd-fonts-sf-mono
+opentrack
+openxlr
+otf-apple-sf-pro-fixed
+otter-launcher
+r2modman
+riscv-gnu-toolchain-bin
+rocksdb-tools
+spotify
+steamtinkerlaunch-git
+teamspeak
+tokyonight-gtk-theme-git
+vesktop
+xcursor-we10xos
+xone-dkms-git
+xplane-sdk-devel
+
+# Ember rice
+elephant-bin
+elephant-desktopapplications-bin
+elephant-calc-bin
+elephant-runner-bin
+elephant-symbols-bin
+elephant-clipboard-bin
+elephant-menus-bin
+grimblast-git
+bibata-cursor-theme-bin

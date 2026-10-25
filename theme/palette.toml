@@ -1,0 +1,45 @@
+# Tokyo Night Ember: the single source of colour for the Linux rice.
+# Every consumer is generated from this file by theme/gen (see theme/README.md).
+# Change a value here, run `theme/ember`, commit the regenerated files.
+
+[meta]
+name = "Tokyo Night Ember"
+variant = "dark"
+
+[colors]
+crust     = "#141217" # wallpaper, lock bg, kitty tab strip, text on orange
+base      = "#1a171d" # window, bar, panel, terminal bg
+surface   = "#2a2530" # inactive border, hover, chips, tracks, dividers
+selection = "#3a3342" # selected row, text selection
+overlay   = "#48404f" # subtle borders (notif, osd, tooltip), line numbers; never text
+comment   = "#877d90" # hints, empty ws, code comments; lowest allowed text
+fg_dim    = "#b3a9b8" # labels, secondary text
+fg        = "#ddd3d6" # primary text
+orange    = "#ff9e64" # focus: active ws, cursor, matches, couch on, border start
+magenta   = "#c49ae8" # secondary: border end, git branch, keywords, verifying
+red       = "#f2798c" # errors, urgent, critical, destructive
+urgent_bg = "#3a262e" # urgent ws bg (red 15% on base)
+yellow    = "#e6b673" # warning, caps lock, cpu label, attributes
+green     = "#a7c97a" # success, prompt ok, strings, gpu label
+teal      = "#7cc7b2" # pad label
+cyan      = "#86c9e0" # types, git HEAD, mem label
+blue      = "#82a1e6" # dirs, functions, links, net label
+
+# ANSI 16: normal 0-7, bright 8-15
+[ansi]
+color0  = "#2a2530" # black
+color1  = "#f2798c" # red
+color2  = "#a7c97a" # green
+color3  = "#e6b673" # yellow
+color4  = "#82a1e6" # blue
+color5  = "#c49ae8" # magenta
+color6  = "#86c9e0" # cyan
+color7  = "#b3a9b8" # white
+color8  = "#5e5568"
+color9  = "#ff8fa0"
+color10 = "#b9d98c"
+color11 = "#f0c488"
+color12 = "#98b3ef"
+color13 = "#d2adf0"
+color14 = "#9dd6ea"
+color15 = "#ddd3d6"
