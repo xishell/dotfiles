@@ -3,7 +3,14 @@
 set -e
 here=$(cd "$(dirname "$0")" && pwd)
 cargo build --release --quiet --manifest-path "$here/gen/Cargo.toml"
-"$here/gen/target/release/ember-gen" --root "$here/.." "$@"
+out=$("$here/gen/target/release/ember-gen" --root "$here/.." "$@") || { status=$?; printf '%s\n' "$out"; exit $status; }
+[ -n "$out" ] && printf '%s\n' "$out"
+
+# Re-stow the packages that got files: with --no-folding a new file needs its own link
+if [ "$1" != --check ] && command -v stow >/dev/null; then
+    pkgs=$(printf '%s\n' "$out" | sed -n 's|^wrote  \([^/]*\)/.*|\1|p' | sort -u)
+    [ -n "$pkgs" ] && (cd "$here/.." && stow --restow $pkgs)
+fi
 
 # Wallpapers: re-render when the palette or generator is newer than the PNG
 [ "$1" = --check ] && exit 0
