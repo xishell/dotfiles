@@ -62,7 +62,10 @@ Mod is `SUPER`.
 | `Mod + E` | dolphin |
 | `Mod + B` | zen-browser |
 | `Mod + Q` | close window |
-| `Mod + V` | toggle floating |
+| `Mod + T` | toggle floating |
+| `Mod + G` | toggle group (tabbed) |
+| `Mod + V` | clipboard history |
+| `Mod + Ctrl + R` | reload config |
 | `Mod + F` | fullscreen |
 | `Mod + M` | `hyprshutdown` if installed, else exit Hyprland |
 | `Mod + Shift + G` | `gaming-mode-toggle` |
@@ -76,7 +79,7 @@ window in that direction. Same applies to workspaces:
 |---|---|
 | `Mod + 1..9, 0` | Workspace 1–10 |
 | `Mod + Shift + 1..9, 0` | Move window to workspace |
-| `Mod + Tab` / `Shift + Tab` | Next / previous workspace |
+| `Mod + Tab` | last-used workspace (cycle: `Mod + scroll`) |
 | `Mod + scroll` | Cycle workspaces |
 | `Mod + S` | Toggle special workspace ("magic") |
 | `Mod + Shift + S` | Send window to special workspace |

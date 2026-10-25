@@ -13,12 +13,15 @@ hl.bind(mainMod .. " + X",           hl.dsp.exec_cmd(tools))
 hl.bind(mainMod .. " + M",           hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E",           hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + B",           hl.dsp.exec_cmd(browser))
-hl.bind(mainMod .. " + V",           hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + T",           hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + G",           hl.dsp.group.toggle())
+-- Clipboard history (moves to walker's clipboard provider in the launcher step)
+hl.bind(mainMod .. " + V",           hl.dsp.exec_cmd("cliphist list | fuzzel --dmenu --prompt 'clip ' | cliphist decode | wl-copy"))
 hl.bind(mainMod .. " + A",           hl.dsp.exec_cmd("qs -c mixer ipc call mixer toggle"))
 hl.bind(mainMod .. " + P",           hl.dsp.exec_cmd("qs -c media ipc call media toggle"))
 hl.bind(mainMod .. " + F",           hl.dsp.window.fullscreen())
-hl.bind(mainMod .. " + Tab",         hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.focus({ workspace = "e-1" }))
+-- Back to the last-used workspace (cycling is Super+scroll)
+hl.bind(mainMod .. " + Tab",         hl.dsp.focus({ workspace = "previous" }))
 
 -- Move focus with arrow keys
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
@@ -99,6 +102,9 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 
 -- Screenshot region → clipboard + ~/Pictures/Screenshots/
 hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/Pictures/Screenshots/$(date +%F_%H-%M-%S).png | wl-copy'))
+
+-- Reload config
+hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd("hyprctl reload"))
 
 -- Gaming mode toggle
 hl.bind(mainMod .. " + SHIFT + G", hl.dsp.exec_cmd("gaming-mode-toggle"))
