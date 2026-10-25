@@ -13,8 +13,9 @@ else
     eval "$(zoxide init zsh)"
 fi
 
-# auto-start tmux, skipped in IDE terminals, nested sessions and kitty
-if command -v tmux &>/dev/null && [ -n "$PS1" ] &&
+# auto-start tmux, skipped in IDE terminals, nested sessions, kitty and shells
+# without a real terminal (e.g. the one uwsm runs at login to load the environment)
+if command -v tmux &>/dev/null && [ -n "$PS1" ] && [ -t 0 ] && [ -t 1 ] &&
     [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] &&
     [ -z "$TMUX" ] && [ -z "$VSCODE_RESOLVING_ENVIRONMENT" ] &&
     [ -z "$TERMINAL_EMULATOR" ] && [ -z "$KITTY_WINDOW_ID" ]; then

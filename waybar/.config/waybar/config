@@ -87,7 +87,7 @@
     "markup": true,
     "tooltip-format": "CPU: {usage}%\nLoad: {load}",
     "interval": 2,
-    "on-click": "alacritty -e btop"
+    "on-click": "kitty -e btop"
   },
 
   "memory": {
@@ -95,7 +95,7 @@
     "markup": true,
     "tooltip-format": "Memory: {used:0.1f}G / {total:0.1f}G\nSwap: {swapUsed:0.1f}G / {swapTotal:0.1f}G",
     "interval": 5,
-    "on-click": "alacritty -e btop"
+    "on-click": "kitty -e btop"
   },
 
   "network": {
@@ -116,7 +116,7 @@
     "format-bluetooth-muted": "<span size='x-large'></span> <span size='x-large'>󰖁</span>",
     "format-muted": "<span size='x-large'>󰖁</span>",
     "markup": true,
-    "on-click": "pavucontrol",
+    "on-click": "qs -c mixer ipc call mixer toggle",
     "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
     "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",

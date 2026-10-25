@@ -1,10 +1,14 @@
 # Linux-specific aliases / functions
 
-# Clipboard: prefer wl-copy (Wayland), fall back to xclip (X11)
+# Clipboard: prefer wl-copy/wl-paste (Wayland), fall back to xclip (X11)
 if command -v wl-copy >/dev/null 2>&1; then
     alias clip='wl-copy'
+    alias pbcopy='wl-copy'
+    alias pbpaste='wl-paste'
 elif command -v xclip >/dev/null 2>&1; then
     alias clip='xclip -selection clipboard'
+    alias pbcopy='xclip -selection clipboard'
+    alias pbpaste='xclip -selection clipboard -o'
 fi
 
 # IP via `ip` — functions for cleaner quoting than aliases

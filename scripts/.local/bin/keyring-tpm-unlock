@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+"""Unlock the GNOME login keyring at login with a TPM-sealed password.
+
+The keyring password lives in ~/.local/state/keyring-unlock/login.cred, encrypted
+with `systemd-creds --user --with-key=host+tpm2` (only this machine's TPM + host key,
+only this user). Logging in with a fingerprint gives PAM no password, so this does
+what pam_gnome_keyring would, over D-Bus: a plain Secret Service session plus
+gnome-keyring's UnlockWithMasterPassword (the call Seahorse uses).
+
+Run by keyring-tpm-unlock.service. Re-create the credential after changing the
+keyring password:
+  fuzzel --dmenu --password --prompt-only 'Keyring password: ' </dev/null | tr -d '\\n' |
+    systemd-creds --user encrypt --with-key=host+tpm2 --name=keyring-login - \\
+    ~/.local/state/keyring-unlock/login.cred
+"""
+import os
+import subprocess
+import sys
+import time
+
+import gi
+gi.require_version("Gio", "2.0")
+from gi.repository import Gio, GLib  # noqa: E402
+
+CRED = os.path.expanduser("~/.local/state/keyring-unlock/login.cred")
+BUS_NAME = "org.freedesktop.secrets"
+SERVICE = "/org/freedesktop/secrets"
+LOGIN = "/org/freedesktop/secrets/collection/login"
+
+
+def call(bus, path, iface, method, args, reply):
+    return bus.call_sync(BUS_NAME, path, iface, method, args, GLib.VariantType(reply),
+                         Gio.DBusCallFlags.NONE, 10000, None).unpack()
+
+
+def locked(bus):
+    (value,) = call(bus, LOGIN, "org.freedesktop.DBus.Properties", "Get",
+                    GLib.Variant("(ss)", ("org.freedesktop.Secret.Collection", "Locked")),
+                    "(v)")
+    return value
+
+
+def main():
+    bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+    # The daemon is socket-activated; give it a moment at login
+    for _ in range(20):
+        try:
+            is_locked = locked(bus)
+            break
+        except GLib.Error:
+            time.sleep(0.5)
+    else:
+        sys.exit("keyring daemon not answering on D-Bus")
+    if not is_locked:
+        print("login keyring already unlocked")
+        return
+
+    password = subprocess.run(
+        ["systemd-creds", "--user", "decrypt", "--name=keyring-login", CRED, "-"],
+        capture_output=True, check=True).stdout
+    _, session = call(bus, SERVICE, "org.freedesktop.Secret.Service", "OpenSession",
+                      GLib.Variant("(sv)", ("plain", GLib.Variant("s", ""))), "(vo)")
+    try:
+        secret = GLib.Variant("(oayays)", (session, b"", password, "text/plain"))
+        call(bus, SERVICE, "org.gnome.keyring.InternalUnsupportedGuiltRiddenInterface",
+             "UnlockWithMasterPassword", GLib.Variant.new_tuple(GLib.Variant("o", LOGIN), secret),
+             "()")
+    except GLib.Error as e:
+        sys.exit(f"unlock failed: {e.message}")
+    finally:
+        del password
+        call(bus, session, "org.freedesktop.Secret.Session", "Close", None, "()")
+    print("login keyring unlocked" if not locked(bus) else "unlock sent, but keyring still locked")
+
+
+if __name__ == "__main__":
+    main()

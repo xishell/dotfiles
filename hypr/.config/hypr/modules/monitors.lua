@@ -1,3 +1,6 @@
+local sofa = require("modules.couch_state")
+
+-- Desk monitor: always on, also in sofa mode
 hl.monitor({
     output   = "DP-1",
     mode     = "3440x1440@160",
@@ -5,7 +8,19 @@ hl.monitor({
     scale    = 1,
 })
 
-hl.monitor({
-    output   = "HDMI-A-1",
-    disabled = true,
-})
+-- LG TV: only on in sofa mode (see sofa.lua). Right of the desk monitor so the two
+-- never overlap. Scale 1: it only shows Steam Big Picture (which scales its own UI)
+-- and games, which would otherwise render at 1080p under XWayland.
+if sofa then
+    hl.monitor({
+        output   = "HDMI-A-1",
+        mode     = "3840x2160@119.88",
+        position = "3440x0",
+        scale    = 1,
+    })
+else
+    hl.monitor({
+        output   = "HDMI-A-1",
+        disabled = true,
+    })
+end

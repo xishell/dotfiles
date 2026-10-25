@@ -1,7 +1,7 @@
 # Tokyo Night theme for fsel
 highlight_color = "rgb(122,162,247)"
 cursor = "█"
-terminal_launcher = "alacritty -e"
+terminal_launcher = "kitty -e"
 hard_stop = false
 pin_color = "rgb(224,175,104)"
 pin_icon = "📌"

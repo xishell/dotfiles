@@ -14,8 +14,9 @@ dimensions = { columns = 120, lines = 30 }
 # Window padding
 padding = { x = 8, y = 0 }
 
-# Spread additional padding evenly around the terminal content
-dynamic_padding = false
+# Split leftover pixels (window height minus cell-grid height) between top and bottom,
+# so the tmux status bar isn't separated from the window edge by a one-sided gap.
+dynamic_padding = true
 
 # Window decorations
 decorations = "Full"  # Full, None, Transparent, Buttonless
@@ -52,10 +53,10 @@ italic = { family = "FiraCode Nerd Font", style = "Italic" }
 bold_italic = { family = "FiraCode Nerd Font", style = "Bold Italic" }
 
 # Font size in points
-size = 11.0
+size = 12.0
 
-# Offset is the extra space around each character
-offset = { x = 0, y = 0 }
+# Offset is the extra space around each character (y = 1 adds a hair of line spacing)
+offset = { x = 0, y = 1 }
 
 # Glyph offset determines the locations of the glyphs within their cells
 glyph_offset = { x = 0, y = 0 }

@@ -8,17 +8,23 @@ hl.on("hyprland.start", function()
     -- Status bar
     hl.exec_cmd("waybar")
 
-    -- Audio effects service
-    hl.exec_cmd("easyeffects --hide-window --gapplication-service")
+    -- Notifications
+    hl.exec_cmd("mako")
+
+    -- Quickshell mixer (IPC-triggered via Super+A or waybar pulseaudio click)
+    hl.exec_cmd("qs -c mixer")
+
+    -- Quickshell media controls (IPC-triggered via Super+P)
+    hl.exec_cmd("qs -c media")
+
+    -- Sofa mode: hold both sticks in (L3 + R3) for 1.5 s to toggle sofa / desk
+    hl.exec_cmd("couch listen")
 
     -- Wallpaper
     hl.exec_cmd("hyprpaper")
 
     -- Clipboard history
     hl.exec_cmd("wl-paste --watch cliphist store")
-
-    -- Idle management
-    hl.exec_cmd("hypridle")
 
     -- Screen sharing / secrets
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")

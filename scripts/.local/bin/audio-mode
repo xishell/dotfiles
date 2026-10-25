@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Switch between the hand-built PipeWire setup and OpenXLR. They both create
+# channel sinks and move app streams, so only one may be active at a time.
+#
+#   audio-mode            show the active mode
+#   audio-mode legacy     virtual sinks + find-user-target.lua + output priority
+#   audio-mode openxlr    OpenXLR daemon owns channels, routing and the Wave XLR
+#
+# Legacy files are parked in ~/.config/audio-modes/legacy-parked/ while OpenXLR
+# runs, so switching back restores them byte for byte.
+set -euo pipefail
+
+PARK="$HOME/.config/audio-modes/legacy-parked"
+LEGACY_FILES=(
+    "$HOME/.config/pipewire/pipewire.conf.d/virtual-sinks.conf"
+    "$HOME/.config/wireplumber/wireplumber.conf.d/50-app-routing.conf"
+    "$HOME/.config/wireplumber/wireplumber.conf.d/52-output-priority.conf"
+)
+
+current() {
+    if [ -f "${LEGACY_FILES[0]}" ]; then echo legacy; else echo openxlr; fi
+}
+
+restart_audio() {
+    systemctl --user restart wireplumber pipewire pipewire-pulse
+    sleep 3
+    # Restarting PipeWire can wedge the Wave XLR capture PCM; bounce it.
+    systemctl --user start wave-xlr-recover.service || true
+}
+
+to_openxlr() {
+    mkdir -p "$PARK"
+    for f in "${LEGACY_FILES[@]}"; do
+        [ -f "$f" ] && mv "$f" "$PARK/"
+    done
+    restart_audio
+    systemctl --user enable --now openxlr-daemon.service
+}
+
+to_legacy() {
+    systemctl --user disable --now openxlr-daemon.service 2>/dev/null || true
+    for f in "${LEGACY_FILES[@]}"; do
+        [ -f "$PARK/$(basename "$f")" ] && mv "$PARK/$(basename "$f")" "$f"
+    done
+    restart_audio
+    wpctl clear-default 2>/dev/null || true
+}
+
+case "${1:-}" in
+    "")      echo "audio mode: $(current)" ;;
+    openxlr) [ "$(current)" = openxlr ] && { echo "already openxlr"; exit 0; }; to_openxlr; echo "audio mode: openxlr" ;;
+    legacy)  [ "$(current)" = legacy ]  && { echo "already legacy";  exit 0; }; to_legacy;  echo "audio mode: legacy" ;;
+    *)       echo "usage: audio-mode [legacy|openxlr]" >&2; exit 2 ;;
+esac

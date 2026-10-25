@@ -1,3 +1,11 @@
+-- User scripts (menu-tools, gaming-mode-toggle, spotify wrapper, ...). ly starts
+-- Hyprland without a login shell, so ~/.local/bin is not on PATH otherwise.
+local home = os.getenv("HOME")
+local path = os.getenv("PATH") or "/usr/local/bin:/usr/bin"
+if not path:find(home .. "/.local/bin", 1, true) then
+    hl.env("PATH", home .. "/.local/bin:" .. path)
+end
+
 -- Cursor size
 hl.env("XCURSOR_SIZE",    "24")
 hl.env("HYPRCURSOR_SIZE", "24")

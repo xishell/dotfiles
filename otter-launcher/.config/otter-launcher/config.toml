@@ -45,7 +45,7 @@ with_argument = true
 [[modules]]
 prefix = "s"
 description = "run command in terminal"
-cmd = "setsid -f alacritty -e {}"
+cmd = "setsid -f kitty -e {}"
 with_argument = true
 
 [[modules]]
@@ -65,9 +65,10 @@ case $1 in
 "suspend") systemctl suspend ;;
 "lock") hyprlock ;;
 "reboot") systemctl reboot ;;
+"windows") sudo efibootmgr --bootnext "$(efibootmgr | sed -nE 's/^Boot([0-9A-F]{4})\\* Windows Boot Manager.*/\\1/p')" && systemctl reboot ;;
 "shutdown") systemctl poweroff ;;
 esac fi }
-power $(echo -e 'reboot\nshutdown\nlogout\nsuspend\nlock' | fzf --reverse --no-scrollbar --padding 1,3 --prompt 'Power Menu: ' | tail -1)
+power $(echo -e 'reboot\nwindows\nshutdown\nlogout\nsuspend\nlock' | fzf --reverse --no-scrollbar --padding 1,3 --prompt 'Power Menu: ' | tail -1)
 """
 
 [[modules]]
@@ -87,7 +88,7 @@ url_encode = true
 [[modules]]
 prefix = "ch"
 description = "cheatsheet (lang/query)"
-cmd = "setsid -f alacritty --class cht-float -e ~/.local/bin/cht.sh --shell {}"
+cmd = "setsid -f kitty --class cht-float -e ~/.local/bin/cht.sh --shell {}"
 with_argument = true
 
 [[modules]]

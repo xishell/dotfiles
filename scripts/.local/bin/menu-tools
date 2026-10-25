@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Super+X tools menu (fuzzel dmenu). Replaces the otter-launcher prefix modules.
+# Usage: menu-tools [power|clipboard|kill|search|wiki|cheat|run]
+set -uo pipefail
+
+pick()  { fuzzel --dmenu --prompt="$1  " "${@:2}"; }
+ask()   { fuzzel --dmenu --prompt-only="$1  " </dev/null; }
+urlenc() { jq -rn --arg q "$1" '$q|@uri'; }
+
+power() {
+    case "$(printf '%s\n' reboot windows shutdown logout suspend lock | pick 'Power')" in
+        reboot)   systemctl reboot ;;
+        windows)  sudo efibootmgr --bootnext "$(efibootmgr | sed -nE 's/^Boot([0-9A-F]{4})\* Windows Boot Manager.*/\1/p')" \
+                      && systemctl reboot ;;
+        shutdown) systemctl poweroff ;;
+        logout)   hyprctl dispatch exit ;;
+        suspend)  systemctl suspend ;;
+        lock)     hyprlock ;;
+    esac
+}
+
+clipboard() { cliphist list | pick 'Clipboard' | cliphist decode | wl-copy; }
+
+kill_app() {
+    local app
+    app=$(ps -u "$USER" -o comm= | sort -u | pick 'Kill') || return
+    [ -n "$app" ] && pkill -9 -x "$app"
+}
+
+search() { local q; q=$(ask 'Google') && [ -n "$q" ] && xdg-open "https://www.google.com/search?q=$(urlenc "$q")"; }
+wiki()   { local q; q=$(ask 'ArchWiki') && [ -n "$q" ] && xdg-open "https://wiki.archlinux.org/index.php?search=$(urlenc "$q")"; }
+cheat()  { local q; q=$(ask 'cht.sh') && [ -n "$q" ] && kitty --class cht-float -e ~/.local/bin/cht.sh --shell "$q"; }
+run()    { local c; c=$(ask 'Run') && [ -n "$c" ] && kitty -e sh -c "$c; exec \$SHELL"; }
+
+menu() {
+    case "$(printf '%s\n' \
+        '󰐥  Power' '󰅍  Clipboard' '󰆴  Kill app' '󰖟  Google search' \
+        '󰣇  ArchWiki' '󰘦  Cheatsheet' '  Run in terminal' | pick 'Tools')" in
+        *Power*)     power ;;
+        *Clipboard*) clipboard ;;
+        *Kill*)      kill_app ;;
+        *Google*)    search ;;
+        *ArchWiki*)  wiki ;;
+        *Cheat*)     cheat ;;
+        *Run*)       run ;;
+    esac
+}
+
+case "${1:-}" in
+    power)     power ;;
+    clipboard) clipboard ;;
+    kill)      kill_app ;;
+    search)    search ;;
+    wiki)      wiki ;;
+    cheat)     cheat ;;
+    run)       run ;;
+    *)         menu ;;
+esac

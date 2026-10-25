@@ -1,0 +1,32 @@
+# Notification daemon. Tokyo Night palette to match fuzzel / waybar.
+
+font=SF Pro Text 11
+anchor=top-right
+layer=overlay
+margin=14
+padding=12,16
+width=380
+border-size=2
+border-radius=10
+icons=1
+max-icon-size=40
+icon-path=/usr/share/icons/Adwaita
+default-timeout=6000
+max-visible=4
+
+background-color=#1a1b26f2
+text-color=#c0caf5
+border-color=#7aa2f7
+progress-color=over #283457
+
+[urgency=low]
+border-color=#414868
+
+[urgency=critical]
+border-color=#f7768e
+default-timeout=0
+
+# Fingerprint prompt from the sudo PAM hook (/usr/local/bin/fprint-notify)
+[app-name=fingerprint]
+border-color=#e0af68
+anchor=top-center

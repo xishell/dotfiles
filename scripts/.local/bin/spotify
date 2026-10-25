@@ -1,0 +1,7 @@
+#!/bin/sh
+# Spotify 1.3's native PipeWire backend stutters/repeats and jumps in volume on
+# pause/resume (2026-10). Spotify skips that backend when it can't find a PipeWire
+# client.conf, falling back to libpulse via pipewire-pulse, which behaves.
+# Remove this wrapper once a Spotify update fixes the PipeWire backend.
+mkdir -p "$HOME/.local/share/spotify-no-pipewire"
+PIPEWIRE_CONFIG_DIR="$HOME/.local/share/spotify-no-pipewire" exec /usr/bin/spotify "$@"
