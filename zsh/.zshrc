@@ -1,5 +1,11 @@
-# Initialize direnv before instant prompt
+# direnv 2.37 ignores DIRENV_LOG_FORMAT, so wrap the hook to drop its
+# loading/export noise (keeps real errors) before p10k instant prompt fires
 eval "$(direnv hook zsh)"
+_direnv_hook() {
+  trap -- '' SIGINT
+  eval "$(direnv export zsh 2> >(grep -vE 'direnv: (loading|export )' >&2))"
+  trap - SIGINT
+}
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -31,3 +37,13 @@ unset _f _zshrc_dir _zshrc_os
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ccache for ESP-IDF builds
+export IDF_CCACHE_ENABLE=1
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/elliot/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/elliot/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/elliot/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/elliot/google-cloud-sdk/completion.zsh.inc'; fi
