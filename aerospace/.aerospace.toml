@@ -19,6 +19,11 @@ outer.bottom = 0
 outer.top = 0
 outer.right = 0
 
+# 9/10 land on external display when attached, else fall back to built-in
+[workspace-to-monitor-force-assignment]
+9 = 'secondary'
+10 = 'secondary'
+
 # Main mode bindings
 [mode.main.binding]
 
@@ -50,6 +55,11 @@ ctrl-alt-2 = 'workspace 2'
 ctrl-alt-3 = 'workspace 3'
 ctrl-alt-4 = 'workspace 4'
 ctrl-alt-5 = 'workspace 5'
+ctrl-alt-6 = 'workspace 6'
+ctrl-alt-7 = 'workspace 7'
+ctrl-alt-8 = 'workspace 8'
+ctrl-alt-9 = 'workspace 9'
+ctrl-alt-0 = 'workspace 10'
 
 # Move window to workspace
 ctrl-alt-shift-1 = 'move-node-to-workspace 1'
@@ -57,14 +67,37 @@ ctrl-alt-shift-2 = 'move-node-to-workspace 2'
 ctrl-alt-shift-3 = 'move-node-to-workspace 3'
 ctrl-alt-shift-4 = 'move-node-to-workspace 4'
 ctrl-alt-shift-5 = 'move-node-to-workspace 5'
+ctrl-alt-shift-6 = 'move-node-to-workspace 6'
+ctrl-alt-shift-7 = 'move-node-to-workspace 7'
+ctrl-alt-shift-8 = 'move-node-to-workspace 8'
+ctrl-alt-shift-9 = 'move-node-to-workspace 9'
+ctrl-alt-shift-0 = 'move-node-to-workspace 10'
 
 # Reload config
 ctrl-alt-shift-r = 'reload-config'
 
-# Float apps that don't tile well
+# browsers: float picture-in-picture, rest left to aerospace dialog heuristic
 [[on-window-detected]]
 if.app-id = 'app.zen-browser.zen'
-run = ['layout tiling']
+if.window-title-regex-substring = 'Picture.in.Picture'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.kagi.kagimacOS'
+if.window-title-regex-substring = 'Picture.in.Picture'
+run = ['layout floating']
+
+# tab hover-preview is chromeless so it reports "Untitled", anchored so docs tabs still tile
+[[on-window-detected]]
+if.app-id = 'com.kagi.kagimacOS'
+if.window-title-regex-substring = '^Untitled$'
+run = ['layout floating']
+
+# address-bar suggestions popup reports "Completions", float it
+[[on-window-detected]]
+if.app-id = 'com.kagi.kagimacOS'
+if.window-title-regex-substring = '^Completions$'
+run = ['layout floating']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
