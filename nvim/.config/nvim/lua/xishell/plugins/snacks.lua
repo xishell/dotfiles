@@ -18,6 +18,11 @@ return {
         gitbrowse = { enabled = true },
         indent = { enabled = true },
         input = { enabled = true },
+        image = {
+            enabled = true,
+            doc = { inline = true, max_width = 60, max_height = 30 },
+            math = { enabled = true },
+        },
         explorer = {
             enabled = false,
             hidden = true,
@@ -37,7 +42,8 @@ return {
             },
         },
         picker = { enabled = true },
-        quickfile = { enabled = true },
+        -- match treesitter.lua disable_hl, quickfile bypasses that guard
+        quickfile = { enabled = true, exclude = { "latex", "bibtex", "asm" } },
         scope = { enabled = true },
         scratch = { enabled = false },
         scroll = { enabled = true },
@@ -132,14 +138,14 @@ return {
             })
           end,
           desc = "Harpoon Files Only" },
-        -- Neorg
+        -- Notes
         { "<leader>nn", function()
             local cfg = require("xishell.config")
-            Snacks.picker.files({ cwd = cfg.get_path("notes.dir") })
+            Snacks.picker.files({ dirs = vim.tbl_map(vim.fn.expand, cfg.get("notes.dirs")), ft = "md" })
           end, desc = "Find Notes" },
         { "<leader>nf", function()
             local cfg = require("xishell.config")
-            Snacks.picker.grep({ cwd = cfg.get_path("notes.dir") })
+            Snacks.picker.grep({ dirs = vim.tbl_map(vim.fn.expand, cfg.get("notes.dirs")), glob = "*.md" })
           end, desc = "Search Notes" },
         { "<leader>nw", function()
             local cfg = require("xishell.config")

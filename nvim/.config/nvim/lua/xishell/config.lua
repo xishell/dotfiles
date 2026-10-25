@@ -10,6 +10,8 @@ M.defaults = {
     dir = "~/notes",
     work = "~/notes/work",
     personal = "~/notes/personal",
+    -- roots searched by <leader>nn / <leader>nf
+    dirs = { "~/notes", "~/courses", "~/htb/kb" },
   },
 
   -- Database connections (name = connection_string)
