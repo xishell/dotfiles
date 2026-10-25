@@ -7,15 +7,16 @@ hl.config({
         kb_rules   = "",
 
         follow_mouse   = 1,
-        -- Pointer speed = Windows: mouse at 1600 DPI (games read those raw counts, like
-        -- Windows raw input; REDengine menus too), desktop cursor halved like Windows'
-        -- pointer speed 4/11 with Enhance pointer precision off. The halving is a straight
-        -- custom libinput curve (slope 0.5, no acceleration): it only touches the cursor.
-        -- sensitivity must stay 0: Hyprland also applies it to wp_relative_pointer
-        -- deltas, which Wine hands games as raw input (it once made Cyberpunk 4x slow).
+        -- Pointer speed = Windows (1600 DPI, pointer speed 4/11 = x0.5, no acceleration).
+        -- Two paths, same as on Windows (verified in Hyprland 0.56 + Wine source):
+        --  * raw input (gameplay): Wine reads the unaccelerated delta -> 1600, never scaled
+        --  * cursor (desktop AND in-game cursors/menus): the accelerated delta -> x0.5 here
+        -- The x0.5 is a straight custom curve (same as flat + sensitivity -0.5). Keep
+        -- force_no_accel false: true makes Hyprland's cursor use the raw delta while game
+        -- cursors still get the scaled one, so menus feel slower than the desktop.
         sensitivity    = 0.0,
         accel_profile  = "custom 1 0 0.5",
-        force_no_accel = false,  -- true would bypass the curve above
+        force_no_accel = false,
 
         repeat_rate  = 25,
         repeat_delay = 400,
