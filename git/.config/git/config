@@ -33,6 +33,9 @@
 [delta]
     navigate = true
     side-by-side = true
+# Ember colours for delta (generated from theme/palette.toml)
+[include]
+    path = ~/.config/git/delta-ember.gitconfig
 [init]
 	defaultBranch = main
 [push]

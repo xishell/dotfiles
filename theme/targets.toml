@@ -105,3 +105,44 @@ comment  = "#"
 template = "mangohud/3-full.conf"
 output   = "mangohud/.config/MangoHud/layouts/3-full.conf"
 comment  = "#"
+
+[[target]]
+template = "gtk/gtk.css"
+output   = "gtk/.config/gtk-4.0/gtk.css"
+comment  = "/*"
+
+[[target]]
+template = "gtk/gtk.css"
+output   = "gtk/.config/gtk-3.0/gtk.css"
+comment  = "/*"
+
+[[target]]
+template = "qt6ct/ember.conf"
+output   = "qt6ct/.config/qt6ct/colors/ember.conf"
+comment  = "#"
+
+[[target]]
+template = "btop/ember.theme"
+output   = "btop/.config/btop/themes/ember.theme"
+comment  = "#"
+
+[[target]]
+template = "bat/Ember.tmTheme"
+output   = "bat/.config/bat/themes/Ember.tmTheme"
+comment  = ""
+
+[[target]]
+template = "git/delta.gitconfig"
+output   = "git/.config/git/delta-ember.gitconfig"
+comment  = "#"
+
+[[target]]
+template = "zsh/fzf.zsh"
+output   = "zsh/.zshrc.d/12-fzf-colors.zsh"
+comment  = "#"
+
+[[target]]
+template = "lazygit/theme.yml"
+output   = "lazygit/.config/lazygit/config.yml"
+comment  = "#"
+region   = true

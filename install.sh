@@ -7,8 +7,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # Shared (mac + linux) and Linux-only stow packages
-SHARED=(zsh nvim tmux git kitty lazygit scripts)
-LINUX=(hypr ironbar walker elephant mako swayosd mangohud gtk fuzzel quickshell)
+SHARED=(zsh nvim tmux git kitty lazygit bat btop scripts)
+LINUX=(hypr ironbar walker elephant mako swayosd mangohud gtk qt6ct fuzzel quickshell)
 
 if [[ ${1:-} != --no-pkgs ]]; then
     command -v paru >/dev/null || { echo "install paru first (CachyOS: pacman -S paru)"; exit 1; }
@@ -22,6 +22,10 @@ theme/ember
 for pkg in "${SHARED[@]}" "${LINUX[@]}"; do
     [[ -d $pkg ]] && stow --restow "$pkg"
 done
+
+# bat reads themes from a cache; btop's own btop.conf (not tracked) picks the theme
+command -v bat >/dev/null && bat cache --build >/dev/null
+[ -f "$HOME/.config/btop/btop.conf" ] && sed -i 's/^color_theme = .*/color_theme = "ember"/' "$HOME/.config/btop/btop.conf"
 
 # MangoHud.conf is a symlink the `hud` script moves between layouts; start with "off"
 [ -e "$HOME/.config/MangoHud/MangoHud.conf" ] || scripts/.local/bin/hud off

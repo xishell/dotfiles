@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key><string>Ember</string>
+	<key>semanticClass</key><string>theme.dark.ember</string>
+	<key>settings</key>
+	<array>
+		<dict>
+			<key>settings</key>
+			<dict>
+				<key>background</key><string>{{ base }}</string>
+				<key>foreground</key><string>{{ fg }}</string>
+				<key>caret</key><string>{{ orange }}</string>
+				<key>selection</key><string>{{ selection }}</string>
+				<key>lineHighlight</key><string>{{ surface }}</string>
+				<key>gutter</key><string>{{ base }}</string>
+				<key>gutterForeground</key><string>{{ overlay }}</string>
+				<key>findHighlight</key><string>{{ orange }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Comment</string>
+			<key>scope</key><string>comment, punctuation.definition.comment</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ comment }}</string><key>fontStyle</key><string>italic</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>String</string>
+			<key>scope</key><string>string, punctuation.definition.string</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ green }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Escape</string>
+			<key>scope</key><string>constant.character.escape, string.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ cyan }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Number</string>
+			<key>scope</key><string>constant.numeric</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ orange }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Constant</string>
+			<key>scope</key><string>constant.language, constant.other, support.constant</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ orange }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Keyword</string>
+			<key>scope</key><string>keyword, storage.modifier, keyword.control</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ magenta }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Storage</string>
+			<key>scope</key><string>storage.type</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ magenta }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Operator</string>
+			<key>scope</key><string>keyword.operator, punctuation.separator, punctuation.accessor</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ cyan }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Function</string>
+			<key>scope</key><string>entity.name.function, support.function, meta.function-call variable.function</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ blue }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Type</string>
+			<key>scope</key><string>entity.name.type, entity.name.class, support.type, support.class, storage.type.primitive</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ cyan }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Attribute</string>
+			<key>scope</key><string>entity.other.attribute-name, meta.attribute, meta.annotation, entity.name.tag.yaml</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ yellow }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Tag</string>
+			<key>scope</key><string>entity.name.tag</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ red }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Variable</string>
+			<key>scope</key><string>variable, variable.other</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ fg }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Parameter</string>
+			<key>scope</key><string>variable.parameter</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ yellow }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Self</string>
+			<key>scope</key><string>variable.language</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ red }}</string><key>fontStyle</key><string>italic</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Punctuation</string>
+			<key>scope</key><string>punctuation</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ fg_dim }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Heading</string>
+			<key>scope</key><string>markup.heading, entity.name.section</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ orange }}</string><key>fontStyle</key><string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Bold</string>
+			<key>scope</key><string>markup.bold</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ fg }}</string><key>fontStyle</key><string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Italic</string>
+			<key>scope</key><string>markup.italic</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ fg }}</string><key>fontStyle</key><string>italic</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Link</string>
+			<key>scope</key><string>markup.underline.link, string.other.link</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ blue }}</string><key>fontStyle</key><string>underline</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Code</string>
+			<key>scope</key><string>markup.raw, markup.inline.raw</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ green }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Quote</string>
+			<key>scope</key><string>markup.quote</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ comment }}</string><key>fontStyle</key><string>italic</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>List</string>
+			<key>scope</key><string>markup.list punctuation.definition.list</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ orange }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Inserted</string>
+			<key>scope</key><string>markup.inserted</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ green }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Deleted</string>
+			<key>scope</key><string>markup.deleted</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ red }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Changed</string>
+			<key>scope</key><string>markup.changed</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ yellow }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Diff header</string>
+			<key>scope</key><string>meta.diff.header, meta.diff.range</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ blue }}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key><string>Invalid</string>
+			<key>scope</key><string>invalid</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key><string>{{ red }}</string><key>fontStyle</key><string>underline</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

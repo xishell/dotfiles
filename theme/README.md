@@ -38,6 +38,7 @@ theme/
 | `{{ orange \| rgba:0.4 }}` | `rgba(255, 158, 100, 0.4)` |
 | `{{ orange \| hypr }}` | `rgb(ff9e64)` (Hyprland) |
 | `{{ orange \| hypr:ee }}` | `rgba(ff9e64ee)` |
+| `{{ green \| mix:base:0.2 }}` | green laid over base at 20 % (tints the palette lacks) |
 | `{{ meta.name }}` | plain string from `[meta]` |
 
 Tokens: everything under `[colors]` (`crust` … `blue`) and `[ansi]` (`color0` … `color15`).

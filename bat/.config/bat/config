@@ -1,0 +1,4 @@
+# bat: Ember syntax theme (themes/Ember.tmTheme, generated from theme/palette.toml).
+# After a theme change: bat cache --build
+--theme="Ember"
+--style="numbers,changes,header"

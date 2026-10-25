@@ -1,0 +1,16 @@
+gui:
+  theme:
+    activeBorderColor: ["{{ orange }}", bold]
+    inactiveBorderColor: ["{{ overlay }}"]
+    searchingActiveBorderColor: ["{{ yellow }}", bold]
+    optionsTextColor: ["{{ blue }}"]
+    selectedLineBgColor: ["{{ selection }}"]
+    inactiveViewSelectedLineBgColor: ["{{ surface }}"]
+    cherryPickedCommitFgColor: ["{{ magenta }}"]
+    cherryPickedCommitBgColor: ["{{ surface }}"]
+    markedBaseCommitFgColor: ["{{ blue }}"]
+    markedBaseCommitBgColor: ["{{ surface }}"]
+    unstagedChangesColor: ["{{ red }}"]
+    defaultFgColor: ["{{ fg }}"]
+  authorColors:
+    "*": "{{ magenta }}"

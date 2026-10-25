@@ -108,6 +108,18 @@ impl Palette {
             ("hexa", a) => format!("#{}{}", c.bare(), alpha_hex(a)?),
             ("hypr", None) => format!("rgb({})", c.bare()),
             ("hypr", a) => format!("rgba({}{})", c.bare(), alpha_hex(a)?),
+            // mix:<token>:<amount>: this colour laid over <token> at <amount> (0..1), as #rrggbb.
+            // For tints the palette doesn't name, e.g. a diff background {{ green | mix:base:0.2 }}
+            ("mix", Some(a)) => {
+                let (other, amount) = a.split_once(':').ok_or_else(|| format!("mix:{a}: expected mix:<token>:<0..1>"))?;
+                let amount: f32 = amount.trim().parse().map_err(|_| format!("mix:{a}: amount is 0..1"))?;
+                let o = match self.0.get(other.trim()) {
+                    Some(Value::Color(o)) => *o,
+                    _ => return Err(format!("mix: {other:?} is not a colour token")),
+                };
+                let ch = |x: u8, y: u8| (x as f32 * amount + y as f32 * (1.0 - amount)).round() as u8;
+                format!("#{}", Rgb(ch(c.0, o.0), ch(c.1, o.1), ch(c.2, o.2)).bare())
+            }
             _ => return Err(format!("unknown filter {:?}", filter.unwrap_or(""))),
         })
     }

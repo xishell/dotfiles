@@ -1,0 +1,23 @@
+# delta: Tokyo Night Ember (included from ~/.config/git/config). Syntax colours come from
+# the bat theme of the same name; added/removed lines get green/red tints over base.
+[delta]
+    syntax-theme = Ember
+    minus-style = syntax "{{ red | mix:base:0.14 }}"
+    minus-emph-style = syntax "{{ red | mix:base:0.32 }}"
+    plus-style = syntax "{{ green | mix:base:0.12 }}"
+    plus-emph-style = syntax "{{ green | mix:base:0.28 }}"
+    map-styles = bold purple => syntax "{{ magenta | mix:base:0.2 }}", bold cyan => syntax "{{ cyan | mix:base:0.2 }}"
+    line-numbers-minus-style = "{{ red }}"
+    line-numbers-plus-style = "{{ green }}"
+    line-numbers-zero-style = "{{ overlay }}"
+    line-numbers-left-style = "{{ surface }}"
+    line-numbers-right-style = "{{ surface }}"
+    file-style = "{{ blue }}" bold
+    file-decoration-style = "{{ surface }}" ul
+    hunk-header-style = file line-number syntax
+    hunk-header-decoration-style = "{{ surface }}" box
+    hunk-header-file-style = "{{ blue }}"
+    hunk-header-line-number-style = "{{ orange }}"
+    commit-style = "{{ yellow }}"
+    commit-decoration-style = "{{ surface }}" box
+    blame-palette = "{{ base }}" "{{ crust }}"
