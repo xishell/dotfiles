@@ -1,9 +1,13 @@
 local mainMod     = "SUPER"
-local terminal    = "kitty"
-local fileManager = "dolphin"
+-- Apps start through uwsm so each gets its own systemd scope instead of sharing
+-- Hyprland's cgroup. 1Password's SSH agent needs that to tell apps apart: without
+-- it, every git signature asks for approval again. (walker/elephant already do this.)
+local function app(cmd) return "uwsm app -- " .. cmd end
+local terminal    = app("kitty")
+local fileManager = app("dolphin")
 local menu        = "walker -H"   -- -H: no F-key chips; a second press closes it
 local tools       = "menu-tools"
-local browser     = "zen-browser"
+local browser     = app("zen-browser")
 
 -- Core app launchers / window actions
 hl.bind(mainMod .. " + Return",      hl.dsp.exec_cmd(terminal))
@@ -108,7 +112,7 @@ hl.bind("SHIFT + Print", hl.dsp.exec_cmd("shot full"))
 
 -- Couch & gaming
 hl.bind(mainMod .. " + F12", hl.dsp.exec_cmd("couch toggle"))                          -- sofa <-> desk
-hl.bind(mainMod .. " + F11", hl.dsp.exec_cmd("steam steam://open/bigpicture"))         -- Big Picture (TV in sofa mode)
+hl.bind(mainMod .. " + F11", hl.dsp.exec_cmd(app("steam steam://open/bigpicture")))         -- Big Picture (TV in sofa mode)
 hl.bind(mainMod .. " + F10", hl.dsp.exec_cmd("hud"))                                     -- MangoHud layout: off → fps → compact → full
 hl.bind(mainMod .. " + F9",  hl.dsp.exec_cmd("game-clip"))                            -- start/stop clip
 
