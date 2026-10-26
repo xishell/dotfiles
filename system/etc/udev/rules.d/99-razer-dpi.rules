@@ -1,0 +1,1 @@
+ACTION=="bind", SUBSYSTEM=="hid", DRIVER=="razermouse", ATTRS{idVendor}=="1532", ATTRS{idProduct}=="00bf", TEST=="dpi_stages", RUN+="/usr/local/bin/razer-dpi-apply %S%p"

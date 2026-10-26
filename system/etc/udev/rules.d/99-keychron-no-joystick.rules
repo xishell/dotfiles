@@ -1,0 +1,7 @@
+# Prevent keyd virtual pointer from registering as a joystick
+KERNEL=="js*", SUBSYSTEM=="input", ATTRS{name}=="keyd virtual pointer", ENV{ID_INPUT_JOYSTICK}="0", RUN+="/bin/rm /dev/input/%k"
+
+# Prevent Keychron Q0 Plus from being seen as a joystick by Wine/Proton
+KERNEL=="js*", SUBSYSTEM=="input", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0131", ENV{ID_INPUT_JOYSTICK}="0", RUN+="/bin/rm /dev/input/%k"
+SUBSYSTEM=="input", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0131", ATTR{name}=="*System Control*", ENV{ID_INPUT_JOYSTICK}="0"
+SUBSYSTEM=="input", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0131", ATTR{name}=="*Consumer Control*", ENV{ID_INPUT_JOYSTICK}="0"

@@ -15,10 +15,14 @@ example, `nvim/.config/nvim/` ends up at `~/.config/nvim/` after stowing.
 ├── nvim/                   # .config/nvim/
 ├── tmux/                   # .config/tmux/
 ├── git/                    # .config/git/
-├── scripts/                # .local/bin/  (gaming-mode, wttr-cache, …)
-├── alacritty/ ghostty/ kitty/
-├── hypr/ waybar/ wofi/ hyprlauncher/ gtk/   # Linux / Wayland
-├── aerospace/ karabiner/                    # macOS
+├── scripts/                # .local/bin/ + user units (couch, audio-mode, hud, …)
+├── kitty/ ghostty/ claude/ # shared
+├── hypr/ ironbar/ walker/ elephant/ mako/ swayosd/ mangohud/ gtk/ qt6ct/ quickshell/
+├── audio/ couch/ verimark/ # Linux: PipeWire/WirePlumber, sofa mode, fingerprint driver
+├── openxlr/ opendeck/      # Linux: linked as whole directories (apps replace files on save)
+├── theme/                  # not stowed; palette.toml → generator for every themed config
+├── system/                 # not stowed; root-owned files, mirror of /etc + /usr (install.sh)
+├── aerospace/ karabiner/   # macOS
 └── docs/                   # not stowed; reference notes
 ```
 
@@ -48,10 +52,17 @@ GUI rather than by hand.
 ### Linux (Hyprland)
 
 ```sh
-stow hypr waybar wofi hyprlauncher gtk alacritty
+./install.sh            # packages, theme, stow, directory links, user services
+system/install.sh       # diff root-owned files against /; --apply installs them with sudo
 ```
 
 The Hyprland config was ported to Lua (see commit `dc271d1`).
+
+OpenXLR and OpenDeck save by writing a new file and renaming it over the old one,
+which would replace a per-file stow symlink. Their config directories are therefore
+symlinked whole (`~/.config/openxlr` → `openxlr/.config/openxlr`), with a
+`.gitignore` per package so only real config is tracked. `couch` keeps its state,
+log, venv and TV pairing key in `~/.local/share/couch`, outside git.
 
 ## Conventions
 

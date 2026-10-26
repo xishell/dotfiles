@@ -1,0 +1,65 @@
+{
+  "tv_ip": "192.168.1.196",
+  "tv_mac": "20:28:BC:86:EB:7E",
+  "tv_pc_input": "HDMI_3",
+  "tv_on_desk": "off",
+  "tv_extra_args": [],
+  "tv_wake_timeout": 30,
+  "display_settle_seconds": 3,
+  "win_tv": "GSMC0C8",
+  "win_desk": "GSM774B",
+  "win_keep_desk_on": true,
+  "hypr_tv": "HDMI-A-1",
+  "hypr_tv_mode": "3840x2160@119.88,3440x0,1",
+  "hypr_desk": "DP-1",
+  "hypr_desk_mode": "3440x1440@160,0x0,1",
+  "hypr_disable_desk": false,
+  "audio_sofa": "",
+  "audio_desk": "",
+  "soundvolumeview": "",
+  "steam": true,
+  "listen_controller_match": "",
+  "listen_hold_seconds": 1.5,
+  "listen_auto_desk_minutes": 0,
+  "win_display_sofa": [
+    "DisplaySwitch.exe",
+    "/external"
+  ],
+  "win_display_desk": [
+    "DisplaySwitch.exe",
+    "/internal"
+  ],
+  "openxlr_sofa_outputs": {
+    "soundbar": [
+      "alsa_output.pci-0000_01_00.1.hdmi-stereo-extra1"
+    ],
+    "controller": [
+      "alsa_output.usb-8BitDo_8BitDo_Ultimate_3_Controller_for_XBOX_0000D41C099E764C-00.stereo-fallback"
+    ]
+  },
+  "openxlr_sofa_default": "soundbar",
+  "openxlr_desk_outputs": [
+    "alsa_output.usb-8BitDo_8BitDo_Ultimate_3_Controller_for_XBOX_0000D41C099E764C-00.stereo-fallback",
+    "alsa_output.usb-Elgato_Systems_Elgato_Wave_XLR_DS24K1A01889-00.analog-stereo"
+  ],
+  "hdmi_card": "alsa_card.pci-0000_01_00.1",
+  "hdmi_profile_sofa": "output:hdmi-stereo-extra1",
+  "hdmi_profile_desk": "output:hdmi-stereo",
+  "listen_button": "leftstick+rightstick",
+  "output_trims": {
+    "wave": {
+      "sink": "alsa_output.usb-Elgato_Systems_Elgato_Wave_XLR_DS24K1A01889-00.analog-stereo",
+      "percent": 100
+    },
+    "controller": {
+      "sink": "alsa_output.usb-8BitDo_8BitDo_Ultimate_3_Controller_for_XBOX_0000D41C099E764C-00.stereo-fallback",
+      "percent": 40
+    },
+    "soundbar": {
+      "sink": "alsa_output.pci-0000_01_00.1.hdmi-stereo-extra1",
+      "percent": 100
+    }
+  },
+  "tv_volume_steps_sofa": 0,
+  "hypr_tv_workspace": "name:tv"
+}

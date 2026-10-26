@@ -1,0 +1,1 @@
+ACTION=="add", ATTRS{idVendor}=="045e", ATTRS{idProduct}=="02fe", RUN+="/bin/sh -c 'echo $kernel > /sys/bus/usb/drivers/mt76x2u/unbind 2>/dev/null; echo $kernel > /sys/bus/usb/drivers/xone-dongle/bind 2>/dev/null'"

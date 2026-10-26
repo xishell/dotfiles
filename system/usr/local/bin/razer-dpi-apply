@@ -1,0 +1,17 @@
+#!/bin/sh
+# Re-apply DeathAdder V4 Pro DPI stages on driver bind (mouse doesn't persist them).
+# Stage 3 (active) = 1600, as on Windows; others: 400, 800, 3200, 6400. The desktop cursor
+# is halved in Hyprland (custom accel curve, like Windows pointer speed 4/11); games get 1600 raw.
+# dpi_stages format: active stage, then X and Y per stage as big-endian u16.
+dev="$1"
+for i in 1 2 3 4 5 6 7 8 9 10; do
+    if [ -w "$dev/dpi_stages" ] && \
+       printf '\x03\x01\x90\x01\x90\x03\x20\x03\x20\x06\x40\x06\x40\x0c\x80\x0c\x80\x19\x00\x19\x00' > "$dev/dpi_stages" 2>/dev/null && \
+       [ "$(cat "$dev/dpi")" = "1600:1600" ]; then
+        logger -t razer-dpi-apply "set 1600 DPI on $dev"
+        exit 0
+    fi
+    sleep 0.5
+done
+logger -t razer-dpi-apply "FAILED to set DPI on $dev"
+exit 1

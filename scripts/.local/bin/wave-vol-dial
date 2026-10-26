@@ -1,0 +1,17 @@
+#!/bin/bash
+# wave-vol-dial <sink> <ticks>
+# Adjusts volume of a Wave Link sink based on Stream Deck Plus dial rotation.
+# Each tick changes volume by 2%. Positive ticks = clockwise = louder.
+#
+# Sink names: system, games, music, browser, comms, airplay
+
+set -euo pipefail
+
+SINK="${1:?Usage: wave-vol-dial <sink> <ticks>}"
+TICKS="${2:?Usage: wave-vol-dial <sink> <ticks>}"
+
+if [ "$TICKS" -gt 0 ]; then
+    wave-vol "$SINK" "+$(( TICKS * 2 ))%"
+elif [ "$TICKS" -lt 0 ]; then
+    wave-vol "$SINK" "-$(( TICKS * -2 ))%"
+fi

@@ -1,0 +1,18 @@
+[Unit]
+Description=Shairport Sync - AirPlay Audio Receiver
+After=pipewire.service pipewire-pulse.service
+Wants=pipewire.service pipewire-pulse.service
+# nqptp and avahi-daemon are system services, which a user unit cannot order
+# against directly. ExecStartPre below waits for them instead.
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+ExecStartPre=/bin/sh -c 'until systemctl is-active --quiet nqptp.service avahi-daemon.service && [ -e /dev/shm/nqptp ]; do sleep 1; done'
+ExecStart=/usr/bin/shairport-sync -c /etc/shairport-sync.conf
+Restart=on-failure
+RestartSec=5s
+TimeoutStartSec=90
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,38 @@
+#!/bin/sh
+# PAM hook (pam_exec; runs with the caller's real uid, i.e. as the user): show a desktop notification while sudo waits
+# for the VeriMark fingerprint, and dismiss it once the session opens.
+#   auth     optional pam_exec.so quiet /usr/local/bin/fprint-notify   (before pam_fprintd)
+#   session  optional pam_exec.so quiet /usr/local/bin/fprint-notify
+# Never fails: authentication must not depend on the notification.
+
+# The session phase runs for the target user (root); PAM_RUSER is who ran sudo
+user="${PAM_RUSER:-$PAM_USER}"
+uid=$(id -u "$user" 2>/dev/null) || exit 0
+bus="/run/user/$uid/bus"
+[ -S "$bus" ] || exit 0
+idfile="/run/user/$uid/fprint-notify.id"
+
+as_user() {
+    if [ "$(id -ru)" = "$uid" ]; then
+        env DBUS_SESSION_BUS_ADDRESS="unix:path=$bus" XDG_RUNTIME_DIR="/run/user/$uid" "$@"
+    else
+        runuser -u "$user" -- env DBUS_SESSION_BUS_ADDRESS="unix:path=$bus" \
+            XDG_RUNTIME_DIR="/run/user/$uid" "$@"
+    fi
+}
+
+case "$PAM_TYPE" in
+    auth)
+        # Only when the reader is plugged in (pam_fprintd skips otherwise)
+        grep -qs '^00f2$' /sys/bus/usb/devices/*/idProduct || exit 0
+        id=$(as_user timeout 2 notify-send -p -a fingerprint -i fingerprint -t 30000 \
+                "${PAM_SERVICE:-sudo}" "Touch the fingerprint reader") || exit 0
+        as_user sh -c 'printf "%s\n" "$1" > "$2"' _ "$id" "$idfile"
+        ;;
+    open_session)
+        [ -f "$idfile" ] || exit 0
+        id=$(cat "$idfile"); as_user rm -f "$idfile"
+        as_user timeout 2 makoctl dismiss -n "$id" >/dev/null 2>&1
+        ;;
+esac
+exit 0

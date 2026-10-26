@@ -1,13 +1,4 @@
 hl.window_rule({
-    name  = "float-otter-launcher",
-    match = { class = "^otter-launcher$" },
-    float = true,
-    size  = "620 420",
-    center = true,
-    animation = "popin",
-})
-
-hl.window_rule({
     name  = "float-cht",
     match = { class = "^cht-float$" },
     float = true,

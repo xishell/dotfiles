@@ -1,4 +1,4 @@
 #!/bin/sh
 # Sofa/desk mode (TV + displays + audio + Steam Big Picture). The real script, its
-# config, state, log and TV pairing key live in ~/.local/share/couch (not in git).
+# code + config are in ~/dotfiles/couch (stowed); state, log, TV key and venv stay local.
 exec "$HOME/.local/share/couch/venv/bin/python" "$HOME/.local/share/couch/couch.py" "$@"

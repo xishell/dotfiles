@@ -1,0 +1,12 @@
+[Unit]
+Description=Recover Elgato Wave XLR capture (login + USB re-enumeration)
+After=pipewire.service wireplumber.service pipewire-pulse.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/wave-xlr-recover
+TimeoutStartSec=90
+
+[Install]
+WantedBy=default.target

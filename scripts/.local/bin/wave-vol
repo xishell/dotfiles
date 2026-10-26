@@ -1,0 +1,96 @@
+#!/bin/bash
+# wave-vol - Per-sink volume control for Wave Link virtual sinks
+#
+# Usage:
+#   wave-vol                  Show all sinks and their volumes
+#   wave-vol <sink> <vol>     Set volume (e.g. 80%, +5%, -10%)
+#   wave-vol <sink> mute      Toggle mute on a sink
+#
+# Sink names (case-insensitive): system, games, music, browser, comms, airplay
+
+set -euo pipefail
+
+# Map friendly names to PipeWire node names
+declare -A SINK_NAMES=(
+  [system]="System"
+  [games]="Games"
+  [music]="Music"
+  [browser]="Browser"
+  [comms]="Comms"
+  [airplay]="AirPlay"
+)
+
+# Resolve a node name to its wpctl ID
+get_node_id() {
+  local node_name="$1"
+  wpctl status | awk -v name="$node_name" '
+    /Audio\/Sink/,/^$/ {
+      if ($0 ~ "\\. " name " ") {
+        gsub(/[^0-9]/, "", $2)
+        print $2
+        exit
+      }
+    }
+  '
+}
+
+# Show all virtual sink volumes
+show_all() {
+  printf "%-10s %-6s %s\n" "SINK" "VOL" "MUTE"
+  printf "%-10s %-6s %s\n" "----" "---" "----"
+  for key in system games music browser comms airplay; do
+    local node_name="${SINK_NAMES[$key]}"
+    local node_id
+    node_id=$(get_node_id "$node_name")
+    if [[ -z "$node_id" ]]; then
+      printf "%-10s %-6s %s\n" "$node_name" "-" "(not found)"
+      continue
+    fi
+    local info
+    info=$(wpctl get-volume "$node_id" 2>/dev/null)
+    local vol mute=""
+    vol=$(echo "$info" | awk '{printf "%.0f%%", $2 * 100}')
+    if echo "$info" | grep -q MUTED; then
+      mute="[MUTED]"
+    fi
+    printf "%-10s %-6s %s\n" "$node_name" "$vol" "$mute"
+  done
+}
+
+if [[ $# -eq 0 ]]; then
+  show_all
+  exit 0
+fi
+
+# Resolve sink argument
+sink_key="${1,,}"  # lowercase
+if [[ -z "${SINK_NAMES[$sink_key]+x}" ]]; then
+  echo "Unknown sink: $1" >&2
+  echo "Valid sinks: ${!SINK_NAMES[*]}" >&2
+  exit 1
+fi
+
+node_name="${SINK_NAMES[$sink_key]}"
+node_id=$(get_node_id "$node_name")
+if [[ -z "$node_id" ]]; then
+  echo "Sink '$node_name' not found in PipeWire" >&2
+  exit 1
+fi
+
+if [[ $# -eq 1 ]]; then
+  # Show single sink volume
+  wpctl get-volume "$node_id"
+  exit 0
+fi
+
+action="$2"
+
+if [[ "$action" == "mute" ]]; then
+  wpctl set-mute "$node_id" toggle
+  echo "$node_name: mute toggled"
+else
+  wpctl set-volume "$node_id" "$action"
+  info=$(wpctl get-volume "$node_id")
+  vol=$(echo "$info" | awk '{printf "%.0f%%", $2 * 100}')
+  echo "$node_name: $vol"
+fi

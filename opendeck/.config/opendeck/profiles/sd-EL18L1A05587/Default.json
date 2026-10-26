@@ -1,0 +1,938 @@
+{
+  "infobars": [],
+  "keys": [
+    {
+      "action": {
+        "controllers": [
+          "Keypad"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/me.amankhanna.oampris.sdPlugin/icons/previous.png",
+        "name": "Previous",
+        "plugin": "me.amankhanna.oampris.sdPlugin",
+        "property_inspector": "",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/previous.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Go to the previous track",
+        "uuid": "me.amankhanna.oampris.previous",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.0.0",
+      "current_state": 0,
+      "settings": {},
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/previous.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/me.amankhanna.oampris.sdPlugin/icons/playpause.png",
+        "name": "Play/Pause",
+        "plugin": "me.amankhanna.oampris.sdPlugin",
+        "property_inspector": "",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/playpause.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Toggle the playback state",
+        "uuid": "me.amankhanna.oampris.playpause",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.1.0",
+      "current_state": 0,
+      "settings": {},
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.jpeg",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/me.amankhanna.oampris.sdPlugin/icons/next.png",
+        "name": "Next",
+        "plugin": "me.amankhanna.oampris.sdPlugin",
+        "property_inspector": "",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/next.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Go to the next track",
+        "uuid": "me.amankhanna.oampris.next",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.2.0",
+      "current_state": 0,
+      "settings": {},
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/next.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad",
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+        "name": "Run Command",
+        "plugin": "com.amansprojects.starterpack.sdPlugin",
+        "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Run a command",
+        "uuid": "com.amansprojects.starterpack.runcommand",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.3.0",
+      "current_state": 0,
+      "settings": {
+        "down": "/home/elliot/.local/bin/couch toggle",
+        "file": "",
+        "show": false,
+        "up": ""
+      },
+      "states": [
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 14,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad"
+        ],
+        "disable_automatic_states": true,
+        "encoder": null,
+        "icon": "plugins/me.amankhanna.oampris.sdPlugin/icons/repeat_playlist.png",
+        "name": "Repeat",
+        "plugin": "me.amankhanna.oampris.sdPlugin",
+        "property_inspector": "",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/repeat_none.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          },
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/repeat_playlist.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          },
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/repeat_track.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Cycle the repeat mode",
+        "uuid": "me.amankhanna.oampris.repeat",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.4.0",
+      "current_state": 0,
+      "settings": {},
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/repeat_none.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        },
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/repeat_playlist.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        },
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/repeat_track.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad",
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+        "name": "Run Command",
+        "plugin": "com.amansprojects.starterpack.sdPlugin",
+        "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.amansprojects.starterpack.sdPlugin/icons/runCommand.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Run a command",
+        "uuid": "com.amansprojects.starterpack.runcommand",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.5.0",
+      "current_state": 0,
+      "settings": {
+        "down": "/home/elliot/.local/bin/couch audio toggle",
+        "file": "",
+        "show": false,
+        "up": ""
+      },
+      "states": [
+        {
+          "alignment": "bottom",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "0.svg",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 14,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad"
+        ],
+        "disable_automatic_states": true,
+        "encoder": null,
+        "icon": "plugins/me.amankhanna.oampris.sdPlugin/icons/shuffle_on.png",
+        "name": "Shuffle",
+        "plugin": "me.amankhanna.oampris.sdPlugin",
+        "property_inspector": "",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/shuffle_off.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          },
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/shuffle_on.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Toggle shuffle",
+        "uuid": "me.amankhanna.oampris.shuffle",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.6.0",
+      "current_state": 0,
+      "settings": {},
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/shuffle_off.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        },
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/shuffle_on.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Keypad",
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": null,
+        "icon": "plugins/com.amansprojects.starterpack.sdPlugin/icons/switchProfile.png",
+        "name": "Switch Profile",
+        "plugin": "com.amansprojects.starterpack.sdPlugin",
+        "property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/switchProfile.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "plugins/com.amansprojects.starterpack.sdPlugin/icons/switchProfile.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": true,
+        "tooltip": "Switch the selected profile",
+        "uuid": "com.amansprojects.starterpack.switchprofile",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Keypad.7.0",
+      "current_state": 0,
+      "settings": {
+        "anticlockwise": "Default",
+        "clockwise": "Default",
+        "device": "sd-EL18L1A05587",
+        "profile": "Page 2"
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "plugins/com.amansprojects.starterpack.sdPlugin/icons/switchProfile.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    }
+  ],
+  "sliders": [
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/dial.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute / reset",
+            "rotate": "Adjust level",
+            "touch": ""
+          }
+        },
+        "icon": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+        "name": "Dial",
+        "plugin": "com.emaspa.openxlr.sdPlugin",
+        "property_inspector": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/propertyInspector/dial.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Adjust a level on a dial: channel sends, mix masters, gain, headphones, crossfade, insert plugin controls",
+        "uuid": "com.emaspa.openxlr.dial",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.0.0",
+      "current_state": 0,
+      "settings": {
+        "activeIndex": 0,
+        "cycleGesture": "tap",
+        "target": "chvol:game",
+        "targets": [
+          "chvol:game"
+        ]
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/dial.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute / reset",
+            "rotate": "Adjust level",
+            "touch": ""
+          }
+        },
+        "icon": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+        "name": "Dial",
+        "plugin": "com.emaspa.openxlr.sdPlugin",
+        "property_inspector": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/propertyInspector/dial.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Adjust a level on a dial: channel sends, mix masters, gain, headphones, crossfade, insert plugin controls",
+        "uuid": "com.emaspa.openxlr.dial",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.1.0",
+      "current_state": 0,
+      "settings": {
+        "activeIndex": 0,
+        "cycleGesture": "tap",
+        "target": "chvol:voicechat",
+        "targets": [
+          "chvol:voicechat"
+        ]
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/dial.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute / reset",
+            "rotate": "Adjust level",
+            "touch": ""
+          }
+        },
+        "icon": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+        "name": "Dial",
+        "plugin": "com.emaspa.openxlr.sdPlugin",
+        "property_inspector": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/propertyInspector/dial.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Adjust a level on a dial: channel sends, mix masters, gain, headphones, crossfade, insert plugin controls",
+        "uuid": "com.emaspa.openxlr.dial",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.2.0",
+      "current_state": 0,
+      "settings": {
+        "activeIndex": 0,
+        "cycleGesture": "tap",
+        "target": "chvol:music",
+        "targets": [
+          "chvol:music"
+        ]
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    },
+    {
+      "action": {
+        "controllers": [
+          "Encoder"
+        ],
+        "disable_automatic_states": false,
+        "encoder": {
+          "background": "",
+          "icon": "",
+          "layout": "layouts/dial.json",
+          "stack_color": "",
+          "trigger_description": {
+            "long_touch": "",
+            "push": "Mute / reset",
+            "rotate": "Adjust level",
+            "touch": ""
+          }
+        },
+        "icon": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+        "name": "Dial",
+        "plugin": "com.emaspa.openxlr.sdPlugin",
+        "property_inspector": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/propertyInspector/dial.html",
+        "states": [
+          {
+            "alignment": "middle",
+            "background_colour": "#000000",
+            "colour": "#FFFFFF",
+            "family": "Liberation Sans",
+            "image": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+            "image_override": null,
+            "image_scale": 100,
+            "name": "",
+            "show": true,
+            "size": 16,
+            "stroke_colour": "#000000",
+            "stroke_size": 3,
+            "style": "Regular",
+            "text": "",
+            "text_override": null,
+            "underline": false
+          }
+        ],
+        "supported_in_multi_actions": false,
+        "tooltip": "Adjust a level on a dial: channel sends, mix masters, gain, headphones, crossfade, insert plugin controls",
+        "uuid": "com.emaspa.openxlr.dial",
+        "visible_in_action_list": true
+      },
+      "children": null,
+      "context": "Encoder.3.0",
+      "current_state": 0,
+      "settings": {
+        "activeIndex": 0,
+        "cycleGesture": "tap",
+        "target": "chvol:browser",
+        "targets": [
+          "chvol:browser",
+          "chvol:system"
+        ]
+      },
+      "states": [
+        {
+          "alignment": "middle",
+          "background_colour": "#000000",
+          "colour": "#FFFFFF",
+          "family": "Liberation Sans",
+          "image": "/usr/share/openxlr/com.emaspa.openxlr.sdPlugin/icons/dial.png",
+          "image_override": null,
+          "image_scale": 100,
+          "name": "",
+          "show": true,
+          "size": 16,
+          "stroke_colour": "#000000",
+          "stroke_size": 3,
+          "style": "Regular",
+          "text": "",
+          "text_override": null,
+          "underline": false
+        }
+      ]
+    }
+  ]
+}

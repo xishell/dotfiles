@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Reset stuck auth flow artifacts first.
+rm -f "$HOME/.cache/lutris/Ubisoft Connect-login-in-progress"
+rm -f "$HOME/.cache/lutris/ubisoft/.auth" "$HOME/.cache/lutris/ubisoft/.token"
+rm -rf "$HOME/.cache/lutris/ubisoft/library"
+
+# Start Lutris with runtime patch for Ubisoft embedded login.
+PYTHONPATH="$HOME/lutris_patch${PYTHONPATH:+:$PYTHONPATH}" lutris "$@"

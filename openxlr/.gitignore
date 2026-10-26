@@ -1,0 +1,6 @@
+# Only the mixer (channels, mic chain, EQ, routing, app rules) and UI prefs are config;
+# the rest is device cache, install history and local backups.
+.config/openxlr/*
+!.config/openxlr/mixer.json
+!.config/openxlr/ui.json
+!.config/openxlr/deck-palette.json

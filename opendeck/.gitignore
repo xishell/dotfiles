@@ -1,0 +1,5 @@
+# Profiles and settings only; plugins (incl. the OpenXLR symlink), logs and caches are local.
+.config/opendeck/*
+!.config/opendeck/profiles/
+!.config/opendeck/settings.json
+!.config/opendeck/applications.json

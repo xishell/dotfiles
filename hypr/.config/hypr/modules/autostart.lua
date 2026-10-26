@@ -10,7 +10,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("mako")
     hl.exec_cmd("swayosd-server")
 
-    -- Quickshell mixer (IPC-triggered via Super+A or waybar pulseaudio click)
+    -- Quickshell mixer (IPC-triggered via Super+A)
     hl.exec_cmd("qs -c mixer")
 
     -- Quickshell media controls (IPC-triggered via Super+P)

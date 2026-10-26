@@ -1,0 +1,689 @@
+{
+  "userChannels": [
+    {
+      "id": "game",
+      "name": "Game",
+      "capturePair": 0
+    },
+    {
+      "id": "music",
+      "name": "Music",
+      "capturePair": 0
+    },
+    {
+      "id": "browser",
+      "name": "Browser",
+      "capturePair": 0
+    },
+    {
+      "id": "system",
+      "name": "System",
+      "capturePair": 0
+    },
+    {
+      "id": "voicechat",
+      "name": "Voice Chat",
+      "capturePair": 0
+    },
+    {
+      "id": "sfx",
+      "name": "SFX",
+      "capturePair": 0
+    }
+  ],
+  "mixes": [
+    {
+      "id": "monitor",
+      "name": "Monitor A",
+      "kind": "monitor",
+      "hasUserKind": true
+    },
+    {
+      "id": "stream",
+      "name": "Stream",
+      "kind": "virtualMic",
+      "hasUserKind": true
+    },
+    {
+      "id": "chat",
+      "name": "Chat",
+      "kind": "virtualMic",
+      "hasUserKind": true
+    }
+  ],
+  "userMixes": [
+    {
+      "id": "stream",
+      "name": "Stream",
+      "kind": "virtualMic",
+      "hasUserKind": true
+    },
+    {
+      "id": "chat",
+      "name": "Chat",
+      "kind": "virtualMic",
+      "hasUserKind": true
+    }
+  ],
+  "exclusiveGroups": [],
+  "mixVolumes": {
+    "monitor": 1,
+    "stream": 1,
+    "chat": 1,
+    "auxout": 1
+  },
+  "mixMuted": [],
+  "levels": {
+    "xlr1|monitor": 1,
+    "xlr1|stream": 1,
+    "xlr1|chat": 1,
+    "xlr1|auxout": 1,
+    "xlr2|monitor": 1,
+    "xlr2|stream": 1,
+    "xlr2|chat": 1,
+    "xlr2|auxout": 1,
+    "aux|monitor": 1,
+    "aux|stream": 1,
+    "aux|chat": 1,
+    "aux|auxout": 0,
+    "game|monitor": 1,
+    "game|stream": 1,
+    "game|chat": 1,
+    "game|auxout": 0.5,
+    "music|monitor": 1,
+    "music|stream": 1,
+    "music|chat": 1,
+    "music|auxout": 1,
+    "browser|monitor": 1,
+    "browser|stream": 1,
+    "browser|chat": 1,
+    "browser|auxout": 1,
+    "system|monitor": 1,
+    "system|stream": 0.6,
+    "system|chat": 0.6,
+    "system|auxout": 0.6,
+    "voicechat|monitor": 1,
+    "voicechat|stream": 1,
+    "voicechat|chat": 1,
+    "voicechat|auxout": 1,
+    "sfx|monitor": 1,
+    "sfx|stream": 1,
+    "sfx|chat": 1,
+    "sfx|auxout": 1
+  },
+  "channelVolumes": {
+    "xlr1": 1,
+    "xlr2": 1,
+    "aux": 1,
+    "game": 0.5,
+    "music": 0.6,
+    "browser": 0.5,
+    "system": 0.5,
+    "voicechat": 0.5,
+    "sfx": 0.51
+  },
+  "channelMuted": [
+    "xlr1|monitor",
+    "xlr2|monitor",
+    "aux|monitor",
+    "aux|auxout",
+    "game|chat",
+    "music|stream",
+    "music|chat",
+    "browser|stream",
+    "browser|chat",
+    "system|stream",
+    "system|chat",
+    "voicechat|stream",
+    "voicechat|chat",
+    "sfx|stream",
+    "sfx|chat"
+  ],
+  "monitorOutputs": [
+    "alsa_output.usb-8BitDo_8BitDo_Ultimate_3_Controller_for_XBOX_0000D41C099E764C-00.stereo-fallback",
+    "alsa_output.usb-Elgato_Systems_Elgato_Wave_XLR_DS24K1A01889-00.analog-stereo"
+  ],
+  "monitorMuted": false,
+  "monitorMuteMicrophones": false,
+  "monitorOutputMutes": {},
+  "monitorFeeds": {},
+  "appOverrides": {
+    "Amberol": "music",
+    "bottles": "game",
+    "Brave": "browser",
+    "brave-browser": "browser",
+    "chrome": "browser",
+    "chromium": "browser",
+    "clementine": "music",
+    "cmus": "music",
+    "discord": "voicechat",
+    "Element": "voicechat",
+    "element-desktop": "voicechat",
+    "epiphany": "browser",
+    "firefox": "browser",
+    "floorp": "browser",
+    "fmodexapp": "game",
+    "gamescope": "game",
+    "googlechrome": "browser",
+    "google-chrome": "browser",
+    "heroic": "game",
+    "java": "game",
+    "javaw": "game",
+    "librewolf": "browser",
+    "Lollypop": "music",
+    "lutris": "game",
+    "mangohud": "game",
+    "microsoftteams": "voicechat",
+    "Minecraft": "game",
+    "mpv": "music",
+    "Mumble": "voicechat",
+    "ncspot": "music",
+    "opera": "browser",
+    "retroarch": "game",
+    "rhythmbox": "music",
+    "shairportsync": "music",
+    "shairport-sync": "music",
+    "Signal": "voicechat",
+    "signal-desktop": "voicechat",
+    "Slack": "voicechat",
+    "spotify": "music",
+    "steam": "game",
+    "strawberry": "music",
+    "teams-for-linux": "voicechat",
+    "teamspeak3": "voicechat",
+    "TIDAL": "music",
+    "tidal-hifi": "music",
+    "ts3client_linux_amd64": "voicechat",
+    "vesktop": "voicechat",
+    "vivaldi": "browser",
+    "vlc": "music",
+    "waterfox": "browser",
+    "WebCord": "voicechat",
+    "zen": "browser",
+    "zen-bin": "browser",
+    "zen-browser": "browser",
+    "zoom": "voicechat",
+    "teamspeak": "voicechat"
+  },
+  "preserveBrowserOutputs": false,
+  "browserSiteChannels": {},
+  "knownApps": [
+    {
+      "identity": "quickshell",
+      "label": "quickshell",
+      "channelId": "system"
+    },
+    {
+      "identity": "waybar",
+      "label": "waybar",
+      "channelId": "system"
+    },
+    {
+      "identity": "zen-bin",
+      "label": "Zen",
+      "channelId": "browser"
+    },
+    {
+      "identity": "pacat",
+      "label": "parecord",
+      "channelId": "system"
+    },
+    {
+      "identity": "Amberol",
+      "label": "Amberol",
+      "channelId": "music"
+    },
+    {
+      "identity": "bottles",
+      "label": "bottles",
+      "channelId": "game"
+    },
+    {
+      "identity": "Brave",
+      "label": "Brave",
+      "channelId": "browser"
+    },
+    {
+      "identity": "brave-browser",
+      "label": "brave-browser",
+      "channelId": "browser"
+    },
+    {
+      "identity": "chrome",
+      "label": "chrome",
+      "channelId": "browser"
+    },
+    {
+      "identity": "chromium",
+      "label": "chromium",
+      "channelId": "browser"
+    },
+    {
+      "identity": "clementine",
+      "label": "clementine",
+      "channelId": "music"
+    },
+    {
+      "identity": "cmus",
+      "label": "cmus",
+      "channelId": "music"
+    },
+    {
+      "identity": "discord",
+      "label": "discord",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "Element",
+      "label": "Element",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "element-desktop",
+      "label": "element-desktop",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "epiphany",
+      "label": "epiphany",
+      "channelId": "browser"
+    },
+    {
+      "identity": "firefox",
+      "label": "firefox",
+      "channelId": "browser"
+    },
+    {
+      "identity": "floorp",
+      "label": "floorp",
+      "channelId": "browser"
+    },
+    {
+      "identity": "fmodexapp",
+      "label": "FMOD Ex App",
+      "channelId": "game"
+    },
+    {
+      "identity": "gamescope",
+      "label": "gamescope",
+      "channelId": "game"
+    },
+    {
+      "identity": "googlechrome",
+      "label": "Google Chrome",
+      "channelId": "browser"
+    },
+    {
+      "identity": "google-chrome",
+      "label": "google-chrome",
+      "channelId": "browser"
+    },
+    {
+      "identity": "heroic",
+      "label": "heroic",
+      "channelId": "game"
+    },
+    {
+      "identity": "java",
+      "label": "java",
+      "channelId": "game"
+    },
+    {
+      "identity": "javaw",
+      "label": "javaw",
+      "channelId": "game"
+    },
+    {
+      "identity": "librewolf",
+      "label": "librewolf",
+      "channelId": "browser"
+    },
+    {
+      "identity": "Lollypop",
+      "label": "Lollypop",
+      "channelId": "music"
+    },
+    {
+      "identity": "lutris",
+      "label": "lutris",
+      "channelId": "game"
+    },
+    {
+      "identity": "mangohud",
+      "label": "mangohud",
+      "channelId": "game"
+    },
+    {
+      "identity": "microsoftteams",
+      "label": "Microsoft Teams",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "Minecraft",
+      "label": "Minecraft",
+      "channelId": "game"
+    },
+    {
+      "identity": "mpv",
+      "label": "mpv",
+      "channelId": "music"
+    },
+    {
+      "identity": "Mumble",
+      "label": "Mumble",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "ncspot",
+      "label": "ncspot",
+      "channelId": "music"
+    },
+    {
+      "identity": "opera",
+      "label": "opera",
+      "channelId": "browser"
+    },
+    {
+      "identity": "retroarch",
+      "label": "retroarch",
+      "channelId": "game"
+    },
+    {
+      "identity": "rhythmbox",
+      "label": "rhythmbox",
+      "channelId": "music"
+    },
+    {
+      "identity": "shairportsync",
+      "label": "Shairport Sync",
+      "channelId": "music"
+    },
+    {
+      "identity": "shairport-sync",
+      "label": "shairport-sync",
+      "channelId": "music"
+    },
+    {
+      "identity": "Signal",
+      "label": "Signal",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "signal-desktop",
+      "label": "signal-desktop",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "Slack",
+      "label": "Slack",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "spotify",
+      "label": "spotify",
+      "channelId": "music"
+    },
+    {
+      "identity": "steam",
+      "label": "Steam",
+      "channelId": "game"
+    },
+    {
+      "identity": "strawberry",
+      "label": "strawberry",
+      "channelId": "music"
+    },
+    {
+      "identity": "teams-for-linux",
+      "label": "teams-for-linux",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "teamspeak3",
+      "label": "TeamSpeak 3",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "TIDAL",
+      "label": "TIDAL",
+      "channelId": "music"
+    },
+    {
+      "identity": "tidal-hifi",
+      "label": "tidal-hifi",
+      "channelId": "music"
+    },
+    {
+      "identity": "ts3client_linux_amd64",
+      "label": "Ts3client_linux_amd64",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "vesktop",
+      "label": "vesktop",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "vivaldi",
+      "label": "vivaldi",
+      "channelId": "browser"
+    },
+    {
+      "identity": "vlc",
+      "label": "vlc",
+      "channelId": "music"
+    },
+    {
+      "identity": "waterfox",
+      "label": "waterfox",
+      "channelId": "browser"
+    },
+    {
+      "identity": "WebCord",
+      "label": "WebCord",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "zen",
+      "label": "zen",
+      "channelId": "browser"
+    },
+    {
+      "identity": "zen-browser",
+      "label": "zen-browser",
+      "channelId": "browser"
+    },
+    {
+      "identity": "zoom",
+      "label": "zoom",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "teamspeak",
+      "label": "teamspeak",
+      "channelId": "voicechat"
+    },
+    {
+      "identity": "pw-top",
+      "label": "pw-top",
+      "channelId": "system"
+    },
+    {
+      "identity": "wpctl",
+      "label": "wpctl",
+      "channelId": "system"
+    },
+    {
+      "identity": "easyeffects",
+      "label": "easyeffects",
+      "channelId": "system"
+    },
+    {
+      "identity": "xdg-desktop-portal-hyprland",
+      "label": "xdg-desktop-portal-hyprland",
+      "channelId": "system"
+    },
+    {
+      "identity": "witcher3",
+      "label": "witcher3",
+      "channelId": "game"
+    },
+    {
+      "identity": "ironbar",
+      "label": "Ironbar",
+      "channelId": "system"
+    },
+    {
+      "identity": "swayosd-server",
+      "label": "SwayOSD",
+      "channelId": "system"
+    },
+    {
+      "identity": "gpu-screen-recorder",
+      "label": "Gpu-screen-recorder",
+      "channelId": "system"
+    },
+    {
+      "identity": "thewitcher3",
+      "label": "The Witcher 3",
+      "channelId": "game"
+    }
+  ],
+  "lowCutHz": 0,
+  "softClipGuard": false,
+  "compensateMixLatency": false,
+  "inserts": {
+    "xlr1": [
+      {
+        "id": "denoise",
+        "kind": "vst3",
+        "plugin": "ABCDEF019182FAEB5765726D526E6E31",
+        "label": "Noise suppression (RNNoise)",
+        "bypass": false,
+        "nativeHost": true,
+        "params": {
+          "1328372421": 0,
+          "1902626702": 0.1,
+          "970313673": 0
+        }
+      },
+      {
+        "id": "gate",
+        "kind": "lv2",
+        "plugin": "http://lsp-plug.in/plugins/lv2/gate_mono",
+        "label": "Gate",
+        "bypass": false,
+        "nativeHost": false,
+        "params": {
+          "gt": 0.003981,
+          "gh": 1,
+          "ht": 0.630957,
+          "gr": 0.251189,
+          "at": 5,
+          "rt": 250,
+          "hold": 300,
+          "sla": 5,
+          "scm": 1,
+          "shpm": 1,
+          "shpf": 100,
+          "gz": 0.630957,
+          "hz": 0.630957,
+          "scr": 15
+        }
+      },
+      {
+        "id": "comp",
+        "kind": "lv2",
+        "plugin": "http://lsp-plug.in/plugins/lv2/compressor_mono",
+        "label": "Compressor",
+        "bypass": false,
+        "nativeHost": false,
+        "params": {
+          "cm": 0,
+          "al": 0.079433,
+          "at": 10,
+          "rt": 80,
+          "cr": 3,
+          "kn": 0.501,
+          "mk": 1.778279
+        }
+      },
+      {
+        "id": "limit",
+        "kind": "lv2",
+        "plugin": "http://lsp-plug.in/plugins/lv2/limiter_mono",
+        "label": "Limiter",
+        "bypass": false,
+        "nativeHost": false,
+        "params": {
+          "th": 0.841,
+          "boost": 0,
+          "lk": 5,
+          "at": 5,
+          "rt": 20
+        }
+      }
+    ]
+  },
+  "eq": {
+    "xlr1": {
+      "enabled": true,
+      "bands": [
+        {
+          "enabled": true,
+          "type": "lowCut",
+          "frequency": 90,
+          "gain": 0,
+          "q": 0.7046930689671469
+        },
+        {
+          "enabled": true,
+          "type": "peak",
+          "frequency": 500,
+          "gain": -3.5,
+          "q": 1.4190575216890926
+        },
+        {
+          "enabled": true,
+          "type": "peak",
+          "frequency": 3500,
+          "gain": 4,
+          "q": 1.0185913880541169
+        },
+        {
+          "enabled": true,
+          "type": "highShelf",
+          "frequency": 10000,
+          "gain": 4,
+          "q": 0.7046930689671469
+        }
+      ]
+    }
+  },
+  "eqProcessing": {
+    "xlr1": "software"
+  },
+  "ducking": {
+    "processing": "device",
+    "enabled": false,
+    "key": "xlr1",
+    "channels": [
+      "game",
+      "music",
+      "browser",
+      "system",
+      "voicechat",
+      "sfx"
+    ],
+    "mixes": [
+      "monitor"
+    ],
+    "sensitivity": "medium",
+    "amount": "medium",
+    "speed": "medium"
+  },
+  "auxPortEnabled": true,
+  "enforcedDefaultSink": "OpenXLR_ch_system",
+  "enforcedDefaultSource": "OpenXLR_chat",
+  "appearance": {}
+}

@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# Rebuild the Elgato Wave XLR capture stream after a USB re-enumeration.
+# PipeWire tears down the playback PCM cleanly on disconnect but can leave the
+# capture PCM wedged (state RUNNING, hw_ptr stuck at 0), so the mic goes silent
+# until the card profile is bounced. Triggered by udev on device re-add.
+set -uo pipefail
+
+MATCH="Elgato_Wave_XLR"
+WANT_PROFILE="output:analog-stereo+input:mono-fallback"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/wave-xlr-recover.log"
+mkdir -p "$(dirname "$LOG")"
+log() { printf '%s %s\n' "$(date -Is)" "$*" >>"$LOG"; }
+
+# WirePlumber needs a moment to republish the card after udev re-adds it.
+card=""
+for _ in $(seq 1 30); do
+    card=$(pactl list short cards 2>/dev/null | awk -v m="$MATCH" '$2 ~ m {print $2; exit}')
+    [ -n "$card" ] && break
+    sleep 1
+done
+[ -z "$card" ] && { log "FAIL: no card matching $MATCH appeared"; exit 1; }
+
+profile=$(pactl list cards 2>/dev/null | grep -F -A200 "Name: $card" \
+          | grep -m1 'Active Profile:' | sed 's/.*Active Profile: //')
+[ -z "$profile" ] && { log "FAIL: could not read active profile for $card"; exit 1; }
+
+# After a replug the card can come back output-only; always restore the mic side.
+case "$profile" in
+    *+input:*) ;;
+    *) log "active profile $profile has no input, forcing $WANT_PROFILE"
+       profile="$WANT_PROFILE" ;;
+esac
+
+# Bounce through "off": going via the output-only variant swaps the output node
+# while the old one still exists, so it comes back as "...analog-stereo.2" and
+# OpenXLR (which links by exact name) loses the Wave output.
+bounce="off"
+log "card=$card profile=$profile bounce=$bounce"
+
+pactl set-card-profile "$card" "$bounce" 2>/dev/null || log "warn: bounce to $bounce failed"
+sleep 1
+restored=0
+for _ in 1 2 3; do
+    pactl set-card-profile "$card" "$profile" 2>/dev/null && { restored=1; break; }
+    sleep 1
+done
+[ "$restored" = 1 ] || { log "FAIL: could not restore profile $profile"; exit 1; }
+sleep 2
+
+# Verify the capture path actually produces frames end to end.
+src=$(pactl list short sources 2>/dev/null \
+      | awk -v m="$MATCH" '$2 ~ m && $2 !~ /monitor/ {print $2; exit}')
+[ -z "$src" ] && { log "FAIL: no capture source after restore"; exit 1; }
+
+tmp=$(mktemp -t wavexlr.XXXXXX.wav)
+timeout 3 parecord --device="$src" --file-format=wav --channels=1 \
+        --rate=48000 --latency-msec=100 "$tmp" >/dev/null 2>&1
+bytes=$(stat -c%s "$tmp" 2>/dev/null || echo 0)
+rm -f "$tmp"
+
+if [ "$bytes" -gt 2000 ]; then
+    log "OK: recovered, capture verified ($bytes bytes in 3s)"
+else
+    log "FAIL: capture still wedged after bounce ($bytes bytes)"
+    exit 1
+fi
+
+# Safety net: WirePlumber keeps a suffixed node name until it restarts. Restart
+# it and hand OpenXLR its saved outputs again so the Wave gets relinked.
+if pactl list short sinks 2>/dev/null | awk -v m="$MATCH" '$2 ~ m {print $2}' \
+        | grep -qE '\.analog-stereo\.[0-9]+$'; then
+    log "warn: Wave sink has a suffixed name, restarting wireplumber"
+    systemctl --user restart wireplumber
+    sleep 3
+    token="${XDG_RUNTIME_DIR:-/run/user/$UID}/openxlr/token"
+    outputs=$(python3 -c 'import json,sys; print(json.dumps(json.load(open(sys.argv[1]))["monitorOutputs"]))' \
+              "$HOME/.config/openxlr/mixer.json" 2>/dev/null)
+    if [ -r "$token" ] && [ -n "$outputs" ]; then
+        curl -s -m 5 -X POST -H "Authorization: Bearer $(cat "$token")" \
+             -H 'Content-Type: application/json' http://127.0.0.1:37890/api/v1/commands \
+             -d "{\"cmd\":\"setMonitorOutputs\",\"devices\":$outputs}" >/dev/null \
+            && log "OK: OpenXLR outputs re-applied" || log "warn: OpenXLR re-apply failed"
+    fi
+fi

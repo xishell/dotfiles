@@ -6,11 +6,11 @@
 #   audio-mode legacy     virtual sinks + find-user-target.lua + output priority
 #   audio-mode openxlr    OpenXLR daemon owns channels, routing and the Wave XLR
 #
-# Legacy files are parked in ~/.config/audio-modes/legacy-parked/ while OpenXLR
-# runs, so switching back restores them byte for byte.
+# The legacy files live in ~/dotfiles/audio/legacy/ (not stowed): legacy mode copies
+# them into place, OpenXLR mode removes the copies.
 set -euo pipefail
 
-PARK="$HOME/.config/audio-modes/legacy-parked"
+LEGACY_SRC="$HOME/dotfiles/audio/legacy"
 LEGACY_FILES=(
     "$HOME/.config/pipewire/pipewire.conf.d/virtual-sinks.conf"
     "$HOME/.config/wireplumber/wireplumber.conf.d/50-app-routing.conf"
@@ -29,10 +29,7 @@ restart_audio() {
 }
 
 to_openxlr() {
-    mkdir -p "$PARK"
-    for f in "${LEGACY_FILES[@]}"; do
-        [ -f "$f" ] && mv "$f" "$PARK/"
-    done
+    rm -f "${LEGACY_FILES[@]}"
     restart_audio
     systemctl --user enable --now openxlr-daemon.service
 }
@@ -40,7 +37,8 @@ to_openxlr() {
 to_legacy() {
     systemctl --user disable --now openxlr-daemon.service 2>/dev/null || true
     for f in "${LEGACY_FILES[@]}"; do
-        [ -f "$PARK/$(basename "$f")" ] && mv "$PARK/$(basename "$f")" "$f"
+        mkdir -p "$(dirname "$f")"
+        cp "$LEGACY_SRC/$(basename "$f")" "$f"
     done
     restart_audio
     wpctl clear-default 2>/dev/null || true

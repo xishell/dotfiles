@@ -1,0 +1,6 @@
+# Elgato Wave XLR (0fd9:007d) intermittently drops off USB and re-enumerates.
+# PipeWire leaves the capture PCM wedged when that happens, so bounce the card
+# profile via a user service once the sound card node re-appears.
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="card*", \
+  ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="007d", \
+  TAG+="systemd", ENV{SYSTEMD_USER_WANTS}+="wave-xlr-recover.service"

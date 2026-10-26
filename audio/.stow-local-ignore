@@ -1,0 +1,3 @@
+# legacy/ is copied into place by audio-mode, not stowed
+^/legacy
+\.stow-local-ignore

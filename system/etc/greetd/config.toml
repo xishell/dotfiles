@@ -1,0 +1,11 @@
+# greetd: replaces ly (ly@tty2). The text login on tty1 stays as a fallback.
+# Fingerprint: pam_fprintd in /etc/pam.d/greetd; keyring: keyring-tpm-unlock.service.
+[terminal]
+vt = 2
+
+[default_session]
+# tuigreet: text greeter that shows PAM messages ("Place your finger…").
+# Styled like ly: white on black, no clock. F1 = power, F2 = command, F3 = sessions. Default = the uwsm session (it runs
+# ~/.config/autostart apps like 1Password/OpenDeck); user + session are remembered.
+command = "tuigreet --remember --remember-user-session --asterisks --cmd 'uwsm start -e -D Hyprland hyprland.desktop' --title --custom-title cachyos --width 50 --container-padding 2 --prompt-padding 1 --kb-power 1 --kb-command 2 --kb-sessions 3 --theme 'border=white;text=white;prompt=white;input=white;action=white;button=white;greet=white;title=white;container=black'"
+user = "greeter"

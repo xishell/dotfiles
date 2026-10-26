@@ -1,0 +1,52 @@
+From 7daebe97e9b2276b1540e375a090621054df3827 Mon Sep 17 00:00:00 2001
+From: build <build@local>
+Date: Mon, 26 Oct 2026 21:00:00 +0100
+Subject: [PATCH] synatlsmoc: keep waiting for a finger after the interrupt
+ timeout
+
+The finger-down wait is a 60 s interrupt transfer. When it timed out the
+verify failed with "transfer timed out", which fprintd reports as
+verify-unknown-error; hyprlock then disables fingerprint auth for the rest
+of the lock. Re-arm the wait on a plain timeout instead.
+---
+ .../libfprint/drivers/synatlsmoc/synatlsmoc.c     | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/libfprint/libfprint/libfprint/drivers/synatlsmoc/synatlsmoc.c b/libfprint/libfprint/libfprint/drivers/synatlsmoc/synatlsmoc.c
+index 81d3ce6..74b042e 100644
+--- a/libfprint/libfprint/libfprint/drivers/synatlsmoc/synatlsmoc.c
++++ b/libfprint/libfprint/libfprint/drivers/synatlsmoc/synatlsmoc.c
+@@ -3153,15 +3153,30 @@ synatlsmoc_load_sample_pairing_data (FpiDeviceSynaTlsMoc *self)
+ }
+ #endif
+ 
++static void synatlsmoc_wait_for_events (FpiDeviceSynaTlsMoc *self);
++
+ static void
+ synatlsmoc_event_interrupt_cb (FpiUsbTransfer *transfer,
+                                FpDevice *device,
+                                gpointer user_data,
+                                GError *error)
+ {
+   fp_dbg ("Wait for events callback");
+   FpiDeviceSynaTlsMoc *self = FPI_DEVICE_SYNATLSMOC (device);
+ 
++  /* No event within the interrupt timeout just means nobody touched the sensor.
++   * Wait again instead of failing the action: a lock screen verifies for hours,
++   * and failing here surfaces as verify-unknown-error, which ends fingerprint auth
++   * there. Cancellation and real errors still fail below. */
++  if (error && g_error_matches (error, G_USB_DEVICE_ERROR,
++                                G_USB_DEVICE_ERROR_TIMED_OUT))
++    {
++      fp_dbg ("No event before timeout, waiting again");
++      g_error_free (error);
++      synatlsmoc_wait_for_events (self);
++      return;
++    }
++
+   if (error)
+     {
+       fpi_ssm_mark_failed (self->task_ssm, error);
+-- 
+2.56.0
+
