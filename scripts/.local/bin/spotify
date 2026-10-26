@@ -3,5 +3,6 @@
 # pause/resume (2026-10). Spotify skips that backend when it can't find a PipeWire
 # client.conf, falling back to libpulse via pipewire-pulse, which behaves.
 # Remove this wrapper once a Spotify update fixes the PipeWire backend.
+# --disable-gpu: its embedded Chromium crashed in libnvidia-glcore (8 cores in 2 days, 2026-10).
 mkdir -p "$HOME/.local/share/spotify-no-pipewire"
-PIPEWIRE_CONFIG_DIR="$HOME/.local/share/spotify-no-pipewire" exec /usr/bin/spotify "$@"
+PIPEWIRE_CONFIG_DIR="$HOME/.local/share/spotify-no-pipewire" exec /usr/bin/spotify --disable-gpu "$@"

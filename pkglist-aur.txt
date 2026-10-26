@@ -3,7 +3,6 @@
 1password-cli
 apple_cursor
 fluxer-git
-fsel-git
 lib32-gst-plugins-base
 lib32-gst-plugins-good
 lug-helper
@@ -11,7 +10,6 @@ nerd-fonts-sf-mono
 opentrack
 openxlr
 otf-apple-sf-pro-fixed
-otter-launcher
 r2modman
 riscv-gnu-toolchain-bin
 rocksdb-tools

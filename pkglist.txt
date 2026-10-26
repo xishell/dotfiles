@@ -1,7 +1,6 @@
 # pacman packages for the CachyOS desktop (install.sh: paru -S --needed).
 # Regenerate the base list with: pacman -Qqen; keep the Ember block at the bottom.
 accountsservice
-alacritty
 alsa-firmware
 alsa-plugins
 alsa-utils
@@ -28,7 +27,6 @@ cachyos-keyring
 cachyos-micro-settings
 cachyos-mirrorlist
 cachyos-packageinstaller
-cachyos-plymouth-bootanimation
 cachyos-rate-mirrors
 cachyos-settings
 cachyos-snapper-support
@@ -74,7 +72,6 @@ firefox
 fontforge
 fprintd
 fsarchiver
-fuzzel
 gdb
 git
 github-cli
@@ -96,7 +93,6 @@ hdparm
 hwdetect
 hwinfo
 hyprland
-hyprlauncher
 hyprshutdown
 inetutils
 inkscape
@@ -133,7 +129,6 @@ lsp-plugins-lv2
 lsscsi
 lutris
 lvm2
-ly
 man-db
 man-pages
 mdadm
@@ -181,9 +176,7 @@ pipewire-pulse
 pkgfile
 playerctl
 plocate
-plymouth
 pnpm
-polkit-kde-agent
 poppler-glib
 power-profiles-daemon
 prismlauncher
@@ -204,7 +197,6 @@ rsync
 rtkit
 rustup
 sbctl
-sddm
 sg3_utils
 shairport-sync
 slurp
@@ -242,12 +234,10 @@ virtualbox
 virtualbox-host-dkms
 vlc-plugins-all
 vulkan-radeon
-waybar
 wget
 which
 wireless-regdb
 wireplumber
-wofi
 wpa_supplicant
 wtype
 xdg-user-dirs
@@ -307,3 +297,5 @@ lazygit
 kitty
 gamescope
 uwsm
+libfprint
+impala
