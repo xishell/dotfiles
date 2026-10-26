@@ -1,0 +1,44 @@
+#!/bin/sh
+# Scratchpads: apps that live on their own special workspace and slide over whatever
+# is on screen; the same key hides them again. Window rules (windowrules.lua) send
+# each app there when it opens; this script launches it if needed and gathers a window
+# that opened before the rules (or was moved out) back in.
+#
+#   scratch term     drop-down kitty          Super+`
+#   scratch music    Spotify                  Super+Y
+#   scratch chat     Vesktop (Discord)        Super+D
+set -eu
+
+case "${1:-}" in
+term)  class=dropterm; cmd="kitty --class dropterm" ;;
+music) class=Spotify;  cmd=spotify ;;
+chat)  class=vesktop;  cmd=vesktop ;;
+*)     echo "usage: scratch term|music|chat" >&2; exit 2 ;;
+esac
+name=$1
+
+# "<address> <workspace>" of the app's first window, or nothing
+find_window() {
+    hyprctl clients -j | python3 -c '
+import json, sys
+for c in json.load(sys.stdin):
+    if c["class"] == sys.argv[1]:
+        print(c["address"], c["workspace"]["name"]); break
+' "$class"
+}
+
+win=$(find_window)
+if [ -z "$win" ]; then
+    uwsm app -- $cmd >/dev/null 2>&1 &
+    for _ in $(seq 50); do               # up to 10 s for the window to map
+        sleep 0.2
+        win=$(find_window)
+        [ -n "$win" ] && break
+    done
+    [ -z "$win" ] && exit 1
+fi
+
+if [ "${win#* }" != "special:$name" ]; then
+    hyprctl dispatch "hl.dsp.window.move({ workspace = \"special:$name\", follow = false, window = \"address:${win%% *}\" })" >/dev/null
+fi
+hyprctl dispatch "hl.dsp.workspace.toggle_special(\"$name\")" >/dev/null

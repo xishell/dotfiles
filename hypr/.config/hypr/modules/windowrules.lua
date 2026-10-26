@@ -125,3 +125,48 @@ hl.window_rule({
     match = { class = "^(mpv|vlc|firefox)$" },
     idle_inhibit = "fullscreen",
 })
+
+-- Scratchpads (`scratch`, Super+` / Super+Y / Super+D): each app opens on its own
+-- special workspace and slides over the current one. Floating so they don't reflow.
+hl.window_rule({
+    name      = "scratch-term",
+    match     = { class = "^dropterm$" },
+    workspace = "special:term silent",
+    float     = true,
+    size      = "monitor_w*0.6 monitor_h*0.45",
+    move      = "monitor_w*0.2 54",
+})
+
+hl.window_rule({
+    name      = "scratch-music",
+    match     = { class = "^Spotify$" },
+    workspace = "special:music silent",
+    float     = true,
+    size      = "monitor_w*0.7 monitor_h*0.8",
+    center    = true,
+})
+
+hl.window_rule({
+    name      = "scratch-chat",
+    match     = { class = "^vesktop$" },
+    workspace = "special:chat silent",
+    float     = true,
+    size      = "monitor_w*0.7 monitor_h*0.8",
+    center    = true,
+})
+
+-- No gaps, border or rounding when a workspace holds a single tiled window
+hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
+hl.workspace_rule({ workspace = "f[1]",   gaps_out = 0, gaps_in = 0 })
+hl.window_rule({
+    name        = "smart-gaps-wtv1",
+    match       = { float = false, workspace = "w[tv1]" },
+    border_size = 0,
+    rounding    = 0,
+})
+hl.window_rule({
+    name        = "smart-gaps-f1",
+    match       = { float = false, workspace = "f[1]" },
+    border_size = 0,
+    rounding    = 0,
+})
