@@ -132,6 +132,8 @@ return {
         clangd = function()
           lspconfig.clangd.setup({
             capabilities = capabilities,
+            -- query-driver lets clangd read newlib headers from arm gcc for stm32
+            cmd = { "clangd", "--query-driver=/opt/homebrew/bin/arm-none-eabi-*" },
             filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }, -- Explicitly exclude "asm"
           })
         end,
