@@ -146,3 +146,9 @@ template = "lazygit/theme.yml"
 output   = "lazygit/.config/lazygit/config.yml"
 comment  = "#"
 region   = true
+
+# Claude Code custom theme (~/.claude/themes/, select with /theme). JSON has no comments: no header
+[[target]]
+template = "claude/hearth.json"
+output   = "claude/.claude/themes/hearth.json"
+comment  = ""

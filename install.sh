@@ -7,7 +7,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # Shared (mac + linux) and Linux-only stow packages
-SHARED=(zsh nvim tmux git kitty lazygit bat btop scripts)
+SHARED=(zsh nvim tmux git kitty lazygit bat btop scripts claude)
 LINUX=(hypr ironbar walker elephant mako swayosd mangohud gtk qt6ct fuzzel quickshell)
 
 if [[ ${1:-} != --no-pkgs ]]; then
