@@ -8,6 +8,7 @@ return {
     comment   = "{{ comment | hypr }}",
     fg_dim    = "{{ fg_dim | hypr }}",
     fg        = "{{ fg | hypr }}",
+    primary   = "{{ primary | hypr }}",
     orange    = "{{ orange | hypr }}",
     magenta   = "{{ magenta | hypr }}",
     red       = "{{ red | hypr }}",

@@ -1,4 +1,4 @@
-# theme: Tokyo Night Ember
+# theme: Hearth
 
 `palette.toml` is the only place a colour is written down. Every themed config in
 this repo is generated from it by `gen/` (a small Rust tool), so a colour change is
@@ -31,17 +31,26 @@ theme/
 
 | placeholder | output |
 |---|---|
-| `{{ orange }}` / `{{ orange \| hex }}` | `#ff9e64` |
-| `{{ orange \| bare }}` | `ff9e64` |
-| `{{ orange \| hexa:f2 }}` | `#ff9e64f2` |
-| `{{ orange \| rgb }}` | `255, 158, 100` |
-| `{{ orange \| rgba:0.4 }}` | `rgba(255, 158, 100, 0.4)` |
-| `{{ orange \| hypr }}` | `rgb(ff9e64)` (Hyprland) |
-| `{{ orange \| hypr:ee }}` | `rgba(ff9e64ee)` |
+| `{{ orange }}` / `{{ orange \| hex }}` | `#ff9a4f` |
+| `{{ orange \| bare }}` | `ff9a4f` |
+| `{{ orange \| hexa:f2 }}` | `#ff9a4ff2` |
+| `{{ orange \| rgb }}` | `255, 154, 79` |
+| `{{ orange \| rgba:0.4 }}` | `rgba(255, 154, 79, 0.4)` |
+| `{{ orange \| hypr }}` | `rgb(ff9a4f)` (Hyprland) |
+| `{{ orange \| hypr:ee }}` | `rgba(ff9a4fee)` |
 | `{{ green \| mix:base:0.2 }}` | green laid over base at 20 % (tints the palette lacks) |
 | `{{ meta.name }}` | plain string from `[meta]` |
 
 Tokens: everything under `[colors]` (`crust` … `blue`) and `[ansi]` (`color0` … `color15`).
+`primary` is the one solid focus colour (active workspace, cursor, selection, matches,
+couch chip); `orange` is for numbers and the warm end of the focus gradient.
+
+## Accent check
+
+`[check]` in `palette.toml` lists the accents and the floor each must clear against
+`against` (bg1): WCAG contrast `min_contrast` and CIE LCh(uv) chroma `min_chroma`.
+If any accent fails, `ember-gen` names it and writes nothing, so no washed-out or
+low-contrast colour ships.
 
 ## Targets
 

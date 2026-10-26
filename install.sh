@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bootstrap the CachyOS + Hyprland "Tokyo Night Ember" desktop from this repo.
+# Bootstrap the CachyOS + Hyprland "Hearth" desktop from this repo.
 #   ./install.sh            packages, theme, stow, user services
 #   ./install.sh --no-pkgs  skip the paru sync
 # macOS / servers: stow packages by hand instead (see README.md).

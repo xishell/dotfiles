@@ -1,8 +1,8 @@
-# btop: Tokyo Night Ember. Labels match the bar: cpu yellow, mem cyan, net blue.
+# btop: Hearth. Labels match the bar: cpu yellow, mem cyan, net blue.
 theme[main_bg]="{{ base }}"
 theme[main_fg]="{{ fg }}"
 theme[title]="{{ fg }}"
-theme[hi_fg]="{{ orange }}"
+theme[hi_fg]="{{ primary }}"
 theme[selected_bg]="{{ selection }}"
 theme[selected_fg]="{{ fg }}"
 theme[inactive_fg]="{{ comment }}"

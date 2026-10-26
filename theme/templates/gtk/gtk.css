@@ -1,7 +1,7 @@
-/* GTK 3 (adw-gtk3-dark) and GTK 4 / libadwaita: Tokyo Night Ember named colours.
-   Orange is the accent (focus, selection, default buttons); text on orange is crust. */
-@define-color accent_color {{ orange }};
-@define-color accent_bg_color {{ orange }};
+/* GTK 3 (adw-gtk3-dark) and GTK 4 / libadwaita: Hearth named colours.
+   Primary (orchid) is the accent (focus, selection, default buttons); text on it is crust. */
+@define-color accent_color {{ primary }};
+@define-color accent_bg_color {{ primary }};
 @define-color accent_fg_color {{ crust }};
 @define-color destructive_color {{ red }};
 @define-color destructive_bg_color {{ red }};
@@ -38,7 +38,7 @@
 @define-color shade_color rgba(0, 0, 0, 0.36);
 @define-color scrollbar_outline_color rgba(0, 0, 0, 0.5);
 /* GTK 3 names (adw-gtk3) */
-@define-color theme_selected_bg_color {{ orange }};
+@define-color theme_selected_bg_color {{ primary }};
 @define-color theme_selected_fg_color {{ crust }};
 @define-color theme_bg_color {{ base }};
 @define-color theme_fg_color {{ fg }};

@@ -47,6 +47,10 @@ impl Palette {
         let doc: toml::Table = src.parse().map_err(|e| format!("{}: {e}", path.display()))?;
         let mut map = BTreeMap::new();
         for (section, table) in &doc {
+            // [check] holds the accent rules, not tokens
+            if section == "check" {
+                continue;
+            }
             let table = table.as_table().ok_or_else(|| format!("[{section}] must be a table"))?;
             for (key, v) in table {
                 // Arrays become indexed tokens: wallpaper.sky.0, wallpaper.sky.1, …
@@ -139,6 +143,67 @@ impl Palette {
     }
 }
 
+impl Rgb {
+    /// WCAG relative luminance.
+    fn luminance(self) -> f64 {
+        let (r, g, b) = self.linear();
+        0.2126 * r + 0.7152 * g + 0.0722 * b
+    }
+
+    fn linear(self) -> (f64, f64, f64) {
+        let f = |c: u8| {
+            let c = c as f64 / 255.0;
+            if c <= 0.04045 { c / 12.92 } else { ((c + 0.055) / 1.055).powf(2.4) }
+        };
+        (f(self.0), f(self.1), f(self.2))
+    }
+
+    fn contrast(self, other: Rgb) -> f64 {
+        let (a, b) = (self.luminance(), other.luminance());
+        (a.max(b) + 0.05) / (a.min(b) + 0.05)
+    }
+
+    /// CIE LCh(uv) chroma, D65.
+    fn chroma(self) -> f64 {
+        let (r, g, b) = self.linear();
+        let x = 0.4124 * r + 0.3576 * g + 0.1805 * b;
+        let y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        let z = 0.0193 * r + 0.1192 * g + 0.9505 * b;
+        let d = x + 15.0 * y + 3.0 * z;
+        if d == 0.0 {
+            return 0.0;
+        }
+        let l = if y > 0.008856 { 116.0 * y.cbrt() - 16.0 } else { 903.3 * y };
+        let (u, v) = (13.0 * l * (4.0 * x / d - 0.19784), 13.0 * l * (9.0 * y / d - 0.46834));
+        u.hypot(v)
+    }
+}
+
+/// Enforce palette.toml [check]: every listed accent keeps min_contrast and
+/// min_chroma against the `against` token. A failing palette writes nothing.
+fn check_accents(path: &Path, palette: &Palette) -> Result<(), String> {
+    let src = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let doc: toml::Table = src.parse().map_err(|e| format!("{}: {e}", path.display()))?;
+    let Some(check) = doc.get("check").and_then(|c| c.as_table()) else { return Ok(()) };
+    let num = |k: &str| check.get(k).and_then(|v| v.as_float().or(v.as_integer().map(|i| i as f64)));
+    let color = |name: &str| match palette.0.get(name) {
+        Some(Value::Color(c)) => Ok(*c),
+        _ => Err(format!("[check]: {name:?} is not a colour token")),
+    };
+    let bg = color(check.get("against").and_then(|v| v.as_str()).ok_or("[check] needs `against`")?)?;
+    let (min_contrast, min_chroma) = (num("min_contrast").unwrap_or(0.0), num("min_chroma").unwrap_or(0.0));
+    let mut bad = Vec::new();
+    for name in check.get("accents").and_then(|v| v.as_array()).into_iter().flatten() {
+        let name = name.as_str().ok_or("[check] accents are token names")?;
+        let c = color(name)?;
+        let (cr, ch) = (c.contrast(bg), c.chroma());
+        if cr < min_contrast || ch < min_chroma {
+            bad.push(format!("  {name} #{}: contrast {cr:.2} (min {min_contrast}), chroma {ch:.1} (min {min_chroma})", c.bare()));
+        }
+    }
+    if bad.is_empty() { Ok(()) } else { Err(format!("accents fail [check]:\n{}", bad.join("\n"))) }
+}
+
 struct Target {
     template: String,
     output: String,
@@ -217,6 +282,7 @@ fn main() -> ExitCode {
 
 fn run(root: &Path, check: bool) -> Result<bool, String> {
     let palette = Palette::load(&root.join("theme/palette.toml"))?;
+    check_accents(&root.join("theme/palette.toml"), &palette)?;
     let targets = load_targets(&root.join("theme/targets.toml"))?;
     let mut clean = true;
     for t in &targets {

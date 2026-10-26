@@ -1,6 +1,6 @@
 gui:
   theme:
-    activeBorderColor: ["{{ orange }}", bold]
+    activeBorderColor: ["{{ primary }}", bold]
     inactiveBorderColor: ["{{ overlay }}"]
     searchingActiveBorderColor: ["{{ yellow }}", bold]
     optionsTextColor: ["{{ blue }}"]

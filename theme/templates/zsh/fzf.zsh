@@ -1,2 +1,2 @@
-# fzf colours (Tokyo Night Ember): matches and pointer orange, current row on selection
-export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }--color=fg:{{ fg_dim }},fg+:{{ fg }},bg:-1,bg+:{{ selection }},hl:{{ orange }},hl+:{{ orange }},info:{{ comment }},marker:{{ magenta }},prompt:{{ orange }},spinner:{{ magenta }},pointer:{{ orange }},header:{{ blue }},border:{{ overlay }},label:{{ fg }},query:{{ fg }},gutter:-1"
+# fzf colours (Hearth): matches and pointer primary (orchid), current row on selection
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }--color=fg:{{ fg_dim }},fg+:{{ fg }},bg:-1,bg+:{{ selection }},hl:{{ primary }},hl+:{{ primary }},info:{{ comment }},marker:{{ magenta }},prompt:{{ primary }},spinner:{{ magenta }},pointer:{{ primary }},header:{{ blue }},border:{{ overlay }},label:{{ fg }},query:{{ fg }},gutter:-1"

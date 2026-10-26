@@ -1,4 +1,4 @@
-# mako: Tokyo Night Ember. 380 wide, top right under the bar, 10 from the edges,
+# mako: Hearth. 380 wide, top right under the bar, 10 from the edges,
 # 8 between cards, radius 10, padding 12 14, 1 px overlay border, 5 s timeout.
 # App line (dim) / bold title / body (fg_dim).
 
@@ -34,8 +34,8 @@ format=<span size="small" color="{{ red }}">%a · critical</span>\n<b>%s</b>\n<s
 # Couch/desk switches (couch.py)
 [app-name=couch]
 border-size=2
-border-color={{ orange }}
-format=<span size="small" color="{{ orange }}">%a</span>\n<b>%s</b>\n<span color="{{ fg_dim }}">%b</span>
+border-color={{ primary }}
+format=<span size="small" color="{{ primary }}">%a</span>\n<b>%s</b>\n<span color="{{ fg_dim }}">%b</span>
 
 # Fingerprint prompt from the sudo PAM hook (/usr/local/bin/fprint-notify)
 [app-name=fingerprint]

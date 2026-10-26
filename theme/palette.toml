@@ -1,48 +1,59 @@
-# Tokyo Night Ember: the single source of colour for the Linux rice.
+# Hearth: the single source of colour for the Linux rice.
 # Every consumer is generated from this file by theme/gen (see theme/README.md).
 # Change a value here, run `theme/ember`, commit the regenerated files.
 
 [meta]
-name = "Tokyo Night Ember"
+name = "Hearth"
 variant = "dark"
 
+# Neutral OLED-black ground so the accents glow; the orange → orchid gradient on
+# focused borders carries the warmth. Orchid is the one solid focus colour.
 [colors]
-crust     = "#141217" # wallpaper, lock bg, kitty tab strip, text on orange
-base      = "#1a171d" # window, bar, panel, terminal bg
-surface   = "#2a2530" # inactive border, hover, chips, tracks, dividers
-selection = "#3a3342" # selected row, text selection
-overlay   = "#48404f" # subtle borders (notif, osd, tooltip), line numbers; never text
-comment   = "#938a9b" # hints, empty ws, code comments; lowest allowed text (≥ 4.5:1 on surface)
-fg_dim    = "#b3a9b8" # labels, secondary text
-fg        = "#ddd3d6" # primary text
-orange    = "#ff9e64" # focus: active ws, cursor, matches, couch on, border start
-magenta   = "#c49ae8" # secondary: border end, git branch, keywords, verifying
-red       = "#f2798c" # errors, urgent, critical, destructive
-urgent_bg = "#3a262e" # urgent ws bg (red 15% on base)
-yellow    = "#e6b673" # warning, caps lock, cpu label, attributes
-green     = "#a7c97a" # success, prompt ok, strings, gpu label
-teal      = "#7cc7b2" # pad label
-cyan      = "#86c9e0" # types, git HEAD, mem label
-blue      = "#82a1e6" # dirs, functions, links, net label
+crust     = "#070708" # wallpaper, lock bg, kitty tab strip, text on primary
+base      = "#0d0d0f" # window, bar, panel, terminal bg
+surface   = "#19191d" # inactive border, hover, chips, tracks, dividers
+selection = "#151519" # current line, selected row, text selection
+overlay   = "#343440" # subtle borders, line numbers; never text
+comment   = "#83838c" # hints, empty ws, code comments; lowest allowed text
+fg_dim    = "#c0c0c8" # labels, secondary text, operators
+fg        = "#eceaf2" # primary text, variables
+primary   = "#cf8cf2" # focus solids: active ws, cursor, selection, mode block, couch chip, matches
+orange    = "#ff9a4f" # numbers, constants, gradient-border warm end
+magenta   = "#cf8cf2" # keywords, git branch, gradient-border cool end (same hue as primary)
+red       = "#ff6f88" # errors, urgent, critical, destructive, macros
+urgent_bg = "#2a1518" # urgent ws bg (red 15% on base)
+yellow    = "#f5c84f" # warning, caps lock, cpu, attributes
+green     = "#9ee05f" # success, prompt ok, strings, gpu
+teal      = "#3fd3b0" # enum variants, constants, pad
+cyan      = "#52cfec" # types, mem
+blue      = "#7ea2f2" # functions, dirs, links, net, verifying
 
 # ANSI 16: normal 0-7, bright 8-15
 [ansi]
-color0  = "#2a2530" # black
-color1  = "#f2798c" # red
-color2  = "#a7c97a" # green
-color3  = "#e6b673" # yellow
-color4  = "#82a1e6" # blue
-color5  = "#c49ae8" # magenta
-color6  = "#86c9e0" # cyan
-color7  = "#b3a9b8" # white
-color8  = "#766b82" # 3.5:1 on base (autosuggestions, dim output)
-color9  = "#ff8fa0"
-color10 = "#b9d98c"
-color11 = "#f0c488"
-color12 = "#98b3ef"
-color13 = "#d2adf0"
-color14 = "#9dd6ea"
-color15 = "#ddd3d6"
+color0  = "#19191d" # black
+color1  = "#ff6f88" # red
+color2  = "#9ee05f" # green
+color3  = "#f5c84f" # yellow
+color4  = "#7ea2f2" # blue
+color5  = "#cf8cf2" # magenta
+color6  = "#52cfec" # cyan
+color7  = "#c0c0c8" # white
+color8  = "#43434f" # bright black (autosuggestions, dim output)
+color9  = "#ff8a9d"
+color10 = "#b0e87a"
+color11 = "#f8d471"
+color12 = "#97b4f5"
+color13 = "#dba6f6"
+color14 = "#74daf0"
+color15 = "#eceaf2"
+
+# ember-gen refuses to write anything if an accent drops below these on `against`:
+# WCAG contrast ratio, and CIE LCh(uv) chroma (no washed-out accent ships).
+[check]
+against      = "base"
+min_contrast = 7.0
+min_chroma   = 50.0
+accents      = ["primary", "orange", "magenta", "red", "yellow", "green", "teal", "cyan", "blue"]
 
 # Wallpaper shades (theme/wallpaper/gen.py): hand-tuned in-between values that are
 # not UI tokens. Sun, glow, stars and the magenta wash come from [colors].

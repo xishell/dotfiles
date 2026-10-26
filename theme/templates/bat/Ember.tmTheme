@@ -11,12 +11,12 @@
 			<dict>
 				<key>background</key><string>{{ base }}</string>
 				<key>foreground</key><string>{{ fg }}</string>
-				<key>caret</key><string>{{ orange }}</string>
+				<key>caret</key><string>{{ primary }}</string>
 				<key>selection</key><string>{{ selection }}</string>
 				<key>lineHighlight</key><string>{{ surface }}</string>
 				<key>gutter</key><string>{{ base }}</string>
 				<key>gutterForeground</key><string>{{ overlay }}</string>
-				<key>findHighlight</key><string>{{ orange }}</string>
+				<key>findHighlight</key><string>{{ primary }}</string>
 			</dict>
 		</dict>
 		<dict>

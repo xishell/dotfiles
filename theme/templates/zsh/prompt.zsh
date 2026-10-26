@@ -1,4 +1,4 @@
-# pure prompt colours (Tokyo Night Ember): dir blue, branch magenta, ❯ green / red on error
+# pure prompt colours (Hearth): dir blue, branch magenta, ❯ green / red on error
 zstyle :prompt:pure:path                  color '{{ blue }}'
 zstyle :prompt:pure:git:branch            color '{{ magenta }}'
 zstyle :prompt:pure:git:branch:cached     color '{{ red }}'

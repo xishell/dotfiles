@@ -6,7 +6,7 @@ hl.config({
         gaps_out    = 10,
         border_size = 2,
 
-        -- Ember: focus gradient orange → magenta, everything else surface
+        -- Hearth: focus gradient orange → orchid, everything else surface
         col = {
             active_border   = { colors = { c.orange, c.magenta }, angle = 135 },
             inactive_border = c.surface,

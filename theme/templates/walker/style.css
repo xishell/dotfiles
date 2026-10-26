@@ -1,6 +1,6 @@
-/* walker: Tokyo Night Ember. Launcher 600 wide, top centre, radius 12, 2 px gradient border
+/* walker: Hearth. Launcher 600 wide, top centre, radius 12, 2 px gradient border
    (outer .box-wrapper paints the gradient, inner .box the base: border-image ignores radius),
-   input 16, rows 40 / 14, selected = selection + bold, matches orange. */
+   input 16, rows 40 / 14, selected = selection + bold, matches primary. */
 
 * {
   all: unset;
@@ -29,14 +29,14 @@ scrollbar { opacity: 0; }
   margin-bottom: 4px;
 }
 .chevron {
-  color: {{ orange }};
+  color: {{ primary }};
   font-weight: bold;
   font-size: 16px;
   margin-right: 12px;
 }
 .input {
   color: {{ fg }};
-  caret-color: {{ orange }};
+  caret-color: {{ primary }};
   font-size: 16px;
 }
 .input placeholder { color: {{ comment }}; }
@@ -74,7 +74,7 @@ child:selected .item-subtext { color: {{ fg_dim }}; }
 child:selected .item-quick-activation { background: {{ overlay }}; color: {{ fg }}; }
 
 /* matches (walker marks them with this class where supported) */
-.match, .item-text .match { color: {{ orange }}; font-weight: bold; }
+.match, .item-text .match { color: {{ primary }}; font-weight: bold; }
 
 /* power menu: shutdown is the destructive one */
 .menus-power .item-text { }

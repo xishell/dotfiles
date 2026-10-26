@@ -1,4 +1,4 @@
-# delta: Tokyo Night Ember (included from ~/.config/git/config). Syntax colours come from
+# delta: Hearth (included from ~/.config/git/config). Syntax colours come from
 # the bat theme of the same name; added/removed lines get green/red tints over base.
 [delta]
     syntax-theme = Ember

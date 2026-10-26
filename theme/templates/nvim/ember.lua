@@ -1,4 +1,4 @@
--- Tokyo Night Ember palette for tokyonight.nvim's on_colors (see plugins/theme.lua)
+-- Hearth palette for tokyonight.nvim's on_colors (see plugins/theme.lua)
 return {
 	crust = "{{ crust }}",
 	base = "{{ base }}",
@@ -8,6 +8,7 @@ return {
 	comment = "{{ comment }}",
 	fg_dim = "{{ fg_dim }}",
 	fg = "{{ fg }}",
+	primary = "{{ primary }}",
 	orange = "{{ orange }}",
 	magenta = "{{ magenta }}",
 	red = "{{ red }}",

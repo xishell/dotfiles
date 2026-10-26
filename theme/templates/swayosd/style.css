@@ -1,5 +1,5 @@
-/* swayosd: Tokyo Night Ember. 320x52 pill (radius 26), base bg, overlay border,
-   icon magenta, track surface, fill orange; muted (disabled): icon, label and fill dim. */
+/* swayosd: Hearth. 320x52 pill (radius 26), base bg, overlay border,
+   icon magenta, track surface, fill primary; muted (disabled): icon, label and fill dim. */
 
 window#osd {
   border-radius: 26px;
@@ -38,7 +38,7 @@ window#osd segment.active {
   min-height: inherit;
   border-radius: inherit;
   border: none;
-  background: {{ orange }};
+  background: {{ primary }};
 }
 window#osd segment { margin-left: 8px; }
 window#osd segment:first-child { margin-left: 0; }

@@ -1,4 +1,4 @@
-/* Ironbar: Tokyo Night Ember. Geometry from the Spec board: height 34, margin 10 10 0,
+/* Ironbar: Hearth. Geometry from the Spec board: height 34, margin 10 10 0,
    radius 10, padding 0 8, font 13, workspace pills 3/10 r6, module gap 18. */
 
 * {
@@ -39,7 +39,7 @@
 #bar .workspaces .item.urgent { background-color: {{ urgent_bg }}; font-weight: bold; }
 #bar .workspaces .item.urgent label { color: {{ red }}; }
 #bar .workspaces .item.focused {
-    background-color: {{ orange }};
+    background-color: {{ primary }};
     font-weight: bold;
 }
 #bar .workspaces .item.focused label { color: {{ crust }}; }
@@ -57,7 +57,7 @@
 }
 #chip-desk { background-color: {{ surface }}; color: {{ fg_dim }}; }
 #chip-desk label { color: {{ fg_dim }}; }
-#chip-couch { background-color: {{ orange }}; color: {{ crust }}; font-weight: bold; }
+#chip-couch { background-color: {{ primary }}; color: {{ crust }}; font-weight: bold; }
 #chip-couch label { color: {{ crust }}; }
 
 /* ── clock ── */
@@ -73,13 +73,13 @@
 }
 tooltip label { font-size: 12px; }
 
-.popup-clock .calendar-clock { font-size: 13px; font-weight: bold; color: {{ orange }}; }
+.popup-clock .calendar-clock { font-size: 13px; font-weight: bold; color: {{ primary }}; }
 .popup-clock .calendar { background: none; border: none; color: {{ fg }}; }
-.popup-clock .calendar header { color: {{ orange }}; font-weight: bold; }
+.popup-clock .calendar header { color: {{ primary }}; font-weight: bold; }
 .popup-clock .calendar .day-name { color: {{ fg_dim }}; }
 .popup-clock .calendar .other-month { color: {{ comment }}; }
 .popup-clock .calendar :selected {
-    background-color: {{ orange }};
+    background-color: {{ primary }};
     color: {{ crust }};
     font-weight: bold;
     border-radius: 6px;

@@ -1,4 +1,4 @@
-# Ironbar: Tokyo Night Ember. Desk monitor only; the TV runs Steam fullscreen.
+# Ironbar: Hearth. Desk monitor only; the TV runs Steam fullscreen.
 # Stats come from ~/.local/bin/ember-bar (icon + value, value yellow/red past warn/crit).
 # couch.py sets the couch_* ironvars on every mode switch (`couch barsync` at login).
 
