@@ -1,0 +1,36 @@
+#!/bin/sh
+# Keep awake: hold a systemd idle inhibitor so hypridle neither locks nor blanks the
+# screens (hypridle honours systemd inhibitors). For watching or reading outside
+# fullscreen; fullscreen windows already inhibit idle on their own.
+#
+#   awake            toggle (Super+C, coffee cup on the bar while on)
+#   awake barsync    push the current state to the bar (ironbar var awake_on)
+set -eu
+
+pidfile="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/awake.pid"
+
+running() { [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; }
+
+barsync() {
+    if running; then v=true; else v=""; fi
+    ironbar var set awake_on "$v" >/dev/null 2>&1 || true
+}
+
+case "${1:-toggle}" in
+toggle)
+    if running; then
+        pkill -P "$(cat "$pidfile")" 2>/dev/null || true   # the sleep under systemd-inhibit
+        kill "$(cat "$pidfile")" 2>/dev/null || true
+        rm -f "$pidfile"
+    else
+        systemd-inhibit --what=idle --who=awake --why="Keep awake (Super+C)" sleep infinity 2>/dev/null &
+        echo $! > "$pidfile"
+    fi
+    barsync
+    ;;
+barsync)
+    barsync
+    ;;
+*)
+    echo "usage: awake [toggle|barsync]" >&2; exit 2 ;;
+esac

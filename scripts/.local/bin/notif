@@ -1,0 +1,34 @@
+#!/bin/sh
+# Notifications: do-not-disturb toggle and a history picker.
+#
+#   notif dnd        toggle mako's do-not-disturb mode (Super+N, bell on the bar)
+#   notif history    recent notifications in walker; the pick is copied (Super+Shift+N)
+#   notif barsync    push the current mode to the bar (ironbar vars dnd_on / dnd_off)
+set -eu
+
+barsync() {
+    if makoctl mode | grep -qx do-not-disturb; then on=true; off=""; else on=""; off=true; fi
+    ironbar var set dnd_on "$on" >/dev/null 2>&1 || true
+    ironbar var set dnd_off "$off" >/dev/null 2>&1 || true
+}
+
+case "${1:-}" in
+dnd)
+    makoctl mode -t do-not-disturb >/dev/null
+    barsync
+    ;;
+history)
+    pick=$(makoctl history -j | python3 -c '
+import json, sys
+for n in json.load(sys.stdin):
+    body = " ".join(n["body"].split())
+    print(n["app_name"] + ": " + n["summary"] + (" | " + body if body else ""))
+' | walker --dmenu -p "notification history") || exit 0
+    [ -n "$pick" ] && printf '%s' "${pick#*: }" | wl-copy
+    ;;
+barsync)
+    barsync
+    ;;
+*)
+    echo "usage: notif dnd|history|barsync" >&2; exit 2 ;;
+esac

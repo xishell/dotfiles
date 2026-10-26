@@ -18,6 +18,9 @@ hl.bind(mainMod .. " + M",           hl.dsp.exec_cmd("command -v hyprshutdown >/
 hl.bind(mainMod .. " + E",           hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + B",           hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + T",           hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + N",           hl.dsp.exec_cmd("notif dnd"))          -- do not disturb
+hl.bind(mainMod .. " + SHIFT + N",   hl.dsp.exec_cmd("notif history"))      -- notification history
+hl.bind(mainMod .. " + C",           hl.dsp.exec_cmd("awake"))              -- keep awake (no lock/blank)
 hl.bind(mainMod .. " + G",           hl.dsp.group.toggle())
 -- Clipboard history and power menu (walker providers)
 hl.bind(mainMod .. " + V",           hl.dsp.exec_cmd("walker -m clipboard"))

@@ -9,6 +9,9 @@ icon_theme = "Papirus-Dark"
 couch_desk  = "true"
 couch_on    = ""
 couch_label = "couch"
+dnd_on      = ""
+dnd_off     = "true"
+awake_on    = ""
 
 [monitors.DP-1]
 position = "top"
@@ -30,6 +33,18 @@ name  = "layout"
 class = "mod"
 label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰯌</span>'
 tooltip = "layout: master"
+
+# now playing (Spotify first, then any player); hidden when nothing plays
+[[monitors.DP-1.start]]
+type = "script"
+name = "media"
+class = "mod"
+mode = "watch"
+cmd  = "ember-bar media"
+tooltip = "Click: play/pause · right: next · middle: previous"
+on_click_left   = "playerctl --player=spotify,%any play-pause"
+on_click_right  = "playerctl --player=spotify,%any next"
+on_click_middle = "playerctl --player=spotify,%any previous"
 
 # ── center: focused window ────────────────────────────────────────────────
 [[monitors.DP-1.center]]
@@ -93,6 +108,35 @@ mode = "watch"
 cmd  = "ember-bar pad"
 show_if = "[ -e /sys/class/power_supply/gip0.0 ]"
 tooltip = "8BitDo Ultimate 3: battery"
+
+[[monitors.DP-1.end]]
+type  = "label"
+name  = "awake"
+class = "mod"
+label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰅶</span>'
+show_if = "#awake_on"
+tooltip = "Keep awake is on: no lock or screen-off (Super+C)"
+on_click_left = "awake"
+
+[[monitors.DP-1.end]]
+type  = "label"
+name  = "bell"
+class = "mod"
+label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰂚</span>'
+show_if = "#dnd_off"
+tooltip = "Notifications · click: do not disturb (Super+N) · right: history (Super+Shift+N)"
+on_click_left  = "notif dnd"
+on_click_right = "notif history"
+
+[[monitors.DP-1.end]]
+type  = "label"
+name  = "bell-off"
+class = "mod"
+label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰂛</span>'
+show_if = "#dnd_on"
+tooltip = "Do not disturb: only critical + fingerprint prompts show · click to end · right: history"
+on_click_left  = "notif dnd"
+on_click_right = "notif history"
 
 [[monitors.DP-1.end]]
 type  = "label"

@@ -4,7 +4,7 @@ hl.on("hyprland.start", function()
 
     -- Status bar (Ironbar); then show the current couch/desk mode on its chip
     hl.exec_cmd("ironbar")
-    hl.exec_cmd("sh -c 'sleep 3; couch barsync'")
+    hl.exec_cmd("sh -c 'sleep 3; couch barsync; notif barsync; awake barsync'")
 
     -- Notifications + volume/brightness OSD
     hl.exec_cmd("mako")

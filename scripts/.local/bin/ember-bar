@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Ironbar stat modules for the Ember rice: ember-bar cpu|gpu|mem|vol|net|pad
+"""Ironbar modules for the Hearth rice: ember-bar cpu|gpu|mem|vol|net|pad|media
 
 Each runs forever (ironbar `script` module, mode = "watch") and prints one line of
 Pango markup per update: a Nerd Font icon in its fixed label colour, then the value,
 which turns yellow at the warning level and red at the critical level. Ironbar's
 classes are static, so the level colour has to travel in the markup.
 """
+import html
 import os
 import subprocess
 import sys
@@ -125,9 +126,29 @@ def pad():
         time.sleep(10)
 
 
+def media():
+    # Now playing (Spotify first, then any MPRIS player); empty output hides the module.
+    # playerctl --follow prints a line per change and an empty one when the player goes.
+    print("", flush=True)
+    fmt = "{{status}}\t{{artist}}\t{{title}}"
+    p = subprocess.Popen(["playerctl", "--player=spotify,%any", "--follow", "metadata", "--format", fmt],
+                         stdout=subprocess.PIPE, text=True)
+    for line in p.stdout:
+        status, artist, title = (line.rstrip("\n").split("\t") + ["", "", ""])[:3]
+        if not title or status == "Stopped":
+            print("", flush=True)
+            continue
+        text = f"{artist} – {title}" if artist else title
+        text = html.escape(text if len(text) <= 48 else text[:47] + "…")
+        if status == "Playing":
+            show("\U000f040a", MAGENTA, text)
+        else:
+            show("\U000f03e4", COMMENT, text, value_color=COMMENT)
+
+
 if __name__ == "__main__":
     try:
-        {"cpu": cpu, "gpu": gpu, "mem": mem, "vol": vol, "net": net, "pad": pad}[sys.argv[1]]()
+        {"cpu": cpu, "gpu": gpu, "mem": mem, "vol": vol, "net": net, "pad": pad, "media": media}[sys.argv[1]]()
     except (BrokenPipeError, KeyboardInterrupt):
         # ironbar closed the pipe (bar reload/exit); leave without a traceback
         os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())

@@ -15,6 +15,7 @@ icons=1
 max-icon-size=40
 default-timeout=5000
 max-visible=4
+max-history=50
 
 background-color={{ base }}
 text-color={{ fg }}
@@ -42,3 +43,15 @@ format=<span size="small" color="{{ primary }}">%a</span>\n<b>%s</b>\n<span colo
 border-size=2
 border-color={{ yellow }}
 anchor=top-center
+
+# Do not disturb (Super+N, bell on the bar; `notif dnd`): hide everything except
+# critical notifications and the sudo fingerprint prompt. Hidden ones still land in
+# the history (Super+Shift+N).
+[mode=do-not-disturb]
+invisible=1
+
+[mode=do-not-disturb urgency=critical]
+invisible=0
+
+[mode=do-not-disturb app-name=fingerprint]
+invisible=0
