@@ -1,7 +1,4 @@
 hl.on("hyprland.start", function()
-    -- Authentication agent
-    hl.exec_cmd("hyprpolkitagent")
-
     -- Cursor theme
     hl.exec_cmd("hyprctl setcursor win11-Dark 24")
 

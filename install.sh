@@ -31,7 +31,7 @@ command -v bat >/dev/null && bat cache --build >/dev/null
 [ -e "$HOME/.config/MangoHud/MangoHud.conf" ] || scripts/.local/bin/hud off
 
 systemctl --user daemon-reload
-for unit in elephant.service walker.service; do
+for unit in hyprpolkitagent.service elephant.service walker.service; do
     systemctl --user list-unit-files "$unit" >/dev/null 2>&1 && systemctl --user enable --now "$unit" || true
 done
 echo "done. Log out and pick the Hyprland (uwsm) session."
