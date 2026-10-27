@@ -85,6 +85,11 @@ DEFAULTS = {
         "controller": [],
     },
     "openxlr_sofa_default": "soundbar",
+    # Sofa output that follows headphones: used whenever all its sinks exist, else
+    # openxlr_sofa_default. The controller's headset output only exists while headphones
+    # are plugged into it (xone; checked 2026-10-27, also across a controller power-on).
+    # "" = off, sofa mode then uses the remembered choice.
+    "sofa_audio_headphones": "controller",
     "openxlr_desk_outputs": [],
     # The TV's HDMI audio only exists while its port's card profile is active
     "hdmi_card": "",              # e.g. alsa_card.pci-0000_01_00.1
@@ -155,11 +160,14 @@ def read_state():
         return {}
 
 
-def write_mode(mode, **extra):
+def write_mode(mode, notify=False, **extra):
+    """notify: only the final write of a switch - sofa and desk also write the mode before
+    the Hyprland reload (which reads it), and each write used to pop its own card."""
     data = {"mode": mode, "since": time.time(), **extra}
     STATE_FILE.write_text(json.dumps(data), encoding="utf-8")
     bar_sync(mode)
-    notify_mode(mode)
+    if notify:
+        notify_mode(mode)
     night_light(mode)
 
 
@@ -186,6 +194,31 @@ def bar_sync(mode=None):
                        ("couch_on", "true" if sofa else ""),
                        ("couch_label", label)):
         run(["ironbar", "var", "set", key, value], timeout=3)
+
+
+def bar_watch(interval=3):
+    """Keep the couch chip true to what the TV is really running: the mode can change
+    after couch is done (driver drops 4K120, hotplug, a reload, hyprctl by hand), and
+    bar_sync otherwise only runs on a mode switch. Runs in the listener; ironbar is only
+    touched when the label changes."""
+    if IS_WIN or not shutil.which("ironbar"):
+        return
+    last = None
+
+    def watch():
+        nonlocal last
+        while True:
+            try:
+                mode = read_mode()
+                tv = tv_mode() if mode == "sofa" else None
+                now = (mode, tv[0] if tv else None)
+                if now != last:
+                    bar_sync(mode)
+                    last = now
+            except Exception as exc:  # never take the listener down over the bar
+                log(f"  ! bar watch: {exc}")
+            time.sleep(interval)
+    threading.Thread(target=watch, daemon=True).start()
 
 
 def night_light(mode):
@@ -378,6 +411,25 @@ def tv_ensure_pc_input(cfg, timeout=20):
             log("TV: on " + cfg["tv_pc_input"])
             return
     log(f"TV: couldn't keep it on {cfg['tv_pc_input']} - see README (Apple TV / SIMPLINK)")
+
+
+def tv_guard_pc_input(cfg, seconds=15):
+    """The Apple TV can grab the input well after tv_ensure_pc_input saw it stick (it wakes
+    with the TV over CEC and claims the screen once it's up; 2026-10-27 it did so after
+    sofa mode was ready). Watch a while longer and take it back. A missed answer is not a
+    loss - re-sending set_input would only re-sync the soundbar (an audible snap)."""
+    if not cfg["tv_ip"]:
+        return
+    start = time.monotonic()
+    while time.monotonic() - start < seconds and read_mode() == "sofa":
+        time.sleep(1)
+        current = tv_cmd(cfg, "get_input", timeout=4, quiet=True)
+        if not current or input_app_id(cfg["tv_pc_input"]) in current.lower():
+            continue
+        log(f"TV: input taken by {current.strip()} after "
+            f"{time.monotonic() - start:.0f} s (Apple TV over CEC?) - taking it back")
+        tv_ensure_pc_input(cfg, timeout=10)
+        return
 
 
 def tv_restore(cfg, app):
@@ -803,8 +855,24 @@ def hypr_rehome_tv_windows(cfg, before):
         dest = (before or {}).get("steam_ws") if c.get("class") == "steam" else None
         dest = dest if dest and dest != tv_ws else here
         log(f"Displays: {c.get('title') or c.get('class')} -> workspace {dest}")
-        hyprctl("dispatch", f"hl.dsp.window.move({{ workspace = {_lua_str(dest)}, "
+        hyprctl("dispatch", f"hl.dsp.window.move({{ workspace = {_lua_str(dest)}, follow = false, "
                             f"window = {_lua_str('address:' + c['address'])} }})")
+    # Big Picture hides Steam's main window; once it closes Steam maps it again as a new
+    # window, which Hyprland opens on the focused workspace (not the TV one, so the loop
+    # above misses it) and possibly a moment later. Wait for it and put it back.
+    steam_ws = (before or {}).get("steam_ws")
+    if not steam_ws or steam_ws == tv_ws:
+        return
+    main = {}
+
+    def steam_main():
+        main.update(next((c for c in hypr_clients()
+                          if c.get("class") == "steam" and c.get("title") == "Steam"), {}))
+        return bool(main)
+    if wait_for(steam_main, 5) and main.get("workspace", {}).get("name") != steam_ws:
+        log(f"Displays: Steam -> workspace {steam_ws} (was {main['workspace'].get('name')})")
+        hyprctl("dispatch", f"hl.dsp.window.move({{ workspace = {_lua_str(steam_ws)}, follow = false, "
+                            f"window = {_lua_str('address:' + main['address'])} }})")
 
 
 def hypr_big_picture_open():
@@ -822,6 +890,29 @@ def hypr_reload_layout(mon):
     return wait_for(lambda: hypr_active(mon), 10)
 
 
+def hypr_tv_mode_fallback(name):
+    """monitors.lua asks for 4K 119.88 Hz. When the HDMI 2.1 (FRL) link doesn't train the
+    driver stops offering 4K above 60 Hz, Hyprland still sets the mode and the TV shows
+    "no signal" (2026-10-27: same driver, port and EDID that did 4K120 two days before).
+    Then drop to the fastest rate the driver does offer at that resolution, keeping
+    position, scale, bit depth and HDR."""
+    m = next((m for m in hypr_monitors() if m.get("name") == name), None)
+    if not m:
+        return
+    res = f"{m['width']}x{m['height']}"
+    offered = [float(s.split("@")[1].rstrip("Hz")) for s in m.get("availableModes", [])
+               if s.startswith(res + "@")]
+    if not offered or any(abs(hz - m.get("refreshRate", 0)) < 0.01 for hz in offered):
+        return
+    hz = max(offered)
+    log(f"  ! {name}: {res}@{m.get('refreshRate', 0):.2f} not offered (HDMI 2.1 link down?)"
+        f" - falling back to {res}@{hz:g}")
+    bitdepth = ", bitdepth = 10" if "2101010" in m.get("currentFormat", "") else ""
+    cm = f", cm = {_lua_str(m['colorManagementPreset'])}" if m.get("colorManagementPreset") else ""
+    hyprctl("eval", f"hl.monitor({{ output = {_lua_str(name)}, mode = {_lua_str(f'{res}@{hz:g}')}, "
+                    f"position = \"{m['x']}x{m['y']}\", scale = {m['scale']:g}{bitdepth}{cm} }})")
+
+
 def displays_sofa(cfg):
     if IS_WIN:
         return win_displays_sofa(cfg)
@@ -833,6 +924,7 @@ def displays_sofa(cfg):
         if not hypr_reload_layout(tv):
             log(f"  ! {tv} did not come up")
             return
+        hypr_tv_mode_fallback(tv)
         hypr_focus_workspace(cfg["hypr_tv_workspace"])
         time.sleep(1)
         return
@@ -939,6 +1031,44 @@ def sofa_audio_choice(cfg, choice=None):
     choices = cfg["openxlr_sofa_outputs"]
     choice = choice or read_prefs().get("sofa_audio") or cfg["openxlr_sofa_default"]
     return choice if choice in choices else next(iter(choices), "")
+
+
+def headphones_choice(cfg):
+    """Sofa output by what's plugged in (see sofa_audio_headphones), or None when off."""
+    hp = cfg["sofa_audio_headphones"]
+    devices = cfg["openxlr_sofa_outputs"].get(hp)
+    if IS_WIN or not devices:
+        return None
+    present = sinks()
+    return hp if all(d in present for d in devices) else cfg["openxlr_sofa_default"]
+
+
+def headphones_watch(cfg, busy, interval=1):
+    """Listener: in sofa mode, plugging headphones into the controller moves the audio
+    there and unplugging them moves it back to the soundbar. Acts only on a plug/unplug,
+    so a manual `couch audio ...` holds until the next one."""
+    last = headphones_choice(cfg)
+    if last is None:
+        return
+
+    def watch():
+        nonlocal last
+        while True:
+            time.sleep(interval)
+            try:
+                now = headphones_choice(cfg)
+                if now == last or busy.is_set():   # mid-switch: sofa() picks it itself
+                    continue
+                last = now
+                if read_mode() != "sofa":
+                    continue
+                log(f"Listener: headphones {'in' if now == cfg['sofa_audio_headphones'] else 'out'}"
+                    f" - sofa audio -> {now}")
+                subprocess.run([python_exe(), str(Path(__file__).resolve()), "audio", now],
+                               cwd=HERE, timeout=60)
+            except Exception as exc:  # never take the listener down over this
+                log(f"  ! headphones watch: {exc}")
+    threading.Thread(target=watch, daemon=True).start()
 
 
 def audio_sofa(cfg, choice=None):
@@ -1051,6 +1181,7 @@ def steam_url(url):
 def sofa(cfg, choice=None):
     with Lock():
         log("=== sofa mode ===")
+        choice = choice or headphones_choice(cfg)
         before = tv_snapshot(cfg)      # remember if the TV was already on, and on what
         saved = read_state()
         if (input_app_id(cfg["tv_pc_input"]) in before.get("tv_prev_app", "").lower()
@@ -1069,13 +1200,14 @@ def sofa(cfg, choice=None):
             log(f"Steam: main window on workspace {ws or '(none found)'}")
         write_mode("sofa", **before)   # monitors.lua / sofa.lua read this on the reload
         displays_sofa(cfg)
-        # Start Big Picture right away (it opens on the new primary display) and fix the
-        # TV input at the same time - Steam takes a few seconds to draw anyway.
+        audio_sofa(cfg, choice)
+        tv_ensure_pc_input(cfg)        # now the PC is sending a picture to the TV
+        # Big Picture only once the TV sits on the PC input: its startup sound reaches the
+        # soundbar (eARC) only from then on, and an input switch mid-sound cuts in or out
+        # of the waveform - an audible snap (2026-10-27).
         if cfg["steam"]:
             log("Steam: Big Picture")
             steam_url("steam://open/bigpicture")
-        audio_sofa(cfg, choice)
-        tv_ensure_pc_input(cfg)        # now the PC is sending a picture to the TV
         if not IS_WIN and cfg["hypr_tv"] and hypr_lua():
             # Big Picture lands on the TV workspace by window rule; show that workspace
             # once the window exists (focusing it earlier doesn't stick)
@@ -1084,8 +1216,9 @@ def sofa(cfg, choice=None):
             hypr_focus_workspace(cfg["hypr_tv_workspace"])
             hypr_reclaim_workspaces(cfg["hypr_tv"], cfg["hypr_desk"], cfg["hypr_tv_workspace"])
         tv_volume_sofa(cfg, before)
-        write_mode("sofa", **before)
+        write_mode("sofa", notify=True, **before)
         log("=== sofa mode ready ===")
+        tv_guard_pc_input(cfg)
 
 
 def desk(cfg):
@@ -1106,7 +1239,7 @@ def desk(cfg):
         if not IS_WIN and hypr_lua():
             hypr_rehome_tv_windows(cfg, before)
         audio_desk(cfg)
-        write_mode("desk")
+        write_mode("desk", notify=True)
         desk_mon = cfg["hypr_desk"]
         if not IS_WIN and desk_mon and not wait_for(lambda: hypr_active(desk_mon), 4):
             # The monitor can drop into standby while it has no signal and not come back
@@ -1309,6 +1442,8 @@ def listen_sdl(cfg):
         threading.Thread(target=work, daemon=True).start()
 
     log(f"Listener: started - hold '{label}' for {hold:g} s to toggle")
+    bar_watch()
+    headphones_watch(cfg, busy)
     while True:
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:      # SDL turns SIGTERM/SIGINT into this event
