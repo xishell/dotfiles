@@ -26,3 +26,7 @@ function y() {
     fi
     rm -f -- "$tmp"
 }
+
+# pdf text, named pdfg to not shadow pdfgrep
+pdftxt() { pdftotext -layout "$1" - | less }
+pdfg() { pdftotext -layout "$2" - | grep -n -i -- "$1" }
