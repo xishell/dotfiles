@@ -64,4 +64,4 @@ ln -s ~/dotfiles/karabiner/.config/karabiner ~/.config/karabiner
 
 ## More
 
-[hypr](hypr/README.md) · [theme](theme/README.md) · [nvim](nvim/README.md) · [tmux](tmux/README.md) · [ghostty](ghostty/README.md) · [latexmk](latexmk/README.md) · [couch](couch/.local/share/couch/README.md) · [verimark](verimark/.local/share/verimark/README.md)
+[hypr](hypr/README.md) · [kitty](kitty/README.md) · [theme](theme/README.md) · [nvim](nvim/README.md) · [tmux](tmux/README.md) · [ghostty](ghostty/README.md) · [latexmk](latexmk/README.md) · [couch](couch/.local/share/couch/README.md) · [verimark](verimark/.local/share/verimark/README.md)
