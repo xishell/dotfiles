@@ -140,7 +140,7 @@
     "sfx|chat"
   ],
   "monitorOutputs": [
-    "alsa_output.usb-8BitDo_8BitDo_Ultimate_3_Controller_for_XBOX_0000D41C099E764C-00.stereo-fallback",
+    "alsa_output.usb-8BitDo_Tech_Co.__Ltd_8BitDo_Ultimate_3E_Xbox_9A138ECF5EB90000-00.stereo-fallback",
     "alsa_output.usb-Elgato_Systems_Elgato_Wave_XLR_DS24K1A01889-00.analog-stereo"
   ],
   "monitorMuted": false,

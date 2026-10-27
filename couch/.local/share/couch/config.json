@@ -34,12 +34,12 @@
       "alsa_output.pci-0000_01_00.1.hdmi-stereo-extra1"
     ],
     "controller": [
-      "alsa_output.usb-8BitDo_8BitDo_Ultimate_3_Controller_for_XBOX_0000D41C099E764C-00.stereo-fallback"
+      "alsa_output.usb-8BitDo_Tech_Co.__Ltd_8BitDo_Ultimate_3E_Xbox_9A138ECF5EB90000-00.stereo-fallback"
     ]
   },
   "openxlr_sofa_default": "soundbar",
   "openxlr_desk_outputs": [
-    "alsa_output.usb-8BitDo_8BitDo_Ultimate_3_Controller_for_XBOX_0000D41C099E764C-00.stereo-fallback",
+    "alsa_output.usb-8BitDo_Tech_Co.__Ltd_8BitDo_Ultimate_3E_Xbox_9A138ECF5EB90000-00.stereo-fallback",
     "alsa_output.usb-Elgato_Systems_Elgato_Wave_XLR_DS24K1A01889-00.analog-stereo"
   ],
   "hdmi_card": "alsa_card.pci-0000_01_00.1",
@@ -52,7 +52,7 @@
       "percent": 100
     },
     "controller": {
-      "sink": "alsa_output.usb-8BitDo_8BitDo_Ultimate_3_Controller_for_XBOX_0000D41C099E764C-00.stereo-fallback",
+      "sink": "alsa_output.usb-8BitDo_Tech_Co.__Ltd_8BitDo_Ultimate_3E_Xbox_9A138ECF5EB90000-00.stereo-fallback",
       "percent": 40
     },
     "soundbar": {
