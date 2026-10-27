@@ -25,6 +25,7 @@ popup_autohide = true
 type = "workspaces"
 sort = "index"
 favorites = ["1", "2", "3", "4", "5"]   # always shown; empty ones dim
+hidden = ["special:term", "special:music", "special:chat", "special:magic"]   # scratchpads (scratch, Super+S)
 name_map = { tv = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt" underline="single" underline_color="#b87af2">󰔂</span>' }
 
 [[monitors.DP-1.start]]
