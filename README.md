@@ -1,103 +1,67 @@
 # dotfiles
 
-My personal configs. Managed with [GNU Stow](https://www.gnu.org/software/stow/).
+macOS + CachyOS/Hyprland configs. [GNU Stow](https://www.gnu.org/software/stow/), one package per top-level dir, contents mirror `$HOME`.
 
-Each top-level directory is a stow package whose contents mirror `$HOME`. For
-example, `nvim/.config/nvim/` ends up at `~/.config/nvim/` after stowing.
+## Packages
 
-## Layout
+| Package | What | OS |
+|---|---|---|
+| `zsh` `nvim` `tmux` `git` | shell, editor, multiplexer, git | both |
+| `kitty` `ghostty` `lazygit` `bat` `btop` | terminal + TUIs | both |
+| `claude` | Claude Code theme | both |
+| `scripts` | `~/.local/bin` + user units | both (most scripts Linux) |
+| `latexmk` | global `.latexmkrc` | both |
+| `aerospace` `karabiner` `config` | tiling WM, key remaps, sketchybar | macOS |
+| `hypr` | Hyprland (Lua), hypridle, hyprlock, hyprpaper | Linux |
+| `ironbar` `walker` `elephant` `mako` `swayosd` `quickshell` | bar, launcher, notifications, OSD, mixer/media panels | Linux |
+| `gtk` `qt6ct` `mangohud` | toolkit themes, fonts, game overlay | Linux |
+| `audio` | WirePlumber rules, Wave XLR recovery, AirPlay | Linux |
+| `openxlr` `opendeck` | Wave XLR mixer, Stream Deck+ (dir-linked) | Linux |
+| `couch` | sofa mode: TV, audio, Big Picture | Linux |
+| `verimark` | fingerprint driver build + patches | Linux |
 
-```
-.
-├── .stowrc                 # --target=~ --no-folding
-├── .stow-local-ignore      # files Stow shouldn't link (README, LICENSE, …)
-├── zsh/                    # .zshenv, .zshrc, .zshrc.d/
-├── nvim/                   # .config/nvim/
-├── tmux/                   # .config/tmux/
-├── git/                    # .config/git/
-├── scripts/                # .local/bin/ + user units (couch, audio-mode, hud, …)
-├── kitty/ ghostty/ claude/ # shared
-├── hypr/ ironbar/ walker/ elephant/ mako/ swayosd/ mangohud/ gtk/ qt6ct/ quickshell/
-├── audio/ couch/ verimark/ # Linux: PipeWire/WirePlumber, sofa mode, fingerprint driver
-├── openxlr/ opendeck/      # Linux: linked as whole directories (apps replace files on save)
-├── theme/                  # not stowed; palette.toml → generator for every themed config
-├── system/                 # not stowed; root-owned files, mirror of /etc + /usr (install.sh)
-├── aerospace/ karabiner/   # macOS
-└── docs/                   # not stowed; reference notes
-```
+Not stowed:
+
+| Dir | What |
+|---|---|
+| `theme/` | `palette.toml` → generator for every themed file ([README](theme/README.md)) |
+| `system/` | root-owned files, mirror of `/etc` + `/usr` |
+| `docs/` | reference notes |
 
 ## Install
 
 ```sh
-git clone https://github.com/xishell/dotfiles ~/dotfiles
-cd ~/dotfiles
-stow zsh nvim tmux git scripts
+git clone git@github.com:xishell/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ```
 
-Stow with `--no-folding` (set in `.stowrc`), so each leaf file gets its own
-symlink and you can stow a new package later without re-folding existing dirs.
-
-Per-host: pick the packages that apply. There is no `bootstrap.sh` because the
-right set of packages on a laptop is not the right set on a server.
-
-### macOS
+**Linux**
 
 ```sh
-stow zsh nvim tmux git kitty lazygit bat btop claude aerospace config ghostty latexmk
-ln -s ../dotfiles/karabiner/.config/karabiner ~/.config/karabiner
+./install.sh             # packages, theme, stow, dir links, user services
+./install.sh --no-pkgs   # same, skip paru
+system/install.sh        # diff root-owned files vs /
+system/install.sh --apply   # install them (sudo); --pull copies / back into the repo
 ```
 
-Karabiner saves by replacing `karabiner.json`, which breaks a file symlink, so
-link the whole directory instead of stowing it. Edit through the Karabiner GUI.
-
-### Linux (Hyprland)
+**macOS**
 
 ```sh
-./install.sh            # packages, theme, stow, directory links, user services
-system/install.sh       # diff root-owned files against /; --apply installs them with sudo
+stow zsh nvim tmux git kitty ghostty lazygit bat btop claude latexmk aerospace config
+ln -s ~/dotfiles/karabiner/.config/karabiner ~/.config/karabiner
 ```
 
-The Hyprland config was ported to Lua (see commit `dc271d1`).
-
-OpenXLR and OpenDeck save by writing a new file and renaming it over the old one,
-which would replace a per-file stow symlink. Their config directories are therefore
-symlinked whole (`~/.config/openxlr` → `openxlr/.config/openxlr`), with a
-`.gitignore` per package so only real config is tracked. `couch` keeps its state,
-log, venv and TV pairing key in `~/.local/share/couch`, outside git.
+**Uninstall:** `stow -D <package>`
 
 ## Conventions
 
-**zsh** is split into ordered fragments under `zsh/.zshrc.d/`:
+- `--no-folding` (`.stowrc`): every file is its own symlink.
+- Dir-linked, not stowed (apps save by rename, which breaks file symlinks): `karabiner`, `openxlr`, `opendeck`. Each has a `.gitignore` for runtime files.
+- `.stow-local-ignore` is per package.
+- Colours: never hand-edit hex; edit `theme/palette.toml` or a template, run `theme/ember`.
+- zsh: numbered fragments in `zsh/.zshrc.d/`, OS-specific under `os.darwin/` / `os.linux/`.
+- git: `includeIf` for KTH remotes (`~/.gitconfig-kth`), `~/.config/git/config.local` for host overrides. Neither tracked.
+- Local only (never committed): couch state/TV key/venv, verimark `src/` + `dist/`, OpenXLR backups.
 
-```
-00-exports.zsh    30-options.zsh    60-integrations.zsh
-10-zinit.zsh      40-aliases.zsh    os.darwin/   # sourced on macOS
-20-completion.zsh 50-functions.zsh  os.linux/    # sourced on Linux
-```
+## More
 
-Add new shell config to a numbered fragment, not to `.zshrc` itself.
-OS-specific bits go under `os.darwin/` or `os.linux/`.
-
-**git** uses `includeIf` so KTH remotes (`gits-15.sys.kth.se`) pick up
-`~/.gitconfig-kth`, and `~/.config/git/config.local` is included unconditionally
-for host-local overrides. Neither file is tracked here.
-
-## Subdirectory READMEs
-
-A few packages have their own notes:
-
-- [`nvim/README.md`](nvim/README.md) — keymaps, plugin list, `:checkhealth xishell`
-- [`tmux/README.md`](tmux/README.md) — prefix is `C-a`, vim-style splits
-- [`hypr/README.md`](hypr/README.md) — Lua-configured Hyprland, modular layout
-- [`ghostty/README.md`](ghostty/README.md)
-- [`latexmk/README.md`](latexmk/README.md)
-
-## Uninstall
-
-```sh
-cd ~/dotfiles
-stow -D <package>
-```
-
-Stow only removes the symlinks it owns. Anything you edited through a GUI
-(Karabiner, GTK) stays put.
+[hypr](hypr/README.md) · [theme](theme/README.md) · [nvim](nvim/README.md) · [tmux](tmux/README.md) · [ghostty](ghostty/README.md) · [latexmk](latexmk/README.md) · [couch](couch/.local/share/couch/README.md) · [verimark](verimark/.local/share/verimark/README.md)

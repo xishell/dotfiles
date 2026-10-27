@@ -1,123 +1,99 @@
 # hypr
 
-Hyprland config written in Lua. Each topic lives in its own module under
-`modules/`; `hyprland.lua` just `require`s them in order.
+Hyprland 0.56, Lua config (`hl.*` API). `hyprland.lua` requires the modules in order.
 
 ```
 .config/hypr/
-├── hyprland.lua            # entry point
-├── hyprpaper.conf          # wallpaper
-├── hypridle.conf           # DPMS off after 5 min
+├── hyprland.lua         entry point
+├── hypridle.conf        lock at 5 min, screen off 1 s later
+├── hyprlock.conf        lock screen (fingerprint + password)
+├── hyprpaper.conf       wallpaper (wall/, rendered by theme/ember)
+├── hyprsunset.conf      night light profiles
 └── modules/
-    ├── env.lua             # XCURSOR, Qt/GDK Wayland hints, Nvidia, permissions
-    ├── monitors.lua        # DP-1 + HDMI-A-1
-    ├── look_and_feel.lua   # gaps, borders, blur, animations, master layout
-    ├── input.lua           # gbswe layout, touchpad, sensitivity
-    ├── keybinds.lua        # see below
-    ├── windowrules.lua     # floats, gaming, PiP, opacity
-    └── autostart.lua       # waybar, hyprpaper, hypridle, cliphist, keyring
+    ├── env.lua          cursor, Qt/GDK Wayland, NVIDIA
+    ├── monitors.lua     DP-1 3440x1440@160, 10-bit, cm=edid; TV in sofa mode
+    ├── look_and_feel.lua  gaps 5/10, border 2 (gradient), rounding 10, master layout
+    ├── palette.lua      generated colours (theme/)
+    ├── input.lua        gbswe, Windows-matched pointer (custom curve x0.5)
+    ├── keybinds.lua
+    ├── windowrules.lua  floats, gaming, PiP, scratchpads, smart gaps
+    ├── sofa.lua         TV workspace rules, only while couch is in sofa mode
+    ├── couch_state.lua  reads couch state for monitors.lua / sofa.lua
+    └── autostart.lua
 ```
 
-The Lua entrypoint requires a Hyprland build with the Lua API enabled (`hl.*`
-globals). It is roughly a 1:1 port of the equivalent `hyprland.conf` — see
-commit `dc271d1`.
+Apps are launched through `uwsm app --` so each gets its own systemd scope (needed by the 1Password SSH agent).
 
-## Hardware assumptions
+## Autostart
 
-The config is set up for my personal box and will need edits on other
-hardware:
-
-- **Monitor:** `DP-1` at `3440x1440@160`, `HDMI-A-1` disabled (`monitors.lua`)
-- **GPU:** Nvidia env vars set in `env.lua` (`LIBVA_DRIVER_NAME`,
-  `GBM_BACKEND`, `WLR_NO_HARDWARE_CURSORS=1`). Harmless on AMD/Intel but you
-  can delete that block.
-- **Keyboard:** `gbswe` layout (`input.lua`) — Swedish hardware, UK-ish
-  layout.
-
-## Apps it expects
-
-Spawned from keybinds or autostart. Install whichever you actually want;
-missing binaries just no-op the bind.
-
-```
-kitty dolphin zen-browser otter-launcher hyprshutdown
-waybar hyprpaper hypridle hyprpolkitagent easyeffects
-grim slurp wl-copy wl-clipboard cliphist
-brightnessctl playerctl wpctl gnome-keyring
-```
-
-Companion configs live elsewhere in this repo: `waybar/`, `wofi/`,
-`otter-launcher/`, `hyprlauncher/`, `gtk/`, `alacritty/`.
+ironbar · mako · swayosd · quickshell (`mixer`, `media`) · `couch listen` · hyprpaper · hyprsunset · cliphist · gnome-keyring (secrets).
+Polkit agent: `hyprpolkitagent.service` (systemd user unit).
 
 ## Keybinds
 
-Mod is `SUPER`.
+Mod = `Super`.
 
-### Apps and windows
-
-| Key | Action |
-|---|---|
-| `Mod + Return` | kitty |
-| `Mod + Space` | otter-launcher (kitty floating) |
-| `Mod + E` | dolphin |
-| `Mod + B` | zen-browser |
-| `Mod + Q` | close window |
-| `Mod + T` | toggle floating |
-| `Mod + G` | toggle group (tabbed) |
-| `Mod + V` | clipboard history |
-| `Mod + Ctrl + R` | reload config |
-| `Mod + F` | fullscreen |
-| `Mod + M` | `hyprshutdown` if installed, else exit Hyprland |
-| `Mod + Shift + G` | `gaming-mode-toggle` |
-| `Mod + F12` | couch: sofa ↔ desk |
-| `Mod + F11` | Steam Big Picture (on the TV in sofa mode) |
-| `Mod + F10` | MangoHud layout: off → fps → compact → full (`hud`; games need `mangohud %command%`) |
-| `Mod + F9` | start/stop game clip (`game-clip`) |
-| `Mod + Escape` | power menu |
-| `Mod + Ctrl + L` | lock |
-
-### Focus and movement
-
-`Mod + h/j/k/l` or `Mod + arrows` to move focus. `Mod + Shift + …` moves the
-window in that direction. Same applies to workspaces:
+**Apps**
 
 | Key | Action |
 |---|---|
-| `Mod + 1..9, 0` | Workspace 1–10 |
-| `Mod + Shift + 1..9, 0` | Move window to workspace |
-| `Mod + Tab` | last-used workspace (cycle: `Mod + scroll`) |
-| `Mod + scroll` | Cycle workspaces |
-| `Mod + S` | Toggle special workspace ("magic") |
-| `Mod + Shift + S` | Send window to special workspace |
-| `Mod + LMB` / `RMB` drag | Move / resize window |
+| `Mod Return` | kitty |
+| `Mod Space` | walker (launcher) |
+| `Mod X` | tools menu |
+| `Mod E` / `Mod B` | dolphin / zen-browser |
+| `Mod V` | clipboard history |
+| `Mod Esc` | power menu (`session-end`) |
+| `Mod A` / `Mod P` | mixer / media panel |
+| `Mod N` / `Mod Shift N` | do not disturb / notification history |
+| `Mod C` | keep awake toggle |
+| `` Mod ` `` / `Mod Y` / `Mod D` | scratchpads: terminal / Spotify / Vesktop |
+| `Alt Tab` | searchable window list |
 
-### Layout (master)
+**Windows**
 
 | Key | Action |
 |---|---|
-| `Mod + Shift + Return` | Swap with master |
-| `Mod + ,` | Orientation left |
-| `Mod + .` | Orientation right |
-| `Mod + R` | Enter resize submap (`hjkl` or arrows, `Esc`/`Return` exits) |
+| `Mod Q` | close |
+| `Mod F` / `Mod T` / `Mod G` | fullscreen / float / group |
+| `Mod h j k l` (or arrows) | focus |
+| `Mod Shift h j k l` | move window |
+| `Mod Shift Return` | swap with master |
+| `Mod ,` / `Mod .` | master left / right |
+| `Mod R` | resize mode (`hjkl`/arrows, `Esc` exits) |
+| `Mod LMB` / `Mod RMB` | drag move / resize |
 
-### Media
+**Workspaces**
 
-Standard `XF86Audio*` and `XF86MonBrightness*` keys. Volume and brightness
-step by 5 %, work while the screen is locked, and autorepeat.
+| Key | Action |
+|---|---|
+| `Mod 1–0` / `Mod Shift 1–0` | go to / move window to workspace 1–10 |
+| `Mod Tab` | previous workspace |
+| `Mod scroll` | cycle workspaces |
+| `Mod S` / `Mod Shift S` | toggle / send to special workspace |
 
-### Screenshots
+**System**
 
-`Print` runs `grim -g "$(slurp)"`, pipes the PNG into both
-`~/Pictures/Screenshots/<timestamp>.png` and the clipboard via `wl-copy`.
+| Key | Action |
+|---|---|
+| `Mod Ctrl L` | lock |
+| `Mod M` | quit apps cleanly, exit Hyprland |
+| `Mod Ctrl R` | reload config |
+| `Print` / `Shift Print` | screenshot region / monitor → satty |
+| media keys | volume, brightness, player (work while locked) |
 
-## Notable settings
+**Gaming / couch**
 
-- **Theme:** Tokyo Night borders (`#7aa2f7` → `#bb9af7`, 45°), 10px rounding,
-  shadows + blur on
-- **Layout:** master, `mfact = 0.55`, new windows go to slave stack
-- **Animations:** custom bezier set (`easeOutQuint`, `quick`, …) per-leaf
-- **Touchpad:** flat accel profile, sensitivity `-0.75`, disable-while-typing
-- **Idle:** screen off after 5 min (`hypridle.conf`)
-- **Window rules:** suppresses `maximize` events globally, floats common
-  dialogs / system tools / yazi / Steam subwindows, keeps mpv-vlc-firefox
-  awake on fullscreen, `idle_inhibit` for Steam games and gamescope
+| Key | Action |
+|---|---|
+| `Mod F12` | sofa ↔ desk (`couch`) |
+| `Mod F11` | Steam Big Picture |
+| `Mod F10` | MangoHud: off → fps → compact → full |
+| `Mod F9` | game clip start/stop |
+| `Mod Shift G` | gaming mode toggle |
+
+## Hardware assumptions
+
+- DP-1 LG UltraGear 3440x1440 (wide gamut, `cm=edid`)
+- NVIDIA (`env.lua`, `environment.d/10-nvidia-gbm.conf`)
+- `gbswe` keyboard layout
+- Razer mouse at 1600 DPI (udev, `system/`)

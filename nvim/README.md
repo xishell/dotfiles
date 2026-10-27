@@ -1,6 +1,6 @@
 # nvim
 
-My Neovim setup. Lazy.nvim, Mason-managed LSPs, Blink completion, Tokyo Night.
+My Neovim setup. Lazy.nvim, Mason-managed LSPs, Blink completion, cyberdream (recoloured from `theme/`).
 Built around tmux navigation, Typst for academic writing, and `vim-dadbod` for
 SQL work.
 
@@ -446,7 +446,7 @@ Editing: mini.ai, mini.surround, nvim-autopairs, tabout.nvim, Comment.nvim.
 
 Git: gitsigns.nvim and snacks' LazyGit / blame / browse.
 
-UI: Tokyo Night, lualine, bufferline, which-key, mini.icons.
+UI: cyberdream (palette from `lua/xishell/ember.lua`, generated), lualine, bufferline, which-key, mini.icons.
 
 Sessions: persistence.nvim.
 
