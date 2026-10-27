@@ -19,3 +19,6 @@ export PATH="$JAVA_HOME/bin:$PATH"
 
 # .NET global tools (ilspycmd etc.)
 export PATH="$PATH:$HOME/.dotnet/tools"
+
+# STM32CubeMX for stm32 cmake toolchains
+export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
