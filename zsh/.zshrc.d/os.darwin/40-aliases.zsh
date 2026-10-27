@@ -43,3 +43,7 @@ pwnnc() {
   echo "[*] listening on :$port (rlwrap nc)"
   rlwrap nc -lvnp "$port"
 }
+
+# pdf viewers, skim reloads on typst watch rebuilds
+pdf() { open -a Skim "$@" }
+pdfv() { mupdf-gl "$@" &! }
