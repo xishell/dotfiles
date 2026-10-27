@@ -19,9 +19,9 @@ for size in 3440x1440 3840x2160; do
     png="$wall/ember-tokyonight_$size.png"
     if [ ! -e "$png" ] || [ "$here/palette.toml" -nt "$png" ] || [ "$here/wallpaper/gen.py" -nt "$png" ]; then
         command -v rsvg-convert >/dev/null || { echo "rsvg-convert missing (librsvg): wallpapers not rendered"; exit 0; }
-        svg=$(mktemp --suffix=.svg)
+        svg="$(mktemp -d)/wall.svg"
         python3 -I "$here/wallpaper/gen.py" "${size%x*}" "${size#*x}" "$svg" >/dev/null
-        rsvg-convert "$svg" -o "$png" && rm -f "$svg"
+        rsvg-convert "$svg" -o "$png" && rm -rf "$(dirname "$svg")"
         echo "wrote  ${png#"$here/../"}"
     fi
 done
