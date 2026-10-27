@@ -43,11 +43,12 @@ right set of packages on a laptop is not the right set on a server.
 ### macOS
 
 ```sh
-stow aerospace karabiner
+stow zsh nvim tmux git kitty lazygit bat btop claude aerospace config ghostty latexmk
+ln -s ../dotfiles/karabiner/.config/karabiner ~/.config/karabiner
 ```
 
-`karabiner.json` is 55k of remappings; expect to edit it through the Karabiner
-GUI rather than by hand.
+Karabiner saves by replacing `karabiner.json`, which breaks a file symlink, so
+link the whole directory instead of stowing it. Edit through the Karabiner GUI.
 
 ### Linux (Hyprland)
 

@@ -1,0 +1,4 @@
+# Karabiner saves by replacing the file, so ~/.config/karabiner links to this dir;
+# only karabiner.json is config, the rest is GUI backups and imported rule sets
+.config/karabiner/*
+!.config/karabiner/karabiner.json
