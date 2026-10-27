@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Ironbar modules for the Hearth rice: ember-bar cpu|gpu|mem|vol|net|pad|media
+(plus `ember-bar vol-step up|down|mute`, the volume chip's scroll/click actions)
 
 Each runs forever (ironbar `script` module, mode = "watch") and prints one line of
 Pango markup per update: a Nerd Font icon in its fixed label colour, then the value,
@@ -7,7 +8,10 @@ which turns yellow at the warning level and red at the critical level. Ironbar's
 classes are static, so the level colour has to travel in the markup.
 """
 import html
+import json
 import os
+import re
+import selectors
 import subprocess
 import sys
 import time
@@ -73,22 +77,92 @@ def mem():
         time.sleep(5)
 
 
+COUCH = os.path.expanduser("~/.local/share/couch")
+
+
+def vol_target():
+    """Where sound goes: "wave" at the desk; on the sofa the couch choice, "pad" or "soundbar".
+    Returns (kind, sink) where sink is the controller headset sink for "pad"."""
+    try:
+        with open(f"{COUCH}/state.json") as f:
+            if json.load(f).get("mode") != "sofa":
+                return "wave", None
+        with open(f"{COUCH}/prefs.json") as f:
+            choice = json.load(f).get("sofa_audio", "soundbar")
+    except (OSError, ValueError):
+        return "wave", None
+    if choice != "controller":
+        return "soundbar", None
+    sinks = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True, text=True).stdout
+    return "pad", next((l.split()[1] for l in sinks.splitlines() if "8BitDo" in l), None)
+
+
+def wave_level():
+    # The Wave XLR's headphone level (its dial) is the card's PCM control: 0-120 = -60..0 dB.
+    # Everything upstream (OpenXLR channels, default sink) stays at unity, so this is the volume.
+    out = subprocess.run(["amixer", "-c", "XLR", "sget", "PCM"], capture_output=True, text=True).stdout
+    m = re.search(r"Playback (\d+) \[\d+%\].*\[(on|off)\]", out)
+    return (round(int(m.group(1)) * 100 / 120), m.group(2) == "off") if m else (None, False)
+
+
+def pad_level(sink):
+    if not sink:
+        return None, False
+    vol = subprocess.run(["pactl", "get-sink-volume", sink], capture_output=True, text=True).stdout
+    mute = subprocess.run(["pactl", "get-sink-mute", sink], capture_output=True, text=True).stdout
+    m = re.search(r"(\d+)%", vol)
+    return (int(m.group(1)) if m else None), "yes" in mute
+
+
 def vol():
+    last = None
+
     def emit():
-        out = subprocess.run(["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"], capture_output=True, text=True).stdout
-        parts = out.split()  # "Volume: 0.62" or "Volume: 0.62 [MUTED]"
-        if len(parts) < 2:
-            return
-        if "[MUTED]" in out:
-            show("\U000f0581", COMMENT, "muted", value_color=COMMENT)
+        nonlocal last
+        kind, sink = vol_target()
+        if kind == "soundbar":
+            args = ("\U000f04c3", MAGENTA, "soundbar")  # level lives on the soundbar (CEC)
         else:
-            show("\U000f057e", MAGENTA, f"{float(parts[1]) * 100:.0f}%")
+            pct, muted = wave_level() if kind == "wave" else pad_level(sink)
+            glyph = "\U000f02cb" if kind == "wave" else "\U000f0297"
+            if pct is None:
+                args = (glyph, COMMENT, "off", 0, COMMENT)
+            elif muted:
+                args = ("\U000f07ce" if kind == "wave" else glyph, RED, "muted", 0, RED)
+            else:
+                args = (glyph, MAGENTA, f"{pct}%")
+        if args != last:
+            show(*args)
+            last = args
+
     emit()
-    # Re-read on every sink/server change (volume keys, mixer, default sink switch)
-    p = subprocess.Popen(["pactl", "subscribe"], stdout=subprocess.PIPE, text=True)
-    for line in p.stdout:
-        if "sink" in line or "server" in line:
-            emit()
+    # Wake on Wave control changes (dial, mute) and sink changes (controller headset);
+    # the 2 s timeout catches couch desk/sofa switches and a Wave that was unplugged.
+    sel = selectors.DefaultSelector()
+    for cmd in (["stdbuf", "-oL", "alsactl", "monitor", "XLR"], ["pactl", "subscribe"]):
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+        sel.register(p.stdout, selectors.EVENT_READ)
+    while True:
+        for key, _ in sel.select(timeout=2):
+            if not key.fileobj.readline():
+                sel.unregister(key.fileobj)
+        emit()
+
+
+def vol_step():
+    # Scroll/right-click on the volume chip: ember-bar vol-step up|down|mute
+    action = sys.argv[2]
+    kind, sink = vol_target()
+    if kind == "wave":
+        step = {"up": "2+", "down": "2-", "mute": "toggle"}[action]  # 2 steps = 1 dB
+        subprocess.run(["amixer", "-q", "-c", "XLR", "sset", "PCM", step])
+    elif kind == "pad" and sink:
+        if action == "mute":
+            subprocess.run(["pactl", "set-sink-mute", sink, "toggle"])
+        else:
+            pct, _ = pad_level(sink)
+            new = min(100, max(0, (pct or 0) + (2 if action == "up" else -2)))
+            subprocess.run(["pactl", "set-sink-volume", sink, f"{new}%"])
 
 
 def default_iface():
@@ -148,7 +222,7 @@ def media():
 
 if __name__ == "__main__":
     try:
-        {"cpu": cpu, "gpu": gpu, "mem": mem, "vol": vol, "net": net, "pad": pad, "media": media}[sys.argv[1]]()
+        {"cpu": cpu, "gpu": gpu, "mem": mem, "vol": vol, "vol-step": vol_step, "net": net, "pad": pad, "media": media}[sys.argv[1]]()
     except (BrokenPipeError, KeyboardInterrupt):
         # ironbar closed the pipe (bar reload/exit); leave without a traceback
         os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
