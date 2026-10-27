@@ -1,36 +1,22 @@
 #!/usr/bin/env bash
-# install.sh — point the system fprintd at the synatlsmoc-based libfprint built
-# by ./build.sh, so BOTH readers work: the Kensington VeriMark Desktop
-# (047d:00f2, driver synatlsmoc) and the built-in Synaptics (06cb:0126, driver
-# synaptics). Fully reversible; never touches the packaged /usr/lib*/libfprint.
+# install.sh: make fprintd use the libfprint from ./build.sh. Run with sudo.
+# Never touches the packaged libfprint; --uninstall reverts fully.
 #
-# RUN WITH SUDO:  sudo ./install.sh
+# Installs:
+#   /usr/local/lib64/verimark-synatlsmoc/   the library (relabelled lib_t if SELinux)
+#   fprintd.service.d drop-in               LD_LIBRARY_PATH, pairing file, --no-timeout
+#                                           (keeps fprintd warm: ~2 s auth instead of ~10 s)
+#   /var/lib/fprint/verimark/047d-00f2/     pairing keys, root 0700
+#   60-verimark.rules                       udev access
+# Also removes an older "verimark-libfprint" install if one is left over.
 #
-# What it does (mirrors the proven, SELinux-safe pattern from ../driver):
-#   1. Removes our OLD clean-room verimark install if present (its drop-in +
-#      relocated .so), so it can't shadow this one.
-#   2. Copies dist/libfprint-2.so.2.0.0 into a SYSTEM lib path and relabels it
-#      lib_t. REQUIRED: under SELinux Enforcing, fprintd runs confined as
-#      fprintd_t and cannot dlopen a library from /home (or an unlabeled path);
-#      ld.so silently falls back to the system libfprint and only stock readers
-#      work. A system path relabeled lib_t is the verified fix.
-#   3. Creates a root-owned 0700 dir for the driver's persistent pairing data
-#      (the host EC key + sensor certs the driver writes on first pairing).
-#   4. Drops a systemd override on fprintd.service that sets LD_LIBRARY_PATH +
-#      SYNA_TLSMOC_PERSISTENT_DATA_FILE and adds `--no-timeout` (keeps the
-#      daemon warm: ~2s auth instead of ~10s cold).
-#   5. Installs the 047d:00f2 uaccess udev rule.
+# First fprintd-enroll pairs the reader, replacing any Windows Hello pairing.
 #
-# The driver AUTO-PAIRS from Linux on the first open (first `fprintd-enroll`):
-# it sends one PAIR (0x93), which REPLACES any existing Windows pairing, then
-# writes the new pairing to the persistent file. No separate pairing step.
-#
-# Usage:
-#   sudo ./install.sh                 # install (default; uses ./dist)
-#   sudo ./install.sh --so PATH       # install a specific libfprint-2.so.2.0.0
-#   sudo ./install.sh --status        # show current state
-#   sudo ./install.sh --uninstall     # revert to stock libfprint (keeps pairing)
-#   sudo ./install.sh --purge         # revert AND wipe pairing + enrolled prints
+#   sudo ./install.sh               install from ./dist
+#   sudo ./install.sh --so PATH     install a specific libfprint-2.so.2.0.0
+#   sudo ./install.sh --status      show state
+#   sudo ./install.sh --uninstall   back to stock libfprint (keeps pairing)
+#   sudo ./install.sh --purge       also delete pairing + enrolled prints
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
@@ -45,7 +31,7 @@ UDEV_RULE_SRC="$SCRIPT_DIR/60-verimark.rules"
 UDEV_RULE_DST="/usr/lib/udev/rules.d/60-verimark.rules"
 FPRINTD_BIN="/usr/lib/fprintd"
 
-# old clean-room install (from ../driver/install-verimark.sh) — remove if present
+# older install under a different name: removed if present
 OLD_RELOC_DIR="/usr/local/lib64/verimark-libfprint"
 OLD_DROPIN_FILE="$DROPIN_DIR/10-verimark-libfprint.conf"
 
@@ -205,7 +191,7 @@ do_uninstall() {
 
   reload_all
   stop_fprintd
-  log "Done. The built-in Synaptics reader is back on stock libfprint."
+  log "Done. fprintd is back on stock libfprint."
   log "(VeriMark 047d:00f2 is unsupported by stock libfprint — reinstall to use it.)"
 }
 

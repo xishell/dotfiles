@@ -1,23 +1,13 @@
 #!/usr/bin/env bash
-# build.sh — reproducibly build the synatlsmoc-based libfprint that supports
-# BOTH this machine's fingerprint readers:
-#   * Kensington VeriMark Desktop  047d:00f2  -> driver `synatlsmoc` (+Kensington patch)
-#   * built-in Synaptics reader    06cb:0126  -> driver `synaptics`
+# build.sh: build libfprint with the synatlsmoc driver for the Kensington VeriMark
+# Desktop (047d:00f2). As your user, no sudo, nothing installed.
 #
-# This is the upstream-track vojtapl/synaTudorMiS driver with the Uriziel01
-# Kensington Match-in-Sensor patch applied (pinned + checksummed in
-# versions.env). It replaces our earlier clean-room driver in ../driver/.
+# Clones vojtapl/synaTudorMiS at the commit pinned in versions.env, applies
+# 0001 (Kensington support), 0002 (self-pairing) and 0003 (re-arm finger wait),
+# verifies the patch checksum and tree hashes, builds into ./dist. Then: sudo ./install.sh
 #
-# Runs entirely as your normal user — NO sudo, NOTHING installed. It only
-# clones the pinned source, applies the verified patch, and builds natively on
-# Fedora into ./dist/libfprint-2.so.2.0.0. Run install.sh (with sudo) after.
-#
-# Build deps (Fedora): gcc glib2-devel libgusb-devel openssl-devel cairo-devel
-#                      meson ninja-build pkgconf
-#
-# Usage:
-#   ./build.sh            # prepare pinned source + build + self-test -> dist/
-#   ./build.sh --clean    # remove ./src and ./dist first, then build
+#   ./build.sh           build -> dist/libfprint-2.so.2.0.0
+#   ./build.sh --clean   remove ./src and ./dist first
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
@@ -27,8 +17,8 @@ cd "$SCRIPT_DIR"
 source "$SCRIPT_DIR/versions.env"
 
 PATCH="$SCRIPT_DIR/$(basename "$VERIMARK_PATCH")"
-# Layered local patch: make the driver self-pair + persist (see the patch header
-# and the 2026-08-18 changelog). Applied after the upstream Kensington patch.
+# Local patch: pair on first open and persist the keys (see the patch header).
+# Applied after the upstream Kensington patch.
 LOCAL_PATCH="$SCRIPT_DIR/0002-verimark-self-pairing.patch"
 # Expected tree hash after BOTH patches (integrity check for the local layer).
 LOCAL_PATCHED_TREE="ef0f853db39c4bf5b10bcd235513cbc39c35b608"
@@ -149,7 +139,7 @@ case "$supported" in
 esac
 case "$supported" in
   *06cb:0126*) : ;;
-  *) die "built library does not register the built-in Synaptics (06cb:0126)" ;;
+  *) die "built library does not register the synaptics driver (06cb:0126)" ;;
 esac
 
 mkdir -p "$DIST_DIR"
