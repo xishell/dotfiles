@@ -19,20 +19,20 @@ actions = { suspend = "systemctl suspend" }
 [[entries]]
 text = "logout"
 icon = "system-log-out"
-actions = { logout = "uwsm stop" }
+actions = { logout = "session-end logout" }
 
 [[entries]]
 text = "reboot"
 icon = "system-reboot"
-actions = { reboot = "systemctl reboot" }
+actions = { reboot = "session-end reboot" }
 
 [[entries]]
 text = "windows"
 subtext = "reboot into Windows once"
 icon = "system-reboot"
-actions = { windows = "sudo efibootmgr --bootnext \"$(efibootmgr | sed -nE 's/^Boot([0-9A-F]{4})\\* Windows Boot Manager.*/\\1/p')\" && systemctl reboot" }
+actions = { windows = "sudo efibootmgr --bootnext \"$(efibootmgr | sed -nE 's/^Boot([0-9A-F]{4})\\* Windows Boot Manager.*/\\1/p')\" && session-end reboot" }
 
 [[entries]]
 text = "shutdown"
 icon = "system-shutdown"
-actions = { shutdown = "systemctl poweroff" }
+actions = { shutdown = "session-end poweroff" }
