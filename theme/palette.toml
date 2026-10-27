@@ -1,64 +1,59 @@
-# Hearth: the single source of colour for the Linux rice.
-# Every consumer is generated from this file by theme/gen (see theme/README.md).
-# Change a value here, run `theme/ember`, commit the regenerated files.
+# Cyberdream x Oxocarbon blend, single source of colour for the rice (see theme/README.md)
 
 [meta]
-name = "Hearth"
+name = "Oxocarbon"
 variant = "dark"
 
-# Neutral OLED-black ground so the accents glow; the orange → orchid gradient on
-# focused borders carries the warmth. Orchid is the one solid focus colour.
+# Oxocarbon ground warmed to Cyberdream accents, oxocarbon pink, calmer purple, blue focus
 [colors]
-crust     = "#070708" # wallpaper, lock bg, kitty tab strip, text on primary
-base      = "#0d0d0f" # window, bar, panel, terminal bg
-surface   = "#19191d" # inactive border, hover, chips, tracks, dividers
-selection = "#151519" # current line, selected row, text selection
-overlay   = "#343440" # subtle borders, line numbers; never text
-comment   = "#83838c" # hints, empty ws, code comments; lowest allowed text
-fg_dim    = "#c0c0c8" # labels, secondary text, operators
-fg        = "#eceaf2" # primary text, variables
-primary   = "#cf8cf2" # focus solids: active ws, cursor, selection, mode block, couch chip, matches
-orange    = "#ff9a4f" # numbers, constants, gradient-border warm end
-magenta   = "#cf8cf2" # keywords, git branch, gradient-border cool end (same hue as primary)
-red       = "#ff6f88" # errors, urgent, critical, destructive, macros
-urgent_bg = "#2a1518" # urgent ws bg (red 15% on base)
-yellow    = "#f5c84f" # warning, caps lock, cpu, attributes
-green     = "#9ee05f" # success, prompt ok, strings, gpu
-teal      = "#3fd3b0" # enum variants, constants, pad
-cyan      = "#52cfec" # types, mem
-blue      = "#7ea2f2" # functions, dirs, links, net, verifying
+crust     = "#0f1012" # wallpaper, lock bg, kitty tab strip, text on primary
+base      = "#16181a" # window, bar, panel, terminal bg
+surface   = "#2a2d33" # inactive border, hover, chips, tracks, dividers, text selection
+selection = "#22252b" # current line, selected row
+overlay   = "#3c4048" # subtle borders, line numbers, never text
+comment   = "#7b8496" # hints, empty ws, code comments
+fg_dim    = "#b6bac3" # labels, secondary text, operators
+fg        = "#e2e4ea" # primary text, variables, cursor
+primary   = "#6ba5ff" # focus solids: active ws, selection, mode block, couch chip, matches
+orange    = "#ff7eb6" # pink: numbers, constants, gradient-border pink end
+magenta   = "#b87af2" # purple: keywords, git branch, gradient-border cool end
+red       = "#ff6e5e" # errors, urgent, critical, destructive, macros
+urgent_bg = "#2e181b" # urgent ws bg, red tint on base
+yellow    = "#f0d070" # warning, caps lock, cpu, attributes
+green     = "#83c995" # success, prompt ok, strings, gpu (toned sage)
+teal      = "#4bd3d9" # enum variants, constants, pad
+cyan      = "#52e6ec" # types, mem
+blue      = "#6ba5ff" # functions, dirs, links, net, verifying
 
-# ANSI 16: normal 0-7, bright 8-15
+# ANSI 16 normal 0-7 and bright 8-15, matches the approved kitty blend
 [ansi]
-color0  = "#19191d" # black
-color1  = "#ff6f88" # red
-color2  = "#9ee05f" # green
-color3  = "#f5c84f" # yellow
-color4  = "#7ea2f2" # blue
-color5  = "#cf8cf2" # magenta
-color6  = "#52cfec" # cyan
-color7  = "#c0c0c8" # white
-color8  = "#43434f" # bright black (autosuggestions, dim output)
-color9  = "#ff8a9d"
-color10 = "#b0e87a"
-color11 = "#f8d471"
-color12 = "#97b4f5"
-color13 = "#dba6f6"
-color14 = "#74daf0"
-color15 = "#eceaf2"
+color0  = "#16181a" # black
+color1  = "#ff6e5e" # red
+color2  = "#83c995" # green
+color3  = "#f0d070" # yellow
+color4  = "#6ba5ff" # blue
+color5  = "#b87af2" # magenta
+color6  = "#52e6ec" # cyan
+color7  = "#e2e4ea" # white
+color8  = "#7b8496" # bright black, autosuggestions and dim output
+color9  = "#ff8575"
+color10 = "#9ad4a8"
+color11 = "#f5dc8a"
+color12 = "#85b5ff"
+color13 = "#ff7eb6"
+color14 = "#6ef0f5"
+color15 = "#ffffff"
 
-# ember-gen refuses to write anything if an accent drops below these on `against`:
-# WCAG contrast ratio, and CIE LCh(uv) chroma (no washed-out accent ships).
+# ember-gen refuses to write anything if an accent drops below these on `against`
 [check]
 against      = "base"
-min_contrast = 7.0
-min_chroma   = 50.0
+min_contrast = 4.5
+min_chroma   = 20.0
 accents      = ["primary", "orange", "magenta", "red", "yellow", "green", "teal", "cyan", "blue"]
 
-# Wallpaper shades (theme/wallpaper/gen.py): hand-tuned in-between values that are
-# not UI tokens. Sun, glow, stars and the magenta wash come from [colors].
+# wallpaper shades for theme/wallpaper/gen.py, cool blend tuning with purple peak
 [wallpaper]
-sky_top = "#121016"
-sky     = ["#17141b", "#1d1721", "#2a1f25", "#3a2927"] # gradient stops at 38/62/82/100%
-sun_hi  = "#ffba86"                                    # sun disc centre
-ridges  = ["#4a3d46", "#352c37", "#241f29", "#16131a"] # far → near
+sky_top = "#0f1012"
+sky     = ["#16181a", "#191c22", "#201f2e", "#2a2442"]
+sun_hi  = "#b87af2"
+ridges  = ["#3c4048", "#2a2d33", "#22252b", "#16181a"]

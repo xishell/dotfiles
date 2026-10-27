@@ -4,16 +4,16 @@
 
 window#osd {
   border-radius: 26px;
-  border: 1px solid #343440;
-  background: #0d0d0f;
+  border: 1px solid #3c4048;
+  background: #16181a;
   min-width: 320px;
   min-height: 52px;
 }
 window#osd #container { margin: 0 20px; }
 
-window#osd image { color: #cf8cf2; -gtk-icon-size: 18px; }
+window#osd image { color: #b87af2; -gtk-icon-size: 18px; }
 window#osd label {
-  color: #eceaf2;
+  color: #e2e4ea;
   font-family: "FiraCode Nerd Font", monospace;
   font-size: 13px;
   min-width: 36px;
@@ -32,19 +32,19 @@ window#osd segment {
   min-height: inherit;
   border-radius: inherit;
   border: none;
-  background: #19191d;
+  background: #2a2d33;
 }
 window#osd progress,
 window#osd segment.active {
   min-height: inherit;
   border-radius: inherit;
   border: none;
-  background: #cf8cf2;
+  background: #6ba5ff;
 }
 window#osd segment { margin-left: 8px; }
 window#osd segment:first-child { margin-left: 0; }
 
 /* muted */
-window#osd image:disabled { color: #83838c; }
-window#osd label:disabled { color: #83838c; }
-window#osd progressbar:disabled progress { background: #343440; }
+window#osd image:disabled { color: #7b8496; }
+window#osd label:disabled { color: #7b8496; }
+window#osd progressbar:disabled progress { background: #3c4048; }

@@ -25,7 +25,7 @@ popup_autohide = true
 type = "workspaces"
 sort = "index"
 favorites = ["1", "2", "3", "4", "5"]   # always shown; empty ones dim
-name_map = { tv = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt" underline="single" underline_color="#cf8cf2">󰔂</span>' }
+name_map = { tv = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt" underline="single" underline_color="#b87af2">󰔂</span>' }
 
 [[monitors.DP-1.start]]
 type  = "label"

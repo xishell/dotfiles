@@ -3,22 +3,22 @@
 # the bat theme of the same name; added/removed lines get green/red tints over base.
 [delta]
     syntax-theme = Ember
-    minus-style = syntax "#2f1b20"
-    minus-emph-style = syntax "#5a2c36"
-    plus-style = syntax "#1e2619"
-    plus-emph-style = syntax "#364825"
-    map-styles = bold purple => syntax "#34263c", bold cyan => syntax "#1b343b"
-    line-numbers-minus-style = "#ff6f88"
-    line-numbers-plus-style = "#9ee05f"
-    line-numbers-zero-style = "#343440"
-    line-numbers-left-style = "#19191d"
-    line-numbers-right-style = "#19191d"
-    file-style = "#7ea2f2" bold
-    file-decoration-style = "#19191d" ul
+    minus-style = syntax "#372424"
+    minus-emph-style = syntax "#613430"
+    plus-style = syntax "#232d29"
+    plus-emph-style = syntax "#354a3c"
+    map-styles = bold purple => syntax "#362c45", bold cyan => syntax "#224144"
+    line-numbers-minus-style = "#ff6e5e"
+    line-numbers-plus-style = "#83c995"
+    line-numbers-zero-style = "#3c4048"
+    line-numbers-left-style = "#2a2d33"
+    line-numbers-right-style = "#2a2d33"
+    file-style = "#6ba5ff" bold
+    file-decoration-style = "#2a2d33" ul
     hunk-header-style = file line-number syntax
-    hunk-header-decoration-style = "#19191d" box
-    hunk-header-file-style = "#7ea2f2"
-    hunk-header-line-number-style = "#ff9a4f"
-    commit-style = "#f5c84f"
-    commit-decoration-style = "#19191d" box
-    blame-palette = "#0d0d0f" "#070708"
+    hunk-header-decoration-style = "#2a2d33" box
+    hunk-header-file-style = "#6ba5ff"
+    hunk-header-line-number-style = "#ff7eb6"
+    commit-style = "#f0d070"
+    commit-decoration-style = "#2a2d33" box
+    blame-palette = "#16181a" "#0f1012"

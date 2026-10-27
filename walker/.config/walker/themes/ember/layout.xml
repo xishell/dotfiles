@@ -161,7 +161,7 @@
                 <property name="halign">fill</property>
                 <property name="xalign">1</property>
                 <property name="margin-top">4</property>
-                <property name="label">&lt;span color="#c0c0c8"&gt;=&lt;/span&gt; calc   &lt;span color="#c0c0c8"&gt;&amp;gt;&lt;/span&gt; run   &lt;span color="#c0c0c8"&gt;:&lt;/span&gt; emoji   &lt;span color="#c0c0c8"&gt;!&lt;/span&gt; power</property>
+                <property name="label">&lt;span color="#b6bac3"&gt;=&lt;/span&gt; calc   &lt;span color="#b6bac3"&gt;&amp;gt;&lt;/span&gt; run   &lt;span color="#b6bac3"&gt;:&lt;/span&gt; emoji   &lt;span color="#b6bac3"&gt;!&lt;/span&gt; power</property>
               </object>
             </child>
             <child>

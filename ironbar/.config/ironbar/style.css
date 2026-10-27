@@ -6,7 +6,7 @@
     font-family: "FiraCode Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 14px;
     font-weight: 500;   /* Medium: holds up better than Regular at bar size */
-    color: #eceaf2;
+    color: #e2e4ea;
     box-shadow: none;
     text-shadow: none;
 }
@@ -14,14 +14,14 @@
 .background { background-color: transparent; }
 
 #bar {
-    background-color: #0d0d0f;
+    background-color: #16181a;
     border-radius: 10px;
     padding: 0 8px;
 }
 
 /* module gap 18 */
 #bar .mod, #bar .tray { margin-left: 18px; }
-#layout, #layout label { color: #83838c; }
+#layout, #layout label { color: #7b8496; }
 #bar #layout { margin-left: 10px; }
 
 /* Drop the GTK theme's button chrome (focus ring, borders) */
@@ -34,20 +34,20 @@
     margin: 5px 2px;
     border-radius: 6px;
     min-width: 0;
-    color: #eceaf2;
+    color: #e2e4ea;
 }
-#bar .workspaces .item:hover { background-color: #19191d; }
-#bar .workspaces .item.urgent { background-color: #2a1518; font-weight: bold; }
-#bar .workspaces .item.urgent label { color: #ff6f88; }
+#bar .workspaces .item:hover { background-color: #2a2d33; }
+#bar .workspaces .item.urgent { background-color: #2e181b; font-weight: bold; }
+#bar .workspaces .item.urgent label { color: #ff6e5e; }
 #bar .workspaces .item.focused {
-    background-color: #cf8cf2;
+    background-color: #6ba5ff;
     font-weight: bold;
 }
-#bar .workspaces .item.focused label { color: #070708; }
-#bar .workspaces .item.inactive label { color: #83838c; }
+#bar .workspaces .item.focused label { color: #0f1012; }
+#bar .workspaces .item.inactive label { color: #7b8496; }
 
 /* ── center ── */
-.focused .label { color: #eceaf2; }
+.focused .label { color: #e2e4ea; }
 
 /* ── couch chip ── */
 .chip {
@@ -56,10 +56,10 @@
     margin-bottom: 5px;
     border-radius: 6px;
 }
-#chip-desk { background-color: #19191d; color: #c0c0c8; }
-#chip-desk label { color: #c0c0c8; }
-#chip-couch { background-color: #cf8cf2; color: #070708; font-weight: bold; }
-#chip-couch label { color: #070708; }
+#chip-desk { background-color: #2a2d33; color: #b6bac3; }
+#chip-desk label { color: #b6bac3; }
+#chip-couch { background-color: #6ba5ff; color: #0f1012; font-weight: bold; }
+#chip-couch label { color: #0f1012; }
 
 /* ── clock ── */
 /* the clock is a button; the reset above unsets it, so style its label */
@@ -67,21 +67,21 @@
 
 /* ── popups + tooltips: surface, overlay border, radius 8 ── */
 .popup, tooltip, popover > contents {
-    background-color: #19191d;
-    border: 1px solid #343440;
+    background-color: #2a2d33;
+    border: 1px solid #3c4048;
     border-radius: 8px;
     padding: 10px 14px;
 }
 tooltip label { font-size: 12px; }
 
-.popup-clock .calendar-clock { font-size: 13px; font-weight: bold; color: #cf8cf2; }
-.popup-clock .calendar { background: none; border: none; color: #eceaf2; }
-.popup-clock .calendar header { color: #cf8cf2; font-weight: bold; }
-.popup-clock .calendar .day-name { color: #c0c0c8; }
-.popup-clock .calendar .other-month { color: #83838c; }
+.popup-clock .calendar-clock { font-size: 13px; font-weight: bold; color: #6ba5ff; }
+.popup-clock .calendar { background: none; border: none; color: #e2e4ea; }
+.popup-clock .calendar header { color: #6ba5ff; font-weight: bold; }
+.popup-clock .calendar .day-name { color: #b6bac3; }
+.popup-clock .calendar .other-month { color: #7b8496; }
 .popup-clock .calendar :selected {
-    background-color: #cf8cf2;
-    color: #070708;
+    background-color: #6ba5ff;
+    color: #0f1012;
     font-weight: bold;
     border-radius: 6px;
 }
@@ -89,5 +89,5 @@ tooltip label { font-size: 12px; }
 #bar .tray .item { padding: 0 3px; }
 
 /* status icons: colour by module name (Pango colour in a label would need a ## escape) */
-#bell { color: #83838c; }
-#bell-off, #awake { color: #f5c84f; }
+#bell { color: #7b8496; }
+#bell-off, #awake { color: #f0d070; }

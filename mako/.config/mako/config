@@ -18,31 +18,31 @@ default-timeout=5000
 max-visible=4
 max-history=50
 
-background-color=#0d0d0f
-text-color=#eceaf2
-border-color=#343440
-progress-color=over #151519
-format=<span size="small" color="#83838c">%a</span>\n<b>%s</b>\n<span color="#c0c0c8">%b</span>
+background-color=#16181a
+text-color=#e2e4ea
+border-color=#3c4048
+progress-color=over #22252b
+format=<span size="small" color="#7b8496">%a</span>\n<b>%s</b>\n<span color="#b6bac3">%b</span>
 
 [urgency=low]
-border-color=#19191d
+border-color=#2a2d33
 
 [urgency=critical]
 border-size=2
-border-color=#ff6f88
+border-color=#ff6e5e
 default-timeout=0
-format=<span size="small" color="#ff6f88">%a · critical</span>\n<b>%s</b>\n<span color="#c0c0c8">%b</span>
+format=<span size="small" color="#ff6e5e">%a · critical</span>\n<b>%s</b>\n<span color="#b6bac3">%b</span>
 
 # Couch/desk switches (couch.py)
 [app-name=couch]
 border-size=2
-border-color=#cf8cf2
-format=<span size="small" color="#cf8cf2">%a</span>\n<b>%s</b>\n<span color="#c0c0c8">%b</span>
+border-color=#6ba5ff
+format=<span size="small" color="#6ba5ff">%a</span>\n<b>%s</b>\n<span color="#b6bac3">%b</span>
 
 # Fingerprint prompt from the sudo PAM hook (/usr/local/bin/fprint-notify)
 [app-name=fingerprint]
 border-size=2
-border-color=#f5c84f
+border-color=#f0d070
 anchor=top-center
 
 # Do not disturb (Super+N, bell on the bar; `notif dnd`): hide everything except

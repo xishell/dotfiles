@@ -1,5 +1,5 @@
-# pure prompt colours (Hearth): dir blue, branch magenta, ❯ green / red on error
-zstyle :prompt:pure:path                  color '{{ blue }}'
+# pure prompt colours: dir cyan, branch purple, ❯ green / red on error
+zstyle :prompt:pure:path                  color '{{ cyan }}'
 zstyle :prompt:pure:git:branch            color '{{ magenta }}'
 zstyle :prompt:pure:git:branch:cached     color '{{ red }}'
 zstyle :prompt:pure:git:dirty             color '{{ yellow }}'
