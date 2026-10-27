@@ -21,7 +21,7 @@ Build output (`src/`, `dist/`) lands in `~/.local/share/verimark/`, outside the 
 ```sh
 sudo ./install.sh --status      # what's installed / paired
 sudo ./install.sh --uninstall   # back to stock libfprint (keeps pairing)
-sudo ./install.sh --purge       # also delete pairing
+sudo ./install.sh --purge       # also delete pairing + enrolled prints
 ```
 
 ## Installed paths
