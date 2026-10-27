@@ -106,7 +106,7 @@ class = "mod"
 mode = "watch"
 cmd  = "ember-bar pad"
 show_if = "[ -e /sys/class/power_supply/gip0.0 ]"
-tooltip = "8BitDo Ultimate 3: battery"
+tooltip = "Controller battery"
 
 [[monitors.DP-1.end]]
 type  = "label"
