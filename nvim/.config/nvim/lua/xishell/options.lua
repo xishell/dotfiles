@@ -4,6 +4,8 @@ local g = vim.g
 
 opt.confirm = true
 g.borderStyle = "rounded"
+-- .h defaults to cpp, all current header work is c
+g.c_syntax_for_h = true
 o.autoindent = true
 o.autoread = true
 o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
