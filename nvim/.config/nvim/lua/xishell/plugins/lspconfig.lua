@@ -12,8 +12,6 @@ return {
     require("mason").setup()
 
     -- 1) Cache modules
-    local lspconfig = require("lspconfig")
-    local configs = require("lspconfig.configs")
     local mason_lspconfig = require("mason-lspconfig")
 
     -- 2) Blink capabilities
@@ -72,91 +70,63 @@ return {
       severity_sort = true,
     })
 
-    -- 4.5) Completely disable asm_lsp to prevent conflicts with RISC-V assembly
-    if configs.asm_lsp then
-      configs.asm_lsp = nil
-    end
+    -- 5) Per-server config, mason-lspconfig v2 dropped `handlers` and only calls vim.lsp.enable
+    vim.lsp.config("*", { capabilities = capabilities })
 
-    -- 5) Mason-lspconfig: use `handlers` inside setup (portable across versions)
-    mason_lspconfig.setup({
-      ensure_installed = {},          -- you said mason-tool-installer handles this
-      automatic_installation = false, -- keep as you prefer
-      handlers = {
-        -- default handler
-        function(server)
-          lspconfig[server].setup({
-            capabilities = capabilities,
-            on_attach = function(_) end,
-          })
-        end,
-
-        -- per-server overrides
-        lua_ls = function()
-          lspconfig.lua_ls.setup({
-            capabilities = capabilities,
-            settings = {
-              Lua = {
-                runtime = { version = "LuaJIT" },
-                workspace = { checkThirdParty = false },
-                telemetry = { enable = false },
-              },
-            },
-          })
-        end,
-
-        tinymist = function()
-          lspconfig.tinymist.setup({
-            capabilities = capabilities,
-            settings = {
-              exportPdf = "onSave",
-              outputPath = "$root/target/$dir/$name",
-            },
-          })
-        end,
-
-        gopls = function()
-          lspconfig.gopls.setup({
-            capabilities = capabilities,
-            settings = {
-              gopls = {
-                analyses = {
-                  unusedparams = true,
-                },
-                staticcheck = true,
-                gofumpt = true,
-              },
-            },
-          })
-        end,
-
-        clangd = function()
-          lspconfig.clangd.setup({
-            capabilities = capabilities,
-            -- query-driver lets clangd read newlib headers from arm gcc for stm32
-            cmd = { "clangd", "--query-driver=/opt/homebrew/bin/arm-none-eabi-*" },
-            filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }, -- Explicitly exclude "asm"
-          })
-        end,
-
-        ltex = function()
-          lspconfig.ltex.setup({
-            capabilities = capabilities,
-            cmd_env = {
-              JAVA_OPTS = "-Djdk.xml.totalEntitySizeLimit=0",
-            },
-            settings = {
-              ltex = {
-                disabledRules = {
-                  ["en-US"] = { "MORFOLOGIK_RULE_EN_US" },
-                  ["en"]    = { "MORFOLOGIK_RULE_EN" },
-                },
-              },
-            },
-          })
-        end,
-
-
+    vim.lsp.config("lua_ls", {
+      settings = {
+        Lua = {
+          runtime = { version = "LuaJIT" },
+          workspace = { checkThirdParty = false },
+          telemetry = { enable = false },
+        },
       },
+    })
+
+    vim.lsp.config("tinymist", {
+      settings = {
+        exportPdf = "onSave",
+        outputPath = "$root/target/$dir/$name",
+      },
+    })
+
+    vim.lsp.config("gopls", {
+      settings = {
+        gopls = {
+          analyses = {
+            unusedparams = true,
+          },
+          staticcheck = true,
+          gofumpt = true,
+        },
+      },
+    })
+
+    vim.lsp.config("clangd", {
+      -- query-driver lets clangd read newlib headers from arm gcc for stm32
+      cmd = { "clangd", "--query-driver=/opt/homebrew/bin/arm-none-eabi-*" },
+      filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }, -- no asm, riscv files go elsewhere
+    })
+
+    vim.lsp.config("ltex", {
+      -- jdk 24+ caps xml entity size below languagetool's grammar.xml
+      cmd_env = {
+        JAVA_OPTS = "-Djdk.xml.totalEntitySizeLimit=0",
+      },
+      settings = {
+        ltex = {
+          disabledRules = {
+            ["en-US"] = { "MORFOLOGIK_RULE_EN_US" },
+            ["en"]    = { "MORFOLOGIK_RULE_EN" },
+          },
+        },
+      },
+    })
+
+    -- 6) Mason-lspconfig enables installed servers, asm_lsp clashes with riscv assembly
+    mason_lspconfig.setup({
+      ensure_installed = {}, -- mason-tool-installer handles installs
+      automatic_enable = { exclude = { "asm_lsp" } },
     })
   end,
 }
