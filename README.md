@@ -11,6 +11,7 @@ macOS + CachyOS/Hyprland configs. [GNU Stow](https://www.gnu.org/software/stow/)
 | `claude` | Claude Code theme | both |
 | `scripts` | `~/.local/bin` + user units | both (most scripts Linux) |
 | `latexmk` | global `.latexmkrc` | both |
+| `markdownlint` | global `.markdownlintrc`, tables exempt from line length | both |
 | `aerospace` `karabiner` `config` | tiling WM, key remaps, sketchybar | macOS |
 | `hypr` | Hyprland (Lua), hypridle, hyprlock, hyprpaper | Linux |
 | `ironbar` `walker` `elephant` `mako` `swayosd` `quickshell` | bar, launcher, notifications, OSD, mixer/media panels | Linux |
@@ -46,7 +47,7 @@ system/install.sh --apply   # install them (sudo); --pull copies / back into the
 **macOS**
 
 ```sh
-stow zsh nvim tmux git kitty ghostty lazygit bat btop claude latexmk aerospace config
+stow zsh nvim tmux git kitty ghostty lazygit bat btop claude latexmk aerospace config markdownlint
 ln -s ~/dotfiles/karabiner/.config/karabiner ~/.config/karabiner
 ```
 
