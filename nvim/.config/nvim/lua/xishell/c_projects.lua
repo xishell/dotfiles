@@ -27,9 +27,10 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     vim.opt_local.path:append(file_dir)
     vim.opt_local.path:append(vim.fn.fnamemodify(file_dir, ":h"))
 
-    -- Configure :make — detect meson project or fall back to clang
+    -- :make uses meson, then the nearest Makefile above, else single-file clang
     local ext = vim.fn.expand("%:e")
     local meson_root = vim.fs.find("meson.build", { path = file_dir, upward = true, type = "file" })[1]
+    local makefile = vim.fs.find("Makefile", { path = file_dir, upward = true, type = "file" })[1]
 
     if meson_root then
       local meson_dir = vim.fn.fnamemodify(meson_root, ":h")
@@ -38,6 +39,9 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
         builddir = meson_dir .. "/build"
       end
       vim.opt_local.makeprg = "ninja -C " .. vim.fn.fnameescape(builddir)
+    elseif makefile then
+      -- make -C so targets like :make test work from any subdir
+      vim.opt_local.makeprg = "make -C " .. vim.fn.fnameescape(vim.fn.fnamemodify(makefile, ":h"))
     else
       local compiler = (ext == "cpp" or ext == "hpp") and "clang++" or "clang"
       vim.opt_local.makeprg = compiler .. " % -o %< -Wall -Wextra -g"
