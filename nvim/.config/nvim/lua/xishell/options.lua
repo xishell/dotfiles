@@ -45,6 +45,8 @@ o.splitbelow = true
 o.synmaxcol = 200
 o.tabline = nil
 o.title = true
+-- % of columns, long paths crowd kitty tabs and menu bar
+o.titlelen = 20
 o.ttyfast = true
 o.updatetime = 250
 o.wildmenu = true
