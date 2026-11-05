@@ -32,7 +32,22 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     local meson_root = vim.fs.find("meson.build", { path = file_dir, upward = true, type = "file" })[1]
     local makefile = vim.fs.find("Makefile", { path = file_dir, upward = true, type = "file" })[1]
 
-    if meson_root then
+    local lima = require("xishell.lima")
+    local in_vm = lima.owns(vim.fn.expand("%:p"))
+
+    if in_vm then
+      if makefile then
+        local make_dir = vim.fn.fnamemodify(makefile, ":h")
+        vim.opt_local.makeprg = lima.wrap("make -C " .. vim.fn.shellescape(lima.to_guest(make_dir)), file_dir)
+      else
+        local src = lima.to_guest(vim.fn.expand("%:p"))
+        local out = vim.fn.fnamemodify(src, ":r")
+        vim.opt_local.makeprg = lima.wrap(
+          string.format("cc %s -o %s -Wall -Wextra -g", vim.fn.shellescape(src), vim.fn.shellescape(out)),
+          file_dir
+        )
+      end
+    elseif meson_root then
       local meson_dir = vim.fn.fnamemodify(meson_root, ":h")
       local builddir = meson_dir .. "/builddir"
       if vim.fn.isdirectory(builddir) == 0 then
@@ -73,6 +88,10 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
               vim.cmd("!" .. vim.fn.fnameescape(exe))
             end
           end)
+        elseif in_vm then
+          -- elf binary only runs in the vm
+          local exe = "./" .. vim.fn.expand("%:t:r")
+          vim.cmd("!limactl shell --workdir " .. vim.fn.shellescape(lima.to_guest(file_dir)) .. " " .. lima.instance .. " " .. exe)
         else
           vim.cmd("!./%<")
         end
