@@ -15,9 +15,10 @@ end
 
 -- sed maps vm paths back so quickfix jumps land on host files
 -- comma delimiter since makeprg expands # to the alternate file
+-- bare | ends the :make command, \| reaches the shell as a pipe
 function M.wrap(cmd, host_dir)
   return string.format(
-    "limactl shell --workdir %s %s %s 2>&1 | sed 's,%s,%s,g'",
+    "limactl shell --workdir %s %s %s 2>&1 \\| sed 's,%s,%s,g'",
     vim.fn.shellescape(M.to_guest(host_dir)),
     M.instance,
     cmd,
