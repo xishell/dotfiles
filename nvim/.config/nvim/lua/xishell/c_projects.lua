@@ -40,8 +40,9 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
         local make_dir = vim.fn.fnamemodify(makefile, ":h")
         vim.opt_local.makeprg = lima.wrap("make -C " .. vim.fn.shellescape(lima.to_guest(make_dir)), file_dir)
       else
+        -- binaries go to build/ which gitignore covers, QuickFixCmdPre creates it
         local src = lima.to_guest(vim.fn.expand("%:p"))
-        local out = vim.fn.fnamemodify(src, ":r")
+        local out = lima.to_guest(file_dir) .. "/build/" .. vim.fn.expand("%:t:r")
         vim.opt_local.makeprg = lima.wrap(
           string.format("cc %s -o %s -Wall -Wextra -g", vim.fn.shellescape(src), vim.fn.shellescape(out)),
           file_dir
@@ -90,7 +91,7 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
           end)
         elseif in_vm then
           -- elf binary only runs in the vm
-          local exe = "./" .. vim.fn.expand("%:t:r")
+          local exe = (makefile and "./" or "./build/") .. vim.fn.expand("%:t:r")
           vim.cmd("!limactl shell --workdir " .. vim.fn.shellescape(lima.to_guest(file_dir)) .. " " .. lima.instance .. " " .. exe)
         else
           vim.cmd("!./%<")
@@ -102,5 +103,17 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
       buffer = true,
       desc = "Build and run C/C++ file",
     })
+  end,
+})
+
+-- shared folder so mkdir on the host is visible to cc in the vm
+vim.api.nvim_create_autocmd("QuickFixCmdPre", {
+  group = group,
+  pattern = "make",
+  callback = function()
+    local file = vim.fn.expand("%:p")
+    if require("xishell.lima").owns(file) then
+      vim.fn.mkdir(vim.fs.dirname(file) .. "/build", "p")
+    end
   end,
 })
