@@ -104,7 +104,12 @@ return {
 
     vim.lsp.config("clangd", {
       -- query-driver lets clangd read newlib headers from arm gcc for stm32
-      cmd = { "clangd", "--query-driver=/opt/homebrew/bin/arm-none-eabi-*" },
+      -- iwyu mode adds the declaring header even when already visible transitively
+      cmd = {
+        "clangd",
+        "--query-driver=/opt/homebrew/bin/arm-none-eabi-*",
+        "--header-insertion=never",
+      },
       filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }, -- no asm, riscv files go elsewhere
     })
 
