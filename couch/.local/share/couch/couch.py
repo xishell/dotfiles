@@ -976,30 +976,37 @@ def set_audio(cfg, device):
 
 
 # --- Linux: OpenXLR (Wave Link replacement) owns the routing when it's running ---
-def _openxlr_token():
+def _openxlr_socket():
+    """Path of the OpenXLR daemon's control socket ("" if it isn't running).
+    Since 0.3.0 the API is HTTP over this Unix socket; no token or TCP port."""
     base = os.environ.get("XDG_RUNTIME_DIR") or os.environ.get("XDG_CONFIG_HOME") \
         or str(Path.home() / ".config")
-    try:
-        return (Path(base) / "openxlr" / "token").read_text(encoding="utf-8").strip()
-    except OSError:
-        return ""
+    path = Path(base) / "openxlr" / "control.sock"
+    return str(path) if path.is_socket() else ""
 
 
 def openxlr(cmd, **fields):
     """Send one command to the OpenXLR daemon. True on success, None if it isn't running."""
-    import urllib.request
-    token = _openxlr_token()
-    if IS_WIN or not token:
+    import http.client
+    path = _openxlr_socket()
+    if IS_WIN or not path:
         return None
-    req = urllib.request.Request(
-        "http://127.0.0.1:37890/api/v1/commands",
-        data=json.dumps({"cmd": cmd, **fields}).encode(),
-        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+
+    class _UnixConn(http.client.HTTPConnection):
+        def connect(self):
+            self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            self.sock.settimeout(self.timeout)
+            self.sock.connect(path)
+
+    conn = _UnixConn("localhost", timeout=5)
     try:
-        with urllib.request.urlopen(req, timeout=5) as r:
-            reply = json.loads(r.read() or b"{}")
+        conn.request("POST", "/api/v1/commands", body=json.dumps({"cmd": cmd, **fields}),
+                     headers={"Content-Type": "application/json"})
+        reply = json.loads(conn.getresponse().read() or b"{}")  # 400 bodies carry the error too
     except (OSError, ValueError):
         return None
+    finally:
+        conn.close()
     for m in reply.get("messages", []):
         if m.get("type") == "error":
             log(f"  ! OpenXLR {cmd}: {m.get('message')}")
@@ -1074,7 +1081,7 @@ def headphones_watch(cfg, busy, interval=1):
 def audio_sofa(cfg, choice=None):
     choice = sofa_audio_choice(cfg, choice)
     devices = cfg["openxlr_sofa_outputs"].get(choice, [])
-    if not IS_WIN and devices and _openxlr_token():
+    if not IS_WIN and devices and _openxlr_socket():
         hdmi_profile(cfg, cfg["hdmi_profile_sofa"])
         hdmi = [d for d in devices if d.startswith("alsa_output.pci")]
         if hdmi and not wait_for(lambda: all(d in sinks() for d in hdmi), 8):
@@ -1089,7 +1096,7 @@ def audio_sofa(cfg, choice=None):
 
 
 def audio_desk(cfg):
-    if not IS_WIN and cfg["openxlr_desk_outputs"] and _openxlr_token():
+    if not IS_WIN and cfg["openxlr_desk_outputs"] and _openxlr_socket():
         log("Audio: desk")
         apply_trims(cfg, cfg["openxlr_desk_outputs"])
         if openxlr_outputs(cfg["openxlr_desk_outputs"]):
@@ -1282,7 +1289,7 @@ def status(cfg):
         print(f"Hypr TV:     {'active' if hypr_active(cfg['hypr_tv']) else 'off'}")
     if not IS_WIN and cfg["openxlr_sofa_outputs"]:
         print(f"Sofa audio:  {sofa_audio_choice(cfg)}   "
-              f"(OpenXLR {'running' if _openxlr_token() else 'not running'})")
+              f"(OpenXLR {'running' if _openxlr_socket() else 'not running'})")
     print(f"Config:      {CONFIG_FILE}")
     print(f"Log:         {LOG_FILE}")
 

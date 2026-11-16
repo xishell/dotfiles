@@ -72,12 +72,13 @@ if pactl list short sinks 2>/dev/null | awk -v m="$MATCH" '$2 ~ m {print $2}' \
     log "warn: Wave sink has a suffixed name, restarting wireplumber"
     systemctl --user restart wireplumber
     sleep 3
-    token="${XDG_RUNTIME_DIR:-/run/user/$UID}/openxlr/token"
+    # OpenXLR >= 0.3.0: HTTP over a private Unix socket, no token or TCP port.
+    sock="${XDG_RUNTIME_DIR:-/run/user/$UID}/openxlr/control.sock"
     outputs=$(python3 -c 'import json,sys; print(json.dumps(json.load(open(sys.argv[1]))["monitorOutputs"]))' \
               "$HOME/.config/openxlr/mixer.json" 2>/dev/null)
-    if [ -r "$token" ] && [ -n "$outputs" ]; then
-        curl -s -m 5 -X POST -H "Authorization: Bearer $(cat "$token")" \
-             -H 'Content-Type: application/json' http://127.0.0.1:37890/api/v1/commands \
+    if [ -S "$sock" ] && [ -n "$outputs" ]; then
+        curl -sf -m 5 --unix-socket "$sock" -X POST \
+             -H 'Content-Type: application/json' http://localhost/api/v1/commands \
              -d "{\"cmd\":\"setMonitorOutputs\",\"devices\":$outputs}" >/dev/null \
             && log "OK: OpenXLR outputs re-applied" || log "warn: OpenXLR re-apply failed"
     fi
