@@ -108,7 +108,7 @@
           "background_colour": "#000000",
           "colour": "#FFFFFF",
           "family": "Liberation Sans",
-          "image": "0.jpeg",
+          "image": "plugins/me.amankhanna.oampris.sdPlugin/icons/playpause.png",
           "image_override": null,
           "image_scale": 100,
           "name": "",
