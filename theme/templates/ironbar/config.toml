@@ -22,6 +22,7 @@ popup_autohide = true
 # ── left: workspaces + layout ─────────────────────────────────────────────
 [[monitors.DP-1.start]]
 type = "workspaces"
+all_monitors = true   # the only bar is on DP-1: also list the TV's `tv` workspace while couch mode has it
 sort = "index"
 favorites = ["1", "2", "3", "4", "5"]   # always shown; empty ones dim
 hidden = ["special:term", "special:music", "special:chat", "special:magic"]   # scratchpads (scratch, Super+S)
