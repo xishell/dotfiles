@@ -1,0 +1,19 @@
+#!/bin/sh
+# Replace the running ironbar with a new process and put its chips back in sync.
+# By hand only: for a bar that stopped following Hyprland, or after installing a new
+# ironbar build. (It was hooked to monitor.added until ironbar 0.19.1-2.4 fixed the
+# frozen workspaces widget at its source - see ~/src/ironbar-pkg/PKGBUILD.)
+# Started through systemd-run so the bar's log lands in the journal:
+#   journalctl --user -t ironbar
+set -u
+pkill -x ironbar
+i=0
+while pgrep -x ironbar >/dev/null && [ "$i" -lt 20 ]; do sleep 0.1; i=$((i + 1)); done
+pkill -9 -x ironbar 2>/dev/null
+systemd-run --user --collect --quiet --unit="ironbar-$(date +%s)" \
+    -E WAYLAND_DISPLAY="$WAYLAND_DISPLAY" \
+    -E HYPRLAND_INSTANCE_SIGNATURE="$HYPRLAND_INSTANCE_SIGNATURE" /usr/bin/ironbar
+
+# the chips take their state from ironvars, which a new ironbar starts without
+sleep 3
+couch barsync; notif barsync; awake barsync

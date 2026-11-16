@@ -3,12 +3,28 @@
 # Clips land in ~/Videos/Clips; a mako card says when recording starts and where it saved.
 dir="$HOME/Videos/Clips"
 mkdir -p "$dir"
-if pid=$(pgrep -f '^gpu-screen-recorder .*-o '"$dir"); then
-    kill -INT $pid   # SIGINT: finish and save
-    notify-send -a clip -i media-record "Clip saved" "$dir"
+if pids=$(pgrep -f '^gpu-screen-recorder .*-o '"$dir"); then
+    for pid in $pids; do
+        file=$(ps -o args= -p "$pid" | sed -n 's/.* -o //p')
+        kill -INT "$pid"                 # SIGINT: finish and save
+        i=0                              # the file is complete only once it has exited
+        while kill -0 "$pid" 2>/dev/null && [ "$i" -lt 40 ]; do sleep 0.25; i=$((i + 1)); done
+        if kill -0 "$pid" 2>/dev/null; then
+            notify-send -a clip -u critical -i media-record "Clip still being written" "${file:-$dir}"
+        else
+            notify-send -a clip -i media-record "Clip saved" "${file:-$dir}"
+        fi
+    done
     exit 0
 fi
 mon=$(hyprctl activeworkspace -j | jq -r .monitor)
 file="$dir/$(date +%Y-%m-%d_%H-%M-%S).mp4"
-notify-send -a clip -i media-record "Recording $mon" "Super+F9 again to stop"
-exec gpu-screen-recorder -w "$mon" -f 60 -a default_output -k h264 -o "$file"
+gpu-screen-recorder -w "$mon" -f 60 -a default_output -k h264 -o "$file" >/dev/null 2>&1 &
+pid=$!
+sleep 1                                  # a bad monitor name or a busy encoder fails at once
+if kill -0 "$pid" 2>/dev/null; then
+    notify-send -a clip -i media-record "Recording $mon" "Super+F9 again to stop"
+else
+    notify-send -a clip -u critical -i media-record "Recording failed" "gpu-screen-recorder did not start on $mon"
+    exit 1
+fi

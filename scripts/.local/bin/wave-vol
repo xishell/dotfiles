@@ -1,6 +1,9 @@
 #!/bin/bash
 # wave-vol - Per-sink volume control for Wave Link virtual sinks
 #
+# Legacy audio mode only (`audio-mode legacy`): these sinks come from
+# audio/legacy/virtual-sinks.conf. Under OpenXLR the channels live in its mixer.
+#
 # Usage:
 #   wave-vol                  Show all sinks and their volumes
 #   wave-vol <sink> <vol>     Set volume (e.g. 80%, +5%, -10%)

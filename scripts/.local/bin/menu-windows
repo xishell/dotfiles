@@ -14,7 +14,11 @@ if len(clients) > 1:
 lines, by_line = [], {}
 for c in clients:
     ws = c["workspace"]["name"].replace("special:", "★ ")
-    line = f"{ws:>8} · {c['class']} · {c['title'][:80]}"
+    base = line = f"{ws:>8} · {c['class']} · {c['title'][:80]}"
+    n = 1
+    while line in by_line:      # same workspace, app and title: number them, or both
+        n += 1                  # rows would lead to the last such window
+        line = f"{base} ({n})"
     lines.append(line)
     by_line[line] = c["address"]
 

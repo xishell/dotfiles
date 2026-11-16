@@ -9,6 +9,10 @@ MATCH="Elgato_Wave_XLR"
 WANT_PROFILE="output:analog-stereo+input:mono-fallback"
 LOG="${XDG_STATE_HOME:-$HOME/.local/state}/wave-xlr-recover.log"
 mkdir -p "$(dirname "$LOG")"
+# keep the log bounded: past 256 KB, the last 500 lines stay
+if [ "$(stat -c%s "$LOG" 2>/dev/null || echo 0)" -gt 262144 ]; then
+    tail -n 500 "$LOG" >"$LOG.tmp" && mv "$LOG.tmp" "$LOG"
+fi
 log() { printf '%s %s\n' "$(date -Is)" "$*" >>"$LOG"; }
 
 # WirePlumber needs a moment to republish the card after udev re-adds it.

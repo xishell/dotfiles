@@ -2,6 +2,7 @@
 # wave-vol-dial <sink> <ticks>
 # Adjusts volume of a Wave Link sink based on Stream Deck Plus dial rotation.
 # Each tick changes volume by 2%. Positive ticks = clockwise = louder.
+# Legacy audio mode only, like wave-vol.
 #
 # Sink names: system, games, music, browser, comms, airplay
 

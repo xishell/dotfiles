@@ -14,7 +14,10 @@ clipboard() { walker -m clipboard; }
 kill_app() {
     local app
     app=$(ps -u "$USER" -o comm= | sort -u | pick 'Kill') || return
-    [ -n "$app" ] && pkill -9 -x "$app"
+    [ -n "$app" ] || return
+    # ask first so the app can save its state; SIGKILL whatever is still there after 3 s
+    pkill -x "$app"
+    ( sleep 3; pkill -9 -x "$app" ) >/dev/null 2>&1 &
 }
 
 search() { local q; q=$(ask 'Google') && [ -n "$q" ] && xdg-open "https://www.google.com/search?q=$(urlenc "$q")"; }

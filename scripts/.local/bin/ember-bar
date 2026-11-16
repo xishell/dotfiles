@@ -154,14 +154,29 @@ def vol():
     emit()
     # Wake on Wave control changes (dial, mute) and sink changes (controller headset);
     # the 2 s timeout catches couch desk/sofa switches and a Wave that was unplugged.
+    # A watcher that exits (pactl when PipeWire restarts - audio-mode and wave-xlr-recover
+    # do that - or alsactl while the Wave is unplugged) is started again, at most every
+    # 10 s; until then the timeout keeps the chip right.
     sel = selectors.DefaultSelector()
-    for cmd in (["stdbuf", "-oL", "alsactl", "monitor", "XLR"], ["pactl", "subscribe"]):
-        p = spawn(cmd, stderr=subprocess.DEVNULL)
-        sel.register(p.stdout, selectors.EVENT_READ)
+    watchers = (("stdbuf", "-oL", "alsactl", "monitor", "hw:XLR"), ("pactl", "subscribe"))
+    due = dict.fromkeys(watchers, 0.0)      # cmd -> earliest (re)start time
     while True:
+        now = time.monotonic()
+        for cmd in [c for c, t in due.items() if t <= now]:
+            del due[cmd]
+            try:
+                p = spawn(list(cmd), stderr=subprocess.DEVNULL)
+            except OSError:
+                due[cmd] = now + 10
+                continue
+            sel.register(p.stdout, selectors.EVENT_READ, (cmd, p))
         for key, _ in sel.select(timeout=2):
             if not key.fileobj.readline():
+                cmd, p = key.data
                 sel.unregister(key.fileobj)
+                key.fileobj.close()
+                p.wait()
+                due[cmd] = time.monotonic() + 10
         emit()
 
 
