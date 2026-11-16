@@ -5,13 +5,13 @@
 # that opened before the rules (or was moved out) back in.
 #
 #   scratch term     drop-down kitty          Super+`
-#   scratch music    Spotify                  Super+Y
+#   scratch music    Sidra (Apple Music)      Super+Y
 #   scratch chat     Vesktop (Discord)        Super+D
 set -eu
 
 case "${1:-}" in
 term)  class=dropterm; cmd="kitty --class dropterm" ;;
-music) class=Spotify;  cmd=spotify ;;
+music) class=sidra;    cmd=sidra ;;
 chat)  class=vesktop;  cmd=vesktop ;;
 *)     echo "usage: scratch term|music|chat" >&2; exit 2 ;;
 esac

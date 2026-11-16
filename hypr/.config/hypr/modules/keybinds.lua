@@ -22,7 +22,7 @@ hl.bind(mainMod .. " + N",           hl.dsp.exec_cmd("notif dnd"))          -- d
 hl.bind(mainMod .. " + SHIFT + N",   hl.dsp.exec_cmd("notif history"))      -- notification history
 hl.bind(mainMod .. " + C",           hl.dsp.exec_cmd("awake"))              -- keep awake (no lock/blank)
 hl.bind(mainMod .. " + grave",       hl.dsp.exec_cmd("scratch term"))       -- drop-down terminal
-hl.bind(mainMod .. " + Y",           hl.dsp.exec_cmd("scratch music"))      -- Spotify scratchpad
+hl.bind(mainMod .. " + Y",           hl.dsp.exec_cmd("scratch music"))      -- Sidra (Apple Music) scratchpad
 hl.bind(mainMod .. " + D",           hl.dsp.exec_cmd("scratch chat"))       -- Vesktop scratchpad
 hl.bind("ALT + Tab",                 hl.dsp.exec_cmd("menu-windows"))       -- searchable window list
 hl.bind(mainMod .. " + G",           hl.dsp.group.toggle())

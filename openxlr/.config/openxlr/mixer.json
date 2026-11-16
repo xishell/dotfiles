@@ -121,7 +121,7 @@
     "aux": 1,
     "line": 1,
     "game": 0.4,
-    "music": 0.3,
+    "music": 0.4,
     "browser": 0.6,
     "system": 0.5,
     "voicechat": 0.8,
@@ -212,7 +212,8 @@
     "zen-bin": "browser",
     "zen-browser": "browser",
     "zoom": "voicechat",
-    "teamspeak": "voicechat"
+    "teamspeak": "voicechat",
+    "sidra": "music"
   },
   "appVolumes": {},
   "routeAppsByDefault": true,
@@ -594,6 +595,11 @@
       "identity": "uplayservice",
       "label": "UplayService",
       "channelId": "game"
+    },
+    {
+      "identity": "sidra",
+      "label": "sidra",
+      "channelId": "music"
     }
   ],
   "lowCutHz": 0,

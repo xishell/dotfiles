@@ -139,7 +139,7 @@ hl.window_rule({
 
 hl.window_rule({
     name      = "scratch-music",
-    match     = { class = "^Spotify$" },
+    match     = { class = "^[Ss]idra$" },
     workspace = "special:music silent",
     float     = true,
     size      = "monitor_w*0.7 monitor_h*0.8",

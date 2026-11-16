@@ -46,7 +46,7 @@ Mod = `Super`.
 | `Mod A` / `Mod P` | mixer / media panel |
 | `Mod N` / `Mod Shift N` | do not disturb / notification history |
 | `Mod C` | keep awake toggle |
-| `` Mod ` `` / `Mod Y` / `Mod D` | scratchpads: terminal / Spotify / Vesktop |
+| `` Mod ` `` / `Mod Y` / `Mod D` | scratchpads: terminal / Sidra (Apple Music) / Vesktop |
 | `Alt Tab` | searchable window list |
 
 **Windows**
