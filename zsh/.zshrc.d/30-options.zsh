@@ -11,7 +11,7 @@ zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
 # History
-HISTSIZE=5000
+HISTSIZE=50000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase

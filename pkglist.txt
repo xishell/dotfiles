@@ -188,6 +188,7 @@ pwvucontrol
 python
 python-defusedxml
 python-packaging
+qbittorrent
 quickshell
 rebuild-detector
 reflector
@@ -253,6 +254,7 @@ xorg-xkill
 xorg-xrandr
 xorg-xwayland
 yazi
+yt-dlp
 zathura
 zathura-pdf-mupdf
 zen-browser-bin

@@ -30,10 +30,3 @@ unset _f _zshrc_dir _zshrc_os
 
 # ccache for ESP-IDF builds
 export IDF_CCACHE_ENABLE=1
-
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/elliot/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/elliot/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/elliot/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/elliot/google-cloud-sdk/completion.zsh.inc'; fi

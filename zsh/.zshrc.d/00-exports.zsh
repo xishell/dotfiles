@@ -6,9 +6,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export GOBIN="$HOME/.local/bin"
 export PATH="$GOBIN:$PATH"
 
-export PATH="$HOME/.bun/bin:$PATH"
-
-export PATH="${PATH}:${HOME}/.local/bin/"
+[ -d "$HOME/.bun/bin" ] && export PATH="$HOME/.bun/bin:$PATH"
 
 export EDITOR="nvim"
 export VISUAL="nvim"

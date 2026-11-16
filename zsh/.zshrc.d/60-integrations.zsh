@@ -22,13 +22,15 @@ if command -v tmux &>/dev/null && [ -n "$PS1" ] && [ -t 0 ] && [ -t 1 ] &&
     tmux new-session -A -s main
 fi
 
-# Lazy-load nvm — only initializes on first use of a node-family command
+# Lazy-load nvm (only where it is installed) on first use of a node-family command
 export NVM_DIR="$HOME/.nvm"
-lazy_load_nvm() {
-    unset -f nvm node npm npx pnpm pnpx corepack
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-}
-for cmd in nvm node npm npx pnpm pnpx corepack; do
-    eval "${cmd}() { lazy_load_nvm; ${cmd} \"\$@\"; }"
-done
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    lazy_load_nvm() {
+        unset -f nvm node npm npx pnpm pnpx corepack
+        \. "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    }
+    for cmd in nvm node npm npx pnpm pnpx corepack; do
+        eval "${cmd}() { lazy_load_nvm; ${cmd} \"\$@\"; }"
+    done
+fi

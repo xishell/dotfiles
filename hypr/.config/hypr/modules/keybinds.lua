@@ -128,6 +128,3 @@ hl.bind(mainMod .. " + CTRL + L", hl.dsp.exec_cmd("loginctl lock-session"))
 
 -- Reload config
 hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd("hyprctl reload"))
-
--- Gaming mode toggle
-hl.bind(mainMod .. " + SHIFT + G", hl.dsp.exec_cmd("gaming-mode-toggle"))

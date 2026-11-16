@@ -1,4 +1,4 @@
--- User scripts (menu-tools, gaming-mode-toggle, spotify wrapper, ...). ly starts
+-- User scripts (menu-tools, scratch, couch, ...). ly starts
 -- Hyprland without a login shell, so ~/.local/bin is not on PATH otherwise.
 local home = os.getenv("HOME")
 local path = os.getenv("PATH") or "/usr/local/bin:/usr/bin"
@@ -28,7 +28,6 @@ hl.env("XCURSOR_THEME",     "win11-Dark")
 hl.env("LIBVA_DRIVER_NAME",          "nvidia")
 hl.env("GBM_BACKEND",                "nvidia-drm")
 hl.env("__GLX_VENDOR_LIBRARY_NAME",  "nvidia")
-hl.env("WLR_NO_HARDWARE_CURSORS",    "1")
 
 -- Permissions
 hl.config({

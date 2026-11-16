@@ -13,7 +13,6 @@ otf-apple-sf-pro-fixed
 r2modman
 riscv-gnu-toolchain-bin
 rocksdb-tools
-spotify
 steamtinkerlaunch-git
 teamspeak
 tokyonight-gtk-theme-git

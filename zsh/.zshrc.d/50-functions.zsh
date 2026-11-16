@@ -1,5 +1,6 @@
-# Auto-show repo todos on cd / shell start
+# Auto-show repo todos on cd / shell start (needs godo)
 function show_git_todos() {
+    (( $+commands[godo] )) || return 0
     if git rev-parse --show-toplevel >/dev/null 2>&1; then
         local root
         root=$(git rev-parse --show-toplevel 2>/dev/null)
