@@ -2,12 +2,19 @@
 # Cycle the MangoHud layout: off → fps → compact → full → off (Super+F10).
 #   hud          next layout
 #   hud <name>   jump to one (off|fps|compact|full)
-# MangoHud.conf is a symlink to one of ~/.config/MangoHud/layouts/*.conf; a running game
-# reloads it over the control socket. Games need `mangohud %command%` in their launch options.
+# MangoHud.conf is a regular file holding a copy of one of ~/.config/MangoHud/layouts/*.conf,
+# rewritten in place. A running game resolves the config path once at start and then only
+# reloads when that file is modified (inotify, one watch per MangoHud instance - a DX12 game
+# can carry several, and only one of them owns the control socket). So a symlink swap or
+# `mangohudctl set reload_config` alone never reaches the instance that draws.
+# Games need `mangohud %command%` in their launch options.
 dir="$HOME/.config/MangoHud"
 conf="$dir/MangoHud.conf"
 layouts=$(ls "$dir"/layouts/*.conf | sort)
-current=$(readlink "$conf" 2>/dev/null)
+current=$(sed -n '1s/^# hud layout: \([a-z]*\).*/\1/p' "$conf" 2>/dev/null)
+if [ -n "$current" ]; then
+    current=$(printf '%s\n' "$layouts" | grep -- "-$current.conf\$" | head -1)
+fi
 
 if [ -n "$1" ]; then
     next=$(printf '%s\n' "$layouts" | grep -- "-$1.conf\$" | head -1)
@@ -21,7 +28,9 @@ else
         END { if (!done) print first }')
 fi
 
-ln -sfn "$next" "$conf"
-mangohudctl set reload_config 1 >/dev/null 2>&1   # no game running: nothing to reload
 name=$(basename "$next" .conf); name=${name#*-}
+[ -L "$conf" ] && rm -f "$conf"     # was a symlink to a layout: writing through it would edit the layout
+# one write of the whole file, in place (same inode - that's what the game watches)
+content=$(printf '# hud layout: %s (written by hud - edit layouts/, not this file)\n' "$name"; cat "$next")
+printf '%s\n' "$content" > "$conf"
 swayosd-client --custom-message "hud: $name" --custom-icon utilities-system-monitor >/dev/null 2>&1 || true
