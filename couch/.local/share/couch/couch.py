@@ -1033,6 +1033,10 @@ def hypr_rehome_tv_windows(cfg, before):
         dest = (before or {}).get("steam_ws") if c.get("class") == "steam" else None
         dest = dest if dest and dest != tv_ws else here
         log(f"Displays: {c.get('title') or c.get('class')} -> workspace {dest}")
+        if c.get("fullscreen") and not re.match(r"steam$|steam_app_|gamescope$", c.get("class") or ""):
+            # sent to the TV with tv-send (fullscreen there): give it back as a normal window
+            hyprctl("dispatch", f"hl.dsp.window.fullscreen({{ window = "
+                                f"{_lua_str('address:' + c['address'])}, action = \"unset\" }})")
         hyprctl("dispatch", f"hl.dsp.window.move({{ workspace = {_lua_str(dest)}, follow = false, "
                             f"window = {_lua_str('address:' + c['address'])} }})")
     # Big Picture hides Steam's main window; once it closes Steam maps it again as a new

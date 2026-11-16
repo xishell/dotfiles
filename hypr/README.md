@@ -46,6 +46,7 @@ Mod = `Super`.
 | `Mod A` / `Mod P` | mixer / media panel |
 | `Mod N` / `Mod Shift N` | do not disturb / notification history |
 | `Mod C` | keep awake toggle |
+| `Mod Shift W` / `Mod W` | couch mode only: send the focused window to the TV (or bring it back) / look at the TV workspace |
 | `` Mod ` `` / `Mod Y` / `Mod D` | scratchpads: terminal / Sidra (Apple Music) / Vesktop |
 | `Alt Tab` | searchable window list |
 

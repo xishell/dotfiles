@@ -31,3 +31,9 @@ hl.window_rule({
     workspace  = "name:tv",
     fullscreen = true,
 })
+
+-- Anything else on the TV (a browser, a video): Super+Shift+W sends the focused window
+-- there fullscreen, or brings it back when it already is there; Super+W looks at the
+-- TV workspace (Super+1..5 returns to the desk).
+hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("tv-send"))
+hl.bind("SUPER + W",         hl.dsp.focus({ workspace = "name:tv" }))

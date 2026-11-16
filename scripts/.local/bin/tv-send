@@ -1,0 +1,32 @@
+#!/bin/sh
+# Couch mode: put the focused window on the TV, fullscreen (a browser, a video player),
+# or bring it back if it is already there. Super+Shift+W; Super+W looks at the TV workspace.
+# Bound in hypr/modules/sofa.lua, so only while couch mode is on. Sound needs nothing:
+# in couch mode the whole monitor mix already plays on the soundbar / controller headset.
+# `couch desk` moves whatever is still on the TV workspace back to the desk by itself.
+set -eu
+tv_ws=tv
+
+win=$(hyprctl activewindow -j)
+addr=$(printf '%s' "$win" | jq -r '.address // empty')
+[ -n "$addr" ] || exit 0
+if ! hyprctl workspaces -j | jq -e --arg ws "$tv_ws" 'any(.[]; .name == $ws)' >/dev/null; then
+    notify-send -a couch -t 2500 "No TV workspace" "Couch mode is off"
+    exit 1
+fi
+
+if [ "$(printf '%s' "$win" | jq -r '.workspace.name')" = "$tv_ws" ]; then
+    # back to the workspace showing on the desk monitor
+    desk=$(hyprctl monitors -j | jq -r --arg ws "$tv_ws" \
+        '[.[] | select(.activeWorkspace.name != $ws)][0].activeWorkspace.name // "1"')
+    hyprctl dispatch "hl.dsp.window.fullscreen({ window = \"address:$addr\", action = \"unset\" })" >/dev/null
+    hyprctl dispatch "hl.dsp.window.move({ workspace = \"$desk\", follow = true, window = \"address:$addr\" })" >/dev/null
+    # Big Picture or a game lost its fullscreen state to the window that just left
+    # (it still fills the TV, but VRR and the idle inhibitor go by that state)
+    game=$(hyprctl clients -j | jq -r --arg ws "$tv_ws" '[.[] | select(.workspace.name == $ws)
+        | select(.title == "Steam Big Picture Mode" or (.class | test("^(steam_app_.*|gamescope)$")))][0].address // empty')
+    [ -z "$game" ] || hyprctl dispatch "hl.dsp.window.fullscreen({ window = \"address:$game\", action = \"set\" })" >/dev/null
+else
+    hyprctl dispatch "hl.dsp.window.move({ workspace = \"name:$tv_ws\", follow = false, window = \"address:$addr\" })" >/dev/null
+    hyprctl dispatch "hl.dsp.window.fullscreen({ window = \"address:$addr\", action = \"set\" })" >/dev/null
+fi
