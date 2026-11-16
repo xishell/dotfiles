@@ -37,6 +37,7 @@ import subprocess
 import sys
 import threading
 import time
+import traceback
 from pathlib import Path
 
 # Data dir: config, state, log, prefs, TV pairing key and venv. Not __file__.resolve():
@@ -138,6 +139,26 @@ def wait_for(predicate, timeout, interval=0.5):
     return False
 
 
+def write_json(path, data, indent=None):
+    """Write JSON so readers never see a half-written file: Hyprland's couch_state.lua and
+    the bar read state.json at any moment, and write_text truncates before it writes.
+    resolve() first - config.json is a stow symlink, and replacing the link itself would
+    turn it into a plain file outside the dotfiles repo."""
+    path = Path(path).resolve()
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    tmp.write_text(json.dumps(data, indent=indent), encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def rotate_log(limit=1_000_000):
+    """Keep couch.log from growing for ever: past `limit` bytes it becomes couch.log.1."""
+    try:
+        if LOG_FILE.stat().st_size > limit:
+            os.replace(LOG_FILE, LOG_FILE.with_name(LOG_FILE.name + ".1"))
+    except OSError:
+        pass
+
+
 def load_config():
     if not CONFIG_FILE.exists():
         sys.exit(f"No config found. Run:  python {Path(__file__).name} setup")
@@ -164,7 +185,7 @@ def write_mode(mode, notify=False, **extra):
     """notify: only the final write of a switch - sofa and desk also write the mode before
     the Hyprland reload (which reads it), and each write used to pop its own card."""
     data = {"mode": mode, "since": time.time(), **extra}
-    STATE_FILE.write_text(json.dumps(data), encoding="utf-8")
+    write_json(STATE_FILE, data)
     bar_sync(mode)
     if notify:
         notify_mode(mode)
@@ -255,16 +276,53 @@ def read_prefs():
 
 
 def write_prefs(**changes):
-    PREFS_FILE.write_text(json.dumps({**read_prefs(), **changes}), encoding="utf-8")
+    write_json(PREFS_FILE, {**read_prefs(), **changes})
 
 
 class Lock:
     """Stops the Stream Deck and the controller listener running at the same time."""
     def __enter__(self):
-        if LOCK_FILE.exists() and time.time() - LOCK_FILE.stat().st_mtime < 120:
-            raise RuntimeError("another switch is already running")
-        LOCK_FILE.write_text(str(os.getpid()))
-        return self
+        for _ in range(2):
+            try:    # O_EXCL: creating the file is the test, so two starts can't both win
+                fd = os.open(LOCK_FILE, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            except FileExistsError:
+                if not self._stale():
+                    raise RuntimeError("another switch is already running") from None
+                try:
+                    LOCK_FILE.unlink()
+                except OSError:
+                    pass
+                continue
+            with os.fdopen(fd, "w") as f:
+                f.write(str(os.getpid()))
+            return self
+        raise RuntimeError("another switch is already running")
+
+    @staticmethod
+    def _stale():
+        """A lock left by a switch that was killed. Its process is gone (Linux), or it is
+        older than any switch takes (the only test on Windows, where os.kill would end
+        the process instead of probing it)."""
+        try:
+            age = time.time() - LOCK_FILE.stat().st_mtime
+            pid = int(LOCK_FILE.read_text().strip() or 0)
+        except OSError:
+            return True                 # gone in the meantime
+        except ValueError:
+            return age > 5              # garbage; a fresh one may just not be written yet
+        if age > (120 if IS_WIN else 600):
+            return True
+        if IS_WIN:
+            return False
+        if not pid:
+            return age > 5
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return True
+        except OSError:
+            pass
+        return False
 
     def __exit__(self, *exc):
         try:
@@ -290,11 +348,114 @@ def have_bscpylgtv():
     return importlib.util.find_spec("bscpylgtv") is not None
 
 
+class _TVLink:
+    """One connection to the TV for the whole run. A switch sends a dozen or more commands,
+    and through the command line each of them started a Python, opened a websocket and
+    registered with webOS first. bscpylgtv is asyncio, so it gets a loop in its own thread
+    and tv_cmd stays an ordinary blocking call."""
+
+    def __init__(self):
+        self.loop = self.client = None
+        self.mutex = threading.Lock()
+
+    def _submit(self, coro, timeout):
+        if self.loop is None:
+            import asyncio
+            import atexit
+            import logging
+            logging.getLogger("bscpylgtv").addHandler(logging.NullHandler())
+            logging.getLogger("bscpylgtv").setLevel(logging.ERROR)
+            self.loop = asyncio.new_event_loop()
+            threading.Thread(target=self.loop.run_forever, daemon=True).start()
+            atexit.register(self.close)
+        import asyncio
+        future = asyncio.run_coroutine_threadsafe(coro, self.loop)
+        try:
+            return future.result(timeout)
+        except BaseException:
+            future.cancel()
+            raise
+
+    async def _drop(self):
+        client, self.client = self.client, None
+        if client is not None:
+            try:
+                await client.disconnect()
+            except Exception:
+                pass
+
+    async def _call(self, ip, options, fast, name, args):
+        if self.client is None or not self.client.is_connected():
+            await self._drop()
+            from bscpylgtv import WebOsClient
+            quick = {"timeout_connect": 1, "connect_retry_attempts": 1} if fast else {}
+            self.client = await WebOsClient.create(ip=ip, key_file_path=str(KEY_FILE),
+                                                   ping_interval=None, states=None,
+                                                   **quick, **options)
+            await self.client.connect()
+        return await getattr(self.client, name)(*args)
+
+    def call(self, ip, options, fast, timeout, name, args):
+        """Result of the command; raises whatever went wrong."""
+        with self.mutex:
+            reused = self.client is not None
+            try:
+                return self._submit(self._call(ip, options, fast, name, args), timeout)
+            except Exception:
+                self._submit(self._drop(), 3)
+                if not reused:
+                    raise
+            # the connection we had may just have gone stale (the TV changed power state):
+            # once more on a new one
+            try:
+                return self._submit(self._call(ip, options, fast, name, args), timeout)
+            except Exception:
+                self._submit(self._drop(), 3)
+                raise
+
+    def close(self):
+        try:
+            if self.client is not None:
+                self._submit(self._drop(), 2)
+        except Exception:
+            pass
+
+
+_tv_link = _TVLink()
+
+
+def _tv_options(extra):
+    """tv_extra_args as WebOsClient options, or None when one of them is unknown here."""
+    options = {}
+    for arg in extra:
+        if arg in ("-w", "--without_ssl"):
+            options["without_ssl"] = True
+        else:
+            return None
+    return options
+
+
 def tv_cmd(cfg, *args, timeout=10, quiet=False, fast=False):
     """Run a bscpylgtv command. Returns its output, or None on failure."""
     if not have_bscpylgtv():
         log("  ! bscpylgtv isn't installed - run: pip install bscpylgtv")
         return None
+    options = _tv_options(cfg["tv_extra_args"])
+    if options is None:
+        return _tv_cmd_cli(cfg, *args, timeout=timeout, quiet=quiet, fast=fast)
+    try:
+        result = _tv_link.call(cfg["tv_ip"], options, fast, timeout, args[0], args[1:])
+    except Exception as exc:
+        if not quiet:
+            why = "timed out" if isinstance(exc, TimeoutError) else (str(exc) or type(exc).__name__)
+            log(f"  ! TV {args[0]}: {why[:200]}")
+        return None
+    return str(result).strip()      # as the command line printed it; callers parse that text
+
+
+def _tv_cmd_cli(cfg, *args, timeout=10, quiet=False, fast=False):
+    """tv_cmd through bscpylgtv's command line: a new Python and a new connection per
+    command. Only for tv_extra_args the in-process client below doesn't know."""
     # Call the library's CLI through this Python, so PATH and the command's name don't matter
     cli = [python_exe(), "-c", "from bscpylgtv.utils import bscpylgtvcommand as m; m()",
            "--log", "ERROR", "-p", str(KEY_FILE)]
@@ -393,13 +554,13 @@ def tv_sofa(cfg):
     return False
 
 
-def tv_ensure_pc_input(cfg, timeout=20):
+def tv_ensure_pc_input(cfg, timeout=20, keep_going=lambda: True):
     """Switch to the PC input and check it stuck. Run once the PC is sending a picture:
     webOS may ignore an input with no signal, and the Apple TV can grab it over HDMI-CEC."""
     if not cfg["tv_ip"]:
         return
     deadline = time.monotonic() + timeout
-    while time.monotonic() < deadline:
+    while time.monotonic() < deadline and keep_going():
         if not tv_on_pc_input(cfg):           # only switch if it isn't there already
             tv_cmd(cfg, "set_input", cfg["tv_pc_input"], timeout=8, quiet=True)
             time.sleep(0.75)
@@ -417,19 +578,36 @@ def tv_guard_pc_input(cfg, seconds=15):
     """The Apple TV can grab the input well after tv_ensure_pc_input saw it stick (it wakes
     with the TV over CEC and claims the screen once it's up; 2026-10-27 it did so after
     sofa mode was ready). Watch a while longer and take it back. A missed answer is not a
-    loss - re-sending set_input would only re-sync the soundbar (an audible snap)."""
+    loss - re-sending set_input would only re-sync the soundbar (an audible snap).
+    Runs as its own process (`couch.py guard`, started by sofa()) without the lock, so a
+    toggle right after "sofa mode ready" works; it backs off as soon as another switch
+    starts (lock file) or the mode is no longer sofa."""
     if not cfg["tv_ip"]:
         return
+
+    def ours():
+        return read_mode() == "sofa" and not LOCK_FILE.exists()
     start = time.monotonic()
-    while time.monotonic() - start < seconds and read_mode() == "sofa":
+    while time.monotonic() - start < seconds and ours():
         time.sleep(1)
         current = tv_cmd(cfg, "get_input", timeout=4, quiet=True)
-        if not current or input_app_id(cfg["tv_pc_input"]) in current.lower():
+        if not current or input_app_id(cfg["tv_pc_input"]) in current.lower() or not ours():
             continue
         log(f"TV: input taken by {current.strip()} after "
             f"{time.monotonic() - start:.0f} s (Apple TV over CEC?) - taking it back")
-        tv_ensure_pc_input(cfg, timeout=10)
+        tv_ensure_pc_input(cfg, timeout=10, keep_going=ours)
         return
+
+
+def spawn_guard():
+    """Start `couch.py guard` detached, so sofa() can finish and release the lock."""
+    kw = {"creationflags": NO_WINDOW} if IS_WIN else {"start_new_session": True}
+    try:
+        subprocess.Popen([python_exe(), str(Path(__file__).resolve()), "guard"], cwd=HERE,
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL, **kw)
+    except OSError as exc:
+        log(f"  ! couldn't start the input guard: {exc}")
 
 
 def tv_restore(cfg, app):
@@ -480,13 +658,13 @@ def tvvolume(cfg, value=None):
     raw = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
     raw["tv_volume_steps_sofa"] = new
     raw.pop("tv_volume_sofa", None)
-    CONFIG_FILE.write_text(json.dumps(raw, indent=2), encoding="utf-8")
+    write_json(CONFIG_FILE, raw, indent=2)
     if read_mode() == "sofa":
         state = read_state()
         applied = state.get("tv_volume_steps", 0)
         tv_volume_keys(cfg, new - applied)
         state["tv_volume_steps"] = new
-        STATE_FILE.write_text(json.dumps(state), encoding="utf-8")
+        write_json(STATE_FILE, state)
     print(f"Sofa volume steps: {new:+d}")
 
 
@@ -655,7 +833,7 @@ def win_find(match):
 def _ccd_api():
     """Structures for the CCD display API (QueryDisplayConfig / SetDisplayConfig)."""
     import ctypes
-    U32, I32, U16 = ctypes.c_uint32, ctypes.c_int32, ctypes.c_uint16
+    U32, I32 = ctypes.c_uint32, ctypes.c_int32
 
     class LUID(ctypes.Structure):
         _fields_ = [("LowPart", U32), ("HighPart", I32)]
@@ -923,16 +1101,16 @@ def displays_sofa(cfg):
         log(f"Displays: reload layout - {tv} on, workspace {cfg['hypr_tv_workspace']}")
         if not hypr_reload_layout(tv):
             log(f"  ! {tv} did not come up")
-            return
+            return False
         hypr_tv_mode_fallback(tv)
         hypr_focus_workspace(cfg["hypr_tv_workspace"])
         time.sleep(1)
-        return
+        return True
     log(f"Displays: enable {tv}")
     hypr_monitor_on(tv, cfg["hypr_tv_mode"])
     if not wait_for(lambda: hypr_active(tv), 10):
         log(f"  ! {tv} did not come up - keeping desk monitor on")
-        return
+        return False
     if cfg["hypr_disable_desk"] and desk:
         log(f"Displays: disable {desk}")
         hypr_monitor_off(desk)
@@ -1063,12 +1241,16 @@ def headphones_watch(cfg, busy, interval=1):
         while True:
             time.sleep(interval)
             try:
+                if read_mode() != "sofa":
+                    last = None                    # at the desk nothing follows headphones
+                    continue
                 now = headphones_choice(cfg)
+                if last is None:                   # just entered sofa mode: sofa() picked
+                    last = now                     # the output itself, only note the state
+                    continue
                 if now == last or busy.is_set():   # mid-switch: sofa() picks it itself
                     continue
                 last = now
-                if read_mode() != "sofa":
-                    continue
                 log(f"Listener: headphones {'in' if now == cfg['sofa_audio_headphones'] else 'out'}"
                     f" - sofa audio -> {now}")
                 subprocess.run([python_exe(), str(Path(__file__).resolve()), "audio", now],
@@ -1115,7 +1297,7 @@ def notify(msg):
 def apply_trims(cfg, devices):
     """Set each present output in `devices` to its calibrated level."""
     present = sinks()
-    for name, t in cfg["output_trims"].items():
+    for t in cfg["output_trims"].values():
         if t.get("sink") in devices and t["sink"] in present:
             run(["pactl", "set-sink-volume", t["sink"], f"{int(t['percent'])}%"])
 
@@ -1139,7 +1321,7 @@ def trim(cfg, name=None, value=None):
         t["percent"] = max(0, min(150, pct))
         raw = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
         raw.setdefault("output_trims", {})[name] = t
-        CONFIG_FILE.write_text(json.dumps(raw, indent=2), encoding="utf-8")
+        write_json(CONFIG_FILE, raw, indent=2)
         if t["sink"] in sinks():
             run(["pactl", "set-sink-volume", t["sink"], f"{int(t['percent'])}%"])
     print(f"{name}: {int(t['percent'])}%")
@@ -1206,7 +1388,16 @@ def sofa(cfg, choice=None):
                 before["steam_ws"] = ws
             log(f"Steam: main window on workspace {ws or '(none found)'}")
         write_mode("sofa", **before)   # monitors.lua / sofa.lua read this on the reload
-        displays_sofa(cfg)
+        if displays_sofa(cfg) is False:
+            # Hyprland never got the TV as an output (cable, TV input board still booting).
+            # Going on would move the sound to the soundbar and open Big Picture on a desk
+            # that state.json calls "sofa" - undo the little that is done instead.
+            log("Stopping: the TV output didn't come up - back to desk mode")
+            tv_desk(cfg, before)
+            displays_desk(cfg)
+            write_mode("desk")
+            notify("Couch mode failed: the TV output didn't come up")
+            return
         audio_sofa(cfg, choice)
         tv_ensure_pc_input(cfg)        # now the PC is sending a picture to the TV
         # Big Picture only once the TV sits on the PC input: its startup sound reaches the
@@ -1225,7 +1416,7 @@ def sofa(cfg, choice=None):
         tv_volume_sofa(cfg, before)
         write_mode("sofa", notify=True, **before)
         log("=== sofa mode ready ===")
-        tv_guard_pc_input(cfg)
+    spawn_guard()                      # after the lock: a toggle must work straight away
 
 
 def desk(cfg):
@@ -1758,7 +1949,7 @@ def setup():
         "Return to desk mode when the controller has been off for N minutes (0 = never)",
         str(cfg["listen_auto_desk_minutes"])))
 
-    CONFIG_FILE.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+    write_json(CONFIG_FILE, cfg, indent=2)
     me = Path(__file__).resolve()
     print(f"\nSaved {CONFIG_FILE}\n\nTry it:  python \"{me}\" sofa   then   python \"{me}\" desk")
     if IS_WIN:
@@ -1770,7 +1961,7 @@ def setup():
 # ------------------------------------------------------------------ main
 def main():
     commands = ["setup", "sofa", "desk", "toggle", "audio", "trim", "tvvolume", "listen", "buttons", "status",
-                "barsync"]
+                "barsync", "guard"]
     # Log how we were started, so a mis-typed Stream Deck argument shows up in couch.log
     given = [a.strip().strip('"').lower() for a in sys.argv[1:]]
     command = next((a for a in given if a in commands), None)
@@ -1783,8 +1974,11 @@ def main():
 
     if args.command == "setup":
         return setup()
+    rotate_log()
     cfg = load_config()
     try:
+        if args.command == "guard":     # internal: started by sofa() once it is ready
+            return tv_guard_pc_input(cfg)
         if args.command in ("sofa", "audio"):
             return {"sofa": sofa, "audio": audio}[args.command](cfg, args.choice)
         if args.command == "trim":
@@ -1799,6 +1993,9 @@ def main():
         log(f"Skipped: {exc}")
     except KeyboardInterrupt:
         pass
+    except Exception:                   # started from a key or the Stream Deck, stderr goes
+        log("! crashed:\n" + traceback.format_exc().rstrip())   # nowhere - keep it in couch.log
+        sys.exit(1)
 
 
 if __name__ == "__main__":
