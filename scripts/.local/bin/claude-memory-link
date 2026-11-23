@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Link Claude Code's per-project memory folders to the Syncthing folder, by project
+# name, so callisto and knight share them although their paths differ.
+#
+#   claude-memory-link            apply ~/.claude-sync/map-<host>.tsv
+#   claude-memory-link --dry-run  show what would change
+#
+# Map file: one "<path-named folder><TAB><shared name>" per line, e.g.
+#   -home-elliot-projects-homelab	homelab
+# Folders not in the map are left alone. Existing files move into the shared folder;
+# MEMORY.md is merged line by line. Re-run after new projects appear.
+set -euo pipefail
+
+dry=false
+[[ ${1:-} == --dry-run ]] && dry=true
+projects=$HOME/.claude/projects
+shared=$HOME/.claude-sync/memory
+map=$HOME/.claude-sync/map-$(hostname -s).tsv
+[[ -f $map ]] || { echo "no map: $map" >&2; exit 1; }
+
+run() { if $dry; then echo "  would: $*"; else "$@"; fi; }
+
+while IFS=$'\t' read -r key name; do
+    [[ -z $key || $key == \#* ]] && continue
+    src=$projects/$key/memory
+    dst=$shared/$name
+    run mkdir -p -- "$dst"
+    if [[ -L $src ]]; then
+        [[ $(readlink -- "$src") == "$dst" ]] && continue
+        echo "$key: linked elsewhere ($(readlink -- "$src")), skipped" >&2
+        continue
+    fi
+    echo "$key → $name"
+    if [[ -d $src ]]; then
+        for f in "$src"/* "$src"/.[!.]*; do
+            [[ -e $f ]] || continue
+            b=$(basename -- "$f")
+            if [[ $b == MEMORY.md ]]; then
+                # Append index lines the shared one doesn't have yet.
+                if $dry; then echo "  would merge MEMORY.md"; else
+                    touch -- "$dst/MEMORY.md"
+                    grep -vxF -f "$dst/MEMORY.md" -- "$f" >> "$dst/MEMORY.md" || true
+                    rm -- "$f"
+                fi
+            elif [[ -e $dst/$b ]]; then
+                cmp -s -- "$f" "$dst/$b" && run rm -- "$f" || run mv -- "$f" "$dst/${b%.md}-$(hostname -s).md"
+            else
+                run mv -- "$f" "$dst/$b"
+            fi
+        done
+        run rmdir -- "$src"
+    else
+        run mkdir -p -- "$projects/$key"
+    fi
+    run ln -s -- "$dst" "$src"
+done < "$map"
