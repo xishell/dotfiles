@@ -1,0 +1,12 @@
+[Unit]
+Description=Tunnel so tycho's CI can build on callisto (homelab docs/runbooks/callisto.md)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/ssh -N -i /etc/rocinante/tunnel_ed25519 -o IdentitiesOnly=yes -o IdentityAgent=none -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/rocinante/known_hosts -R 10.102.0.1:2222:127.0.0.1:22 builder-tunnel@192.168.20.10
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
