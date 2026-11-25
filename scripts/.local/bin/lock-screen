@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""Run hyprlock, and keep the screens dark while it is up.
+
+hypridle's lock_cmd. The LG on DP-1 sometimes drops off the bus while in DPMS standby
+(wl_output removed, then re-added a few seconds later). Hyprland brings a re-added
+monitor up powered on, which lights the lock screen. That isn't input, so hypridle's
+30 s "blank while locked" rule never re-arms, and the lock screen stays lit until someone
+comes back (2026-11-17 12:39 and 22:17).
+
+This watches Hyprland's event socket while hyprlock runs and turns DPMS back off
+whenever a monitor is (re)added. Real input never adds a monitor, so it doesn't fight
+mouse_move_enables_dpms / key_press_enables_dpms when you come back to unlock.
+"""
+import os
+import socket
+import subprocess
+import sys
+import threading
+import time
+
+SETTLE_S = 2.0      # let the re-added output finish its modeset before blanking it
+MIN_GAP_S = 10.0    # at most one blank per 10 s, so a flapping link can't loop us
+
+
+def blank():
+    subprocess.run(["hyprctl", "dispatch", 'hl.dsp.dpms("off")'],
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def watch(lock: subprocess.Popen):
+    path = os.path.join(os.environ["XDG_RUNTIME_DIR"], "hypr",
+                        os.environ["HYPRLAND_INSTANCE_SIGNATURE"], ".socket2.sock")
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.connect(path)
+    last = 0.0
+    buf = b""
+    while lock.poll() is None:
+        chunk = s.recv(4096)
+        if not chunk:
+            return
+        buf += chunk
+        *lines, buf = buf.split(b"\n")
+        for line in lines:
+            if not line.startswith(b"monitoradded>>"):
+                continue
+            time.sleep(SETTLE_S)
+            if lock.poll() is None and time.monotonic() - last >= MIN_GAP_S:
+                print(f"lock-screen: {line.decode(errors='replace')} while locked, "
+                      "turning DPMS off", file=sys.stderr, flush=True)
+                blank()
+                last = time.monotonic()
+
+
+def main():
+    lock = subprocess.Popen(["hyprlock", *sys.argv[1:]])
+    try:
+        threading.Thread(target=watch, args=(lock,), daemon=True).start()
+    except Exception as e:  # never let the watcher get in the way of locking
+        print(f"lock-screen: watcher failed: {e}", file=sys.stderr)
+    sys.exit(lock.wait())
+
+
+if __name__ == "__main__":
+    main()

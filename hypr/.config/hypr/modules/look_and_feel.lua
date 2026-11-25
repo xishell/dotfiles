@@ -47,6 +47,9 @@ hl.config({
         disable_hyprland_logo   = false,
         render_unfocused_fps    = 60,
         font_family             = "FiraCode Nerd Font",
+        -- Real input wakes screens hypridle blanked (hypridle has no on-resume dpms-on)
+        mouse_move_enables_dpms = true,
+        key_press_enables_dpms  = true,
     },
 })
 
