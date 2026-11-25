@@ -30,6 +30,8 @@ o.jumpoptions = "view"
 o.laststatus = 0
 o.linebreak = true
 o.maxmempattern = 5000
+-- stray " ex:" in prose like cubemx comments gets parsed as options
+o.modeline = false
 o.mouse = "a"
 o.number = true
 o.pumblend = 0
