@@ -86,7 +86,7 @@ return {
     vim.lsp.config("tinymist", {
       settings = {
         exportPdf = "onSave",
-        outputPath = "$root/target/$dir/$name",
+        outputPath = "$root/$dir/build/$name",
       },
     })
 
