@@ -3,7 +3,7 @@
 # screens (hypridle honours systemd inhibitors). For watching or reading outside
 # fullscreen; fullscreen windows already inhibit idle on their own.
 #
-#   awake            toggle (Super+C, coffee cup on the bar while on)
+#   awake            toggle (Super+C, or the coffee cup on the bar)
 #   awake barsync    push the current state to the bar (ironbar var awake_on)
 set -eu
 
@@ -12,8 +12,9 @@ pidfile="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/awake.pid"
 running() { [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; }
 
 barsync() {
-    if running; then v=true; else v=""; fi
-    ironbar var set awake_on "$v" >/dev/null 2>&1 || true
+    if running; then on=true off=""; else on="" off=true; fi
+    ironbar var set awake_on "$on" >/dev/null 2>&1 || true
+    ironbar var set awake_off "$off" >/dev/null 2>&1 || true
 }
 
 case "${1:-toggle}" in
