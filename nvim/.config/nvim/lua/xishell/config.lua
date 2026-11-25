@@ -14,11 +14,6 @@ M.defaults = {
     dirs = { "~/notes", "~/courses", "~/htb/kb" },
   },
 
-  -- Database connections (name = connection_string)
-  databases = {
-    -- Example: dev = "postgresql://user@localhost:5432/mydb"
-  },
-
   -- Formatters to skip (by filetype)
   format_disabled_ft = {},
 

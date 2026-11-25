@@ -116,21 +116,11 @@ return {
       -- regular sources stay here
       sources = {
         default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-        -- Add dadbod completion for SQL files
-        per_filetype = {
-          sql = { "dadbod", "buffer" },
-          mysql = { "dadbod", "buffer" },
-          plsql = { "dadbod", "buffer" },
-        },
         providers = {
           lazydev = {
             name = "LazyDev",
             module = "lazydev.integrations.blink",
             score_offset = 100,
-          },
-          dadbod = {
-            name = "Dadbod",
-            module = "vim_dadbod_completion.blink",
           },
           lsp = { min_keyword_length = 2, score_offset = 0 },
           path = { min_keyword_length = 0 },

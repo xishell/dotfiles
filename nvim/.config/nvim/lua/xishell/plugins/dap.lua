@@ -9,17 +9,26 @@ return {
       "theHamsta/nvim-dap-virtual-text",
     },
     keys = {
-      { "<leader>Dc", function() require("dap").continue() end, desc = "Continue" },
-      { "<leader>Db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
-      { "<leader>DB", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Conditional Breakpoint" },
-      { "<leader>Do", function() require("dap").step_over() end, desc = "Step Over" },
-      { "<leader>Di", function() require("dap").step_into() end, desc = "Step Into" },
-      { "<leader>DO", function() require("dap").step_out() end, desc = "Step Out" },
-      { "<leader>Dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
-      { "<leader>Dl", function() require("dap").run_last() end, desc = "Run Last" },
-      { "<leader>Dt", function() require("dap").terminate() end, desc = "Terminate" },
-      { "<leader>Du", function() require("dapui").toggle() end, desc = "Toggle DAP UI" },
-      { "<leader>De", function() require("dapui").eval() end, desc = "Eval Expression", mode = { "n", "v" } },
+      { "<leader>dc", function() require("dap").continue() end, desc = "Continue" },
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Conditional Breakpoint" },
+      { "<leader>do", function() require("dap").step_over() end, desc = "Step Over" },
+      { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
+      { "<leader>dO", function() require("dap").step_out() end, desc = "Step Out" },
+      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
+      { "<leader>dl", function() require("dap").run_last() end, desc = "Run Last" },
+      { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
+      -- thread list stays empty until the first stop, so fetch it before pausing
+      { "<leader>dp", function()
+        local s = require("dap").session()
+        if not s then return end
+        s:update_threads(function(err)
+          if err then return vim.notify("threads: " .. tostring(err), vim.log.levels.ERROR) end
+          require("dap").pause()
+        end)
+      end, desc = "Pause" },
+      { "<leader>du", function() require("dapui").toggle() end, desc = "Toggle DAP UI" },
+      { "<leader>de", function() require("dapui").eval() end, desc = "Eval Expression", mode = { "n", "v" } },
     },
     config = function()
       local dap = require("dap")
@@ -35,9 +44,10 @@ return {
       dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
 
       -- Breakpoint signs
-      vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticError" })
-      vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticWarn" })
-      vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticInfo" })
+      vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DiagnosticWarn" })
+      vim.fn.sign_define("DapLogPoint", { text = "◉", texthl = "DiagnosticInfo" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "○", texthl = "DiagnosticHint" })
       vim.fn.sign_define("DapStopped", { text = "→", texthl = "DiagnosticOk", linehl = "DapStoppedLine" })
 
       -- C/C++ via codelldb
