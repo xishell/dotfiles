@@ -142,39 +142,39 @@ return {
   -- Math
   -- =====================
 
-  s({ trig = "mk", desc = "Inline math" }, fmt("${}<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "dm", desc = "Display math" }, fmt("$ {} $\n<>", { i(1), i(0) }, { delimiters = "<>" })),
+  s({ trig = "mk", desc = "Inline math" }, fmt("${}${}", { i(1), i(0) })),
+  s({ trig = "dm", desc = "Display math" }, fmt("$ {} $\n{}", { i(1), i(0) })),
 
   -- Fractions
-  s({ trig = "//", desc = "Fraction", wordTrig = false }, fmt("frac({}, {})<>", { i(1), i(2), i(0) }, { delimiters = "<>" })),
+  s({ trig = "//", desc = "Fraction", wordTrig = false }, fmt("frac({}, {}){}", { i(1), i(2), i(0) })),
 
   -- Sub/superscript
-  s({ trig = "td", desc = "Superscript", wordTrig = false }, fmt("^({})<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "__", desc = "Subscript", wordTrig = false }, fmt("_({})<>", { i(1), i(0) }, { delimiters = "<>" })),
+  s({ trig = "td", desc = "Superscript", wordTrig = false }, fmt("^({}){}", { i(1), i(0) })),
+  s({ trig = "__", desc = "Subscript", wordTrig = false }, fmt("_({}){}", { i(1), i(0) })),
 
   -- Common math constructs
-  s({ trig = "sq", desc = "Square root" }, fmt("sqrt({})<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "nrt", desc = "Nth root" }, fmt("root({}, {})<>", { i(1, "n"), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "sum", desc = "Summation" }, fmt("sum_({})^({}) {}<>", { i(1, "i=0"), i(2, "n"), i(3), i(0) }, { delimiters = "<>" })),
-  s({ trig = "prod", desc = "Product" }, fmt("product_({})^({}) {}<>", { i(1, "i=0"), i(2, "n"), i(3), i(0) }, { delimiters = "<>" })),
-  s({ trig = "lim", desc = "Limit" }, fmt("lim_({}) {}<>", { i(1, "n -> oo"), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "int", desc = "Integral" }, fmt("integral_({})^({}) {} dif {}<>", { i(1), i(2), i(3), i(4, "x"), i(0) }, { delimiters = "<>" })),
-  s({ trig = "dint", desc = "Definite integral" }, fmt("integral_({})^({}) {} dif {}<>", { i(1, "a"), i(2, "b"), i(3), i(4, "x"), i(0) }, { delimiters = "<>" })),
+  s({ trig = "sq", desc = "Square root" }, fmt("sqrt({}){}", { i(1), i(0) })),
+  s({ trig = "nrt", desc = "Nth root" }, fmt("root({}, {}){}", { i(1, "n"), i(2), i(0) })),
+  s({ trig = "sum", desc = "Summation" }, fmt("sum_({})^({}) {}{}", { i(1, "i=0"), i(2, "n"), i(3), i(0) })),
+  s({ trig = "prod", desc = "Product" }, fmt("product_({})^({}) {}{}", { i(1, "i=0"), i(2, "n"), i(3), i(0) })),
+  s({ trig = "lim", desc = "Limit" }, fmt("lim_({}) {}{}", { i(1, "n -> oo"), i(2), i(0) })),
+  s({ trig = "int", desc = "Integral" }, fmt("integral_({})^({}) {} dif {}{}", { i(1), i(2), i(3), i(4, "x"), i(0) })),
+  s({ trig = "dint", desc = "Definite integral" }, fmt("integral_({})^({}) {} dif {}{}", { i(1, "a"), i(2, "b"), i(3), i(4, "x"), i(0) })),
 
   -- Delimiters
-  s({ trig = "lr(", desc = "Auto-sized parens" }, fmt("lr(({}))<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "lr[", desc = "Auto-sized brackets" }, fmt("lr([{}])<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "lr|", desc = "Auto-sized abs value" }, fmt("lr(|{}|)<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "norm", desc = "Norm" }, fmt("norm({})<>", { i(1), i(0) }, { delimiters = "<>" })),
+  s({ trig = "lr(", desc = "Auto-sized parens" }, fmt("lr(({})){}", { i(1), i(0) })),
+  s({ trig = "lr[", desc = "Auto-sized brackets" }, fmt("lr([{}]){}", { i(1), i(0) })),
+  s({ trig = "lr|", desc = "Auto-sized abs value" }, fmt("lr(|{}|){}", { i(1), i(0) })),
+  s({ trig = "norm", desc = "Norm" }, fmt("norm({}){}", { i(1), i(0) })),
 
   -- Matrices and vectors
-  s({ trig = "mat2", desc = "2x2 matrix" }, fmt("mat(\n  {}, {};\n  {}, {};\n)<>", { i(1), i(2), i(3), i(4), i(0) }, { delimiters = "<>" })),
-  s({ trig = "mat3", desc = "3x3 matrix" }, fmt("mat(\n  {}, {}, {};\n  {}, {}, {};\n  {}, {}, {};\n)<>", {
+  s({ trig = "mat2", desc = "2x2 matrix" }, fmt("mat(\n  {}, {};\n  {}, {};\n){}", { i(1), i(2), i(3), i(4), i(0) })),
+  s({ trig = "mat3", desc = "3x3 matrix" }, fmt("mat(\n  {}, {}, {};\n  {}, {}, {};\n  {}, {}, {};\n){}", {
     i(1), i(2), i(3), i(4), i(5), i(6), i(7), i(8), i(9), i(0),
-  }, { delimiters = "<>" })),
-  s({ trig = "vec2", desc = "2D column vector" }, fmt("vec({}, {})<>", { i(1), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "vec3", desc = "3D column vector" }, fmt("vec({}, {}, {})<>", { i(1), i(2), i(3), i(0) }, { delimiters = "<>" })),
-  s({ trig = "cvec", desc = "Column vector" }, fmt("vec({})<>", { i(1, "delim: \"[\", ..."), i(0) }, { delimiters = "<>" })),
+  })),
+  s({ trig = "vec2", desc = "2D column vector" }, fmt("vec({}, {}){}", { i(1), i(2), i(0) })),
+  s({ trig = "vec3", desc = "3D column vector" }, fmt("vec({}, {}, {}){}", { i(1), i(2), i(3), i(0) })),
+  s({ trig = "cvec", desc = "Column vector" }, fmt("vec({}){}", { i(1, "delim: \"[\", ..."), i(0) })),
 
   -- Common symbols/shortcuts
   s({ trig = "ooo", desc = "Infinity" }, t("oo")),
@@ -205,16 +205,16 @@ return {
   s({ trig = "sig", desc = "Sigma" }, t("sigma")),
 
   -- Accents and decorations
-  s({ trig = "hat", desc = "Hat accent" }, fmt("hat({})<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "bar", desc = "Bar accent" }, fmt("overline({})<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "tld", desc = "Tilde accent" }, fmt("tilde({})<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "dot.", desc = "Dot accent" }, fmt("dot({})<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "ddot", desc = "Double dot" }, fmt("dot.double({})<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "vc", desc = "Bold vector" }, fmt("bold({})<>", { i(1), i(0) }, { delimiters = "<>" })),
+  s({ trig = "hat", desc = "Hat accent" }, fmt("hat({}){}", { i(1), i(0) })),
+  s({ trig = "bar", desc = "Bar accent" }, fmt("overline({}){}", { i(1), i(0) })),
+  s({ trig = "tld", desc = "Tilde accent" }, fmt("tilde({}){}", { i(1), i(0) })),
+  s({ trig = "dot.", desc = "Dot accent" }, fmt("dot({}){}", { i(1), i(0) })),
+  s({ trig = "ddot", desc = "Double dot" }, fmt("dot.double({}){}", { i(1), i(0) })),
+  s({ trig = "vc", desc = "Bold vector" }, fmt("bold({}){}", { i(1), i(0) })),
 
   -- Calculus
-  s({ trig = "pd", desc = "Partial derivative" }, fmt("frac(diff {}, diff {})<>", { i(1, "f"), i(2, "x"), i(0) }, { delimiters = "<>" })),
-  s({ trig = "dd", desc = "Derivative" }, fmt("frac(dif {}, dif {})<>", { i(1, "f"), i(2, "x"), i(0) }, { delimiters = "<>" })),
+  s({ trig = "pd", desc = "Partial derivative" }, fmt("frac(diff {}, diff {}){}", { i(1, "f"), i(2, "x"), i(0) })),
+  s({ trig = "dd", desc = "Derivative" }, fmt("frac(dif {}, dif {}){}", { i(1, "f"), i(2, "x"), i(0) })),
   s({ trig = "grad", desc = "Gradient" }, t("nabla ")),
 
   -- Sets
@@ -223,29 +223,29 @@ return {
   s({ trig = "QQ", desc = "Rationals" }, t("QQ")),
   s({ trig = "RR", desc = "Reals" }, t("RR")),
   s({ trig = "CC", desc = "Complex" }, t("CC")),
-  s({ trig = "set", desc = "Set notation" }, fmt("\\{{ {} | {} \\}}<>", { i(1, "x"), i(2, "x > 0"), i(0) }, { delimiters = "<>" })),
+  s({ trig = "set", desc = "Set notation" }, fmt("\\{{ {} | {} \\}}{}", { i(1, "x"), i(2, "x > 0"), i(0) })),
 
   -- =====================
   -- Environments (ctheorems)
   -- =====================
 
-  s({ trig = "thm", desc = "Theorem" }, fmt("#theorem[{}][{}]\n<>", { i(1, "Title"), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "lem", desc = "Lemma" }, fmt("#lemma[{}][{}]\n<>", { i(1, "Title"), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "cor", desc = "Corollary" }, fmt("#corollary[{}][{}]\n<>", { i(1, "Title"), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "def", desc = "Definition" }, fmt("#definition[{}][{}]\n<>", { i(1, "Title"), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "exm", desc = "Example" }, fmt("#example[{}][{}]\n<>", { i(1, "Title"), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "rmk", desc = "Remark" }, fmt("#remark[{}][{}]\n<>", { i(1, "Title"), i(2), i(0) }, { delimiters = "<>" })),
-  s({ trig = "prf", desc = "Proof" }, fmt("#proof[{}]\n<>", { i(1), i(0) }, { delimiters = "<>" })),
+  s({ trig = "thm", desc = "Theorem" }, fmt("#theorem[{}][{}]\n{}", { i(1, "Title"), i(2), i(0) })),
+  s({ trig = "lem", desc = "Lemma" }, fmt("#lemma[{}][{}]\n{}", { i(1, "Title"), i(2), i(0) })),
+  s({ trig = "cor", desc = "Corollary" }, fmt("#corollary[{}][{}]\n{}", { i(1, "Title"), i(2), i(0) })),
+  s({ trig = "def", desc = "Definition" }, fmt("#definition[{}][{}]\n{}", { i(1, "Title"), i(2), i(0) })),
+  s({ trig = "exm", desc = "Example" }, fmt("#example[{}][{}]\n{}", { i(1, "Title"), i(2), i(0) })),
+  s({ trig = "rmk", desc = "Remark" }, fmt("#remark[{}][{}]\n{}", { i(1, "Title"), i(2), i(0) })),
+  s({ trig = "prf", desc = "Proof" }, fmt("#proof[{}]\n{}", { i(1), i(0) })),
 
   -- =====================
   -- Text formatting
   -- =====================
 
-  s({ trig = "bf", desc = "Bold" }, fmt("*{}*<>", { d(1, get_visual), i(0) }, { delimiters = "<>" })),
-  s({ trig = "it", desc = "Italic" }, fmt("_{}_<>", { d(1, get_visual), i(0) }, { delimiters = "<>" })),
-  s({ trig = "sc", desc = "Smallcaps" }, fmt("#smallcaps[{}]<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "hl", desc = "Highlight" }, fmt("#highlight[{}]<>", { i(1), i(0) }, { delimiters = "<>" })),
-  s({ trig = "ul", desc = "Underline" }, fmt("#underline[{}]<>", { i(1), i(0) }, { delimiters = "<>" })),
+  s({ trig = "bf", desc = "Bold" }, fmt("*{}*{}", { d(1, get_visual), i(0) })),
+  s({ trig = "it", desc = "Italic" }, fmt("_{}_{}", { d(1, get_visual), i(0) })),
+  s({ trig = "sc", desc = "Smallcaps" }, fmt("#smallcaps[{}]{}", { i(1), i(0) })),
+  s({ trig = "hl", desc = "Highlight" }, fmt("#highlight[{}]{}", { i(1), i(0) })),
+  s({ trig = "ul", desc = "Underline" }, fmt("#underline[{}]{}", { i(1), i(0) })),
 
   -- =====================
   -- Blocks and structure
@@ -256,7 +256,7 @@ return {
   image("{}", width: {}%),
   caption: [{}],
 ) {}
-{}]], { i(1, "path.png"), i(2, "80"), i(3, "Caption"), c(4, { fmt("<{}>", { i(1, "fig:label") }, { delimiters = "<>" }), t("") }), i(0) })),
+{}]], { i(1, "path.png"), i(2, "80"), i(3, "Caption"), c(4, { sn(nil, fmt("<{}>", { i(1, "fig:label") })), t("") }), i(0) })),
 
   s({ trig = "tbl", desc = "Table" }, fmt([[
 #figure(
@@ -276,7 +276,7 @@ return {
     i(5),
     i(6),
     i(7, "Caption"),
-    c(8, { fmt("<{}>", { i(1, "tbl:label") }, { delimiters = "<>" }), t("") }),
+    c(8, { sn(nil, fmt("<{}>", { i(1, "tbl:label") })), t("") }),
     i(0),
   })),
 
@@ -296,7 +296,7 @@ return {
 ```
 {}]], { i(1, "lang"), i(2), i(0) })),
 
-  s({ trig = "quote", desc = "Block quote" }, fmt("#quote(block: true, attribution: [{}])[{}]\n<>", { i(1), i(2), i(0) }, { delimiters = "<>" })),
+  s({ trig = "quote", desc = "Block quote" }, fmt("#quote(block: true, attribution: [{}])[{}]\n{}", { i(1), i(2), i(0) })),
 
   s({ trig = "box", desc = "Colored box" }, fmt([[
 #block(
@@ -323,9 +323,9 @@ return {
   -- References and labels
   -- =====================
 
-  s({ trig = "ref", desc = "Reference" }, fmt("@{}<>", { i(1, "label"), i(0) }, { delimiters = "<>" })),
-  s({ trig = "lab", desc = "Label" }, fmt("<{}>", { i(1, "label") }, { delimiters = "<>" })),
-  s({ trig = "cite", desc = "Citation" }, fmt("@{}<>", { i(1, "citation-key"), i(0) }, { delimiters = "<>" })),
+  s({ trig = "ref", desc = "Reference" }, fmt("@{}{}", { i(1, "label"), i(0) })),
+  s({ trig = "lab", desc = "Label" }, fmt("<{}>", { i(1, "label") })),
+  s({ trig = "cite", desc = "Citation" }, fmt("@{}{}", { i(1, "citation-key"), i(0) })),
 
   -- =====================
   -- Page layout
@@ -342,7 +342,7 @@ return {
   -- Imports
   -- =====================
 
-  s({ trig = "imp", desc = "Import package" }, fmt('#import "@preview/{}": *\n<>', { i(1, "package:version"), i(0) }, { delimiters = "<>" })),
+  s({ trig = "imp", desc = "Import package" }, fmt('#import "@preview/{}": *\n{}', { i(1, "package:version"), i(0) })),
   s({ trig = "cthm", desc = "Import ctheorems" }, t({
     '#import "@preview/ctheorems:1.1.3": *',
     '#show: thmrules.with(qed-symbol: $square$)',

@@ -19,7 +19,6 @@ return {
 		"google-java-format",
 		"gofumpt",
 		"goimports-reviser",
-		"rustfmt",
 		"taplo",
 		"sql-formatter",
 
