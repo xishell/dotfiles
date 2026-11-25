@@ -94,7 +94,12 @@ DEFAULTS = {
     "openxlr_desk_outputs": [],
     # The TV's HDMI audio only exists while its port's card profile is active
     "hdmi_card": "",              # e.g. alsa_card.pci-0000_01_00.1
-    "hdmi_profile_sofa": "",      # e.g. output:hdmi-stereo-extra1 (the TV's port)
+    "hdmi_profile_sofa": "",      # e.g. output:hdmi-surround71-extra1 (the TV's port). 7.1 PCM on
+                                  # purpose, with the stereo mix on its front pair: a Sonos Beam
+                                  # on the LG's eARC pops when the TV goes from *stereo* PCM to
+                                  # the Apple TV, and not from 5.1/7.1 (mic-measured 2026-11-16);
+                                  # Sonos recommends 7.1 over 5.1 on LG TVs. Needs an OpenXLR
+                                  # that links a stereo mix to the front pair only (0.8.1-1.1).
     "hdmi_profile_desk": "",      # e.g. output:hdmi-stereo (back to the desk monitor's port)
     # Fixed per-output level (% on the sink) so the same channel dial position sounds
     # about as loud on every output; set with `couch.py trim <name> <percent|+N|-N>`
@@ -356,6 +361,7 @@ class _TVLink:
 
     def __init__(self):
         self.loop = self.client = None
+        self.last_error = ""            # why the last failed command failed (for the log)
         self.mutex = threading.Lock()
 
     def _submit(self, coro, timeout):
@@ -446,8 +452,9 @@ def tv_cmd(cfg, *args, timeout=10, quiet=False, fast=False):
     try:
         result = _tv_link.call(cfg["tv_ip"], options, fast, timeout, args[0], args[1:])
     except Exception as exc:
+        why = "timed out" if isinstance(exc, TimeoutError) else (str(exc) or type(exc).__name__)
+        _tv_link.last_error = why[:200]
         if not quiet:
-            why = "timed out" if isinstance(exc, TimeoutError) else (str(exc) or type(exc).__name__)
             log(f"  ! TV {args[0]}: {why[:200]}")
         return None
     return str(result).strip()      # as the command line printed it; callers parse that text
@@ -461,7 +468,7 @@ def _tv_cmd_cli(cfg, *args, timeout=10, quiet=False, fast=False):
            "--log", "ERROR", "-p", str(KEY_FILE)]
     if fast:   # one quick attempt - for "is the TV even on?" checks
         cli += ["--timeout_connect", "1", "--connect_retry_attempts", "1"]
-    p = run([*cli, *cfg["tv_extra_args"], cfg["tv_ip"], *args], timeout=timeout)
+    p = run([*cli, *cfg["tv_extra_args"], cfg["tv_ip"], *map(str, args)], timeout=timeout)
     if p is None:
         return None
     out = (p.stdout + p.stderr).strip()
@@ -523,21 +530,24 @@ def tv_snapshot(cfg):
     # can miss one quick check - and then desk mode would switch it off instead of back
     state = tv_power_state_patient(cfg, timeout=4)
     if state is None or state in TV_OFF_STATES:
-        log(f"TV: off before sofa mode ({state or 'no answer'})")
-        return {"tv_was_on": False}
+        log(f"TV: off before sofa mode ({state or 'no answer: ' + (_tv_link.last_error or '?')})")
+        return {"tv_was_on": False, "tv_no_answer": state is None}
     app = tv_cmd(cfg, "get_input", timeout=6, quiet=True, fast=True) or ""
     app = app.strip().strip("'\"")
     log(f"TV: already on ({app or 'unknown input'}) - will leave it on in desk mode")
     return {"tv_was_on": True, "tv_prev_app": app}
 
 
-def tv_sofa(cfg):
-    """Wake the TV and wait until it accepts commands."""
+def tv_sofa(cfg, before=None):
+    """Wake the TV and wait until it accepts commands. `before` (tv_snapshot's result) is
+    corrected when the TV turns out to have been on after all."""
     if not cfg["tv_ip"]:
         return True
     log("TV: waking")
+    tries = 0
     deadline = time.monotonic() + cfg["tv_wake_timeout"]
     while time.monotonic() < deadline:
+        tries += 1
         if cfg["tv_mac"]:
             wake_on_lan(cfg["tv_mac"], cfg["tv_ip"])
         # While booting, webOS answers "Try Again Later" - keep quiet and retry
@@ -547,6 +557,14 @@ def tv_sofa(cfg):
             tv_cmd(cfg, "power_on", timeout=6, quiet=True)
         elif state is not None and state not in TV_OFF_STATES:
             log("TV: awake")
+            if before is not None and before.pop("tv_no_answer", False) and tries == 1:
+                # The snapshot got no answer at all, yet the TV is up on the very first
+                # look, about a second after the wake packet: one that was really off takes
+                # longer than that. It was on and only too busy to answer (2026-11-16: desk
+                # mode then powered off a TV that had been on).
+                app = (tv_cmd(cfg, "get_input", timeout=6, quiet=True) or "").strip().strip("'\"")
+                before.update(tv_was_on=True, tv_prev_app=app)
+                log(f"TV: it was on after all ({app or 'unknown input'}) - will leave it on in desk mode")
             tv_cmd(cfg, "set_input", cfg["tv_pc_input"], timeout=8, quiet=True)
             return True
         time.sleep(1)
@@ -1281,6 +1299,13 @@ def audio_sofa(cfg, choice=None):
     set_audio(cfg, cfg["audio_sofa"])
 
 
+def sink_volume(sink):
+    """A sink's volume in percent (first channel), or None."""
+    p = run(["pactl", "get-sink-volume", sink], timeout=5)
+    m = re.search(r"(\d+)%", p.stdout if p else "")
+    return int(m.group(1)) if m else None
+
+
 def audio_desk(cfg):
     if not IS_WIN and cfg["openxlr_desk_outputs"] and _openxlr_socket():
         log("Audio: desk")
@@ -1383,9 +1408,10 @@ def sofa(cfg, choice=None):
             # the TV is on the PC because of us - keep what it showed before the first run.
             before = {k: saved[k] for k in ("tv_was_on", "tv_prev_app", "tv_volume_steps", "steam_ws") if k in saved}
             log(f"TV: already in sofa mode - keeping {before.get('tv_prev_app') or 'TV off'} for desk mode")
-        if not tv_sofa(cfg):
+        if not tv_sofa(cfg, before):
             log("Stopping: switching displays to a TV that isn't on would leave you without a screen")
             return
+        before.pop("tv_no_answer", None)
         if not IS_WIN and hypr_lua() and "steam_ws" not in before:
             ws = hypr_steam_workspace()
             if ws:
@@ -1433,14 +1459,19 @@ def desk(cfg):
             if not IS_WIN and hypr_lua():
                 wait_for(lambda: not hypr_big_picture_open(), 5)
             time.sleep(1)
-        # TV first, while it still shows the PC: right after its input loses the signal
-        # webOS can be too busy to answer, and we'd wrongly conclude it's off
+        # The TV first, while it still shows the PC: right after its input loses the
+        # signal webOS can be too busy to answer, and we'd wrongly conclude it's off.
+        # It also has to leave the PC input while the PC's 7.1 PCM stream is still open:
+        # that is what keeps the soundbar from popping (see hdmi_profile_sofa in DEFAULTS;
+        # closing the HDMI audio just before the switch left a smaller click, 2026-11-16).
         tv_volume_restore(cfg, before)
         tv_desk(cfg, before)
+        if cfg["tv_ip"] and not IS_WIN:
+            time.sleep(1.0)             # the TV is on its other input (or off) by now
+        audio_desk(cfg)
         displays_desk(cfg)
         if not IS_WIN and hypr_lua():
             hypr_rehome_tv_windows(cfg, before)
-        audio_desk(cfg)
         write_mode("desk", notify=True)
         desk_mon = cfg["hypr_desk"]
         if not IS_WIN and desk_mon and not wait_for(lambda: hypr_active(desk_mon), 4):
@@ -1507,6 +1538,9 @@ def _sdl():
         pass
     os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"
     os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
+    # display.init() would otherwise disable the screensaver: SDL takes a "Playing a game"
+    # org.freedesktop.ScreenSaver inhibit for the listener's whole life, so hypridle never locks
+    os.environ["SDL_VIDEO_ALLOW_SCREENSAVER"] = "1"
     os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
     try:
         import pygame
