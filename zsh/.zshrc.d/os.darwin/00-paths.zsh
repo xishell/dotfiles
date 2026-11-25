@@ -22,3 +22,6 @@ export PATH="$PATH:$HOME/.dotnet/tools"
 
 # STM32CubeMX for stm32 cmake toolchains
 export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
+
+# stm32cubeprogrammer cli for cubeide-style flashing
+export STM32_PRG_PATH=/Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/Resources/bin

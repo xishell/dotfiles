@@ -79,9 +79,6 @@ return {
         formatters = {
           shfmt = { prepend_args = { "-i", "2", "-ci" } },
           stylua = { prepend_args = { "--search-parent-directories" } },
-          ["clang-format"] = {
-            prepend_args = { "--style={IndentWidth: 4, TabWidth: 4, UseTab: Never}" },
-          },
           ["google-java-format"] = {
             prepend_args = { "--aosp" },
           },

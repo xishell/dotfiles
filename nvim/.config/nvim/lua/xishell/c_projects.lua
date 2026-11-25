@@ -27,17 +27,37 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     vim.opt_local.path:append(file_dir)
     vim.opt_local.path:append(vim.fn.fnamemodify(file_dir, ":h"))
 
-    -- Configure :make — detect meson project or fall back to clang
+    -- :make uses meson, then the nearest Makefile above, else single-file clang
     local ext = vim.fn.expand("%:e")
     local meson_root = vim.fs.find("meson.build", { path = file_dir, upward = true, type = "file" })[1]
+    local makefile = vim.fs.find("Makefile", { path = file_dir, upward = true, type = "file" })[1]
 
-    if meson_root then
+    local lima = require("xishell.lima")
+    local in_vm = lima.owns(vim.fn.expand("%:p"))
+
+    if in_vm then
+      if makefile then
+        local make_dir = vim.fn.fnamemodify(makefile, ":h")
+        vim.opt_local.makeprg = lima.wrap("make -C " .. vim.fn.shellescape(lima.to_guest(make_dir)), file_dir)
+      else
+        -- binaries go to build/ which gitignore covers, QuickFixCmdPre creates it
+        local src = lima.to_guest(vim.fn.expand("%:p"))
+        local out = lima.to_guest(file_dir) .. "/build/" .. vim.fn.expand("%:t:r")
+        vim.opt_local.makeprg = lima.wrap(
+          string.format("cc %s -o %s -Wall -Wextra -g", vim.fn.shellescape(src), vim.fn.shellescape(out)),
+          file_dir
+        )
+      end
+    elseif meson_root then
       local meson_dir = vim.fn.fnamemodify(meson_root, ":h")
       local builddir = meson_dir .. "/builddir"
       if vim.fn.isdirectory(builddir) == 0 then
         builddir = meson_dir .. "/build"
       end
       vim.opt_local.makeprg = "ninja -C " .. vim.fn.fnameescape(builddir)
+    elseif makefile then
+      -- make -C so targets like :make test work from any subdir
+      vim.opt_local.makeprg = "make -C " .. vim.fn.fnameescape(vim.fn.fnamemodify(makefile, ":h"))
     else
       local compiler = (ext == "cpp" or ext == "hpp") and "clang++" or "clang"
       vim.opt_local.makeprg = compiler .. " % -o %< -Wall -Wextra -g"
@@ -69,6 +89,10 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
               vim.cmd("!" .. vim.fn.fnameescape(exe))
             end
           end)
+        elseif in_vm then
+          -- elf binary only runs in the vm
+          local exe = (makefile and "./" or "./build/") .. vim.fn.expand("%:t:r")
+          vim.cmd("!limactl shell --workdir " .. vim.fn.shellescape(lima.to_guest(file_dir)) .. " " .. lima.instance .. " " .. exe)
         else
           vim.cmd("!./%<")
         end
@@ -79,5 +103,17 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
       buffer = true,
       desc = "Build and run C/C++ file",
     })
+  end,
+})
+
+-- shared folder so mkdir on the host is visible to cc in the vm
+vim.api.nvim_create_autocmd("QuickFixCmdPre", {
+  group = group,
+  pattern = "make",
+  callback = function()
+    local file = vim.fn.expand("%:p")
+    if require("xishell.lima").owns(file) then
+      vim.fn.mkdir(vim.fs.dirname(file) .. "/build", "p")
+    end
   end,
 })

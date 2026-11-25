@@ -86,7 +86,7 @@ return {
     vim.lsp.config("tinymist", {
       settings = {
         exportPdf = "onSave",
-        outputPath = "$root/target/$dir/$name",
+        outputPath = "$root/$dir/build/$name",
       },
     })
 
@@ -102,11 +102,46 @@ return {
       },
     })
 
+    local lima = require("xishell.lima")
+    local clangd_markers = {
+      ".clangd", ".clang-tidy", ".clang-format",
+      "compile_commands.json", "compile_flags.txt", "configure.ac", ".git",
+    }
+
     vim.lsp.config("clangd", {
       -- query-driver lets clangd read newlib headers from arm gcc for stm32
-      cmd = { "clangd", "--query-driver=/opt/homebrew/bin/arm-none-eabi-*" },
+      -- iwyu mode adds the declaring header even when already visible transitively
+      cmd = {
+        "clangd",
+        "--query-driver=/opt/homebrew/bin/arm-none-eabi-*",
+        "--header-insertion=never",
+      },
       filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }, -- no asm, riscv files go elsewhere
+      root_dir = function(bufnr, on_dir)
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        if lima.owns(name) then return end -- clangd_lima takes these
+        on_dir(vim.fs.root(bufnr, clangd_markers) or vim.fs.dirname(name))
+      end,
     })
+
+    -- macos clangd lacks cpu_set_t and kernel headers, vm clangd sees the real ones
+    vim.lsp.config("clangd_lima", {
+      cmd = {
+        "limactl", "shell", "--workdir", lima.guest_root, lima.instance,
+        "clangd",
+        "--path-mappings=" .. lima.host_root .. "=" .. lima.guest_root,
+        "--header-insertion=never",
+      },
+      filetypes = { "c", "cpp" },
+      root_dir = function(bufnr, on_dir)
+        if lima.owns(vim.api.nvim_buf_get_name(bufnr)) then
+          -- markers above the course resolve to ~ which the vm cannot map
+          local root = vim.fs.root(bufnr, clangd_markers)
+          on_dir(lima.owns(root) and root or lima.host_root)
+        end
+      end,
+    })
+    vim.lsp.enable("clangd_lima")
 
     vim.lsp.config("ltex", {
       -- jdk 24+ caps xml entity size below languagetool's grammar.xml

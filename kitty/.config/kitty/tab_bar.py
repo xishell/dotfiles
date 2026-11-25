@@ -28,6 +28,8 @@ WINDOWS_ICON = "\U000f056e"
 ZOOM_ICON = "\U000f0293"
 BELL_ICON = "\U000f009e"
 ACTIVITY_ICON = "●"
+# hard cap, max_tab_length alone lets few tabs grow to half the bar
+TITLE_MAX = 24
 # @tokyo-night-tmux_window_id_style dsquare
 DSQUARE = "\U000f03a2\U000f03a5\U000f03a8\U000f03ab\U000f03b2\U000f03af\U000f03b4\U000f03b7\U000f03ba\U000f03bd"
 
@@ -162,7 +164,7 @@ def draw_tab(
 
     bg = BASE if tab.is_active else CRUST
     title = tab.title
-    room = max(1, max_tab_length - 14)
+    room = max(1, min(TITLE_MAX, max_tab_length - 14))
     if len(title) > room:
         title = title[: room - 1] + "…"
 

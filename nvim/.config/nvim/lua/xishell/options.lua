@@ -4,6 +4,8 @@ local g = vim.g
 
 opt.confirm = true
 g.borderStyle = "rounded"
+-- .h defaults to cpp, all current header work is c
+g.c_syntax_for_h = true
 o.autoindent = true
 o.autoread = true
 o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
@@ -28,6 +30,8 @@ o.jumpoptions = "view"
 o.laststatus = 0
 o.linebreak = true
 o.maxmempattern = 5000
+-- stray " ex:" in prose like cubemx comments gets parsed as options
+o.modeline = false
 o.mouse = "a"
 o.number = true
 o.pumblend = 0
@@ -43,6 +47,8 @@ o.splitbelow = true
 o.synmaxcol = 200
 o.tabline = nil
 o.title = true
+-- % of columns, long paths crowd kitty tabs and menu bar
+o.titlelen = 20
 o.ttyfast = true
 o.updatetime = 250
 o.wildmenu = true
