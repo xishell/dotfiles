@@ -51,3 +51,6 @@ pwnnc() {
   echo "[*] listening on :$port (rlwrap nc)"
   rlwrap nc -lvnp "$port"
 }
+
+# pdf viewer, zathura reloads on typst watch rebuilds
+pdf() { zathura "$@" &>/dev/null &! }

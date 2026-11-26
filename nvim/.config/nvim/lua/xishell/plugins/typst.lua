@@ -2,16 +2,14 @@ return {
   {
     "chomosuke/typst-preview.nvim",
     ft = "typst",
-    version = "0.3.*",
+    version = "1.*",
     build = function()
       require("typst-preview").update()
     end,
     opts = {
-      dependencies_bin = {
-        ["tinymist"] = "tinymist",
-        ["websocat"] = "websocat",
-      },
-      open_cmd = "open %s",
+      -- share Mason's tinymist with the LSP; the plugin downloads websocat itself
+      dependencies_bin = { tinymist = "tinymist" },
+      open_cmd = vim.fn.has("mac") == 1 and "open %s" or nil,
       invert_colors = "auto",
       follow_cursor = true,
       debug = false,

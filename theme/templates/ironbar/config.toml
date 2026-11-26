@@ -11,6 +11,7 @@ couch_label = "couch"
 dnd_on      = ""
 dnd_off     = "true"
 awake_on    = ""
+awake_off   = "true"
 
 [monitors.DP-1]
 position = "top"
@@ -112,11 +113,20 @@ tooltip = "Controller battery"
 
 [[monitors.DP-1.end]]
 type  = "label"
+name  = "awake-off"
+class = "mod"
+label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰛊</span>'
+show_if = "#awake_off"
+tooltip = "Keep awake · click: no lock or screen-off until clicked again (Super+C)"
+on_click_left = "awake"
+
+[[monitors.DP-1.end]]
+type  = "label"
 name  = "awake"
 class = "mod"
 label = '<span font_family="Symbols Nerd Font" size="13pt" rise="-1pt">󰅶</span>'
 show_if = "#awake_on"
-tooltip = "Keep awake is on: no lock or screen-off (Super+C)"
+tooltip = "Keep awake is on: no lock or screen-off · click to end (Super+C)"
 on_click_left = "awake"
 
 [[monitors.DP-1.end]]

@@ -8,5 +8,6 @@
   },
   "tui": "fullscreen",
   "theme": "custom:hearth",
-  "switchModelsOnFlag": false
+  "switchModelsOnFlag": false,
+  "agentPushNotifEnabled": true
 }

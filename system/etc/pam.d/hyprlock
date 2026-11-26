@@ -1,0 +1,10 @@
+#%PAM-1.0
+# hyprlock: password only, without pam_faillock.
+# hyprlock checks the fingerprint over fprintd's D-Bus API, in parallel with this PAM
+# password conversation. A fingerprint unlock abandons the conversation, pam_unix logs
+# "conversation failed", and faillock counted every one of them as a failed login: three
+# fingerprint unlocks in 15 min locked the password out for 10 min (2026-11-17).
+# pam_unix still adds its ~2 s delay after a wrong password.
+# Stock was: auth include login (-> system-local-login -> system-auth, with faillock).
+
+auth       required     pam_unix.so     try_first_pass nullok

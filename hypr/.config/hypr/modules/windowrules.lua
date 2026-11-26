@@ -30,9 +30,27 @@ hl.window_rule({
 
 hl.window_rule({
     name  = "float-file-dialogs",
-    match = { title = "^(Open File|Save File|Select a File|Choose a file)$" },
+    match = { title = "^(Open File|Save File|Save As|File Upload|Select a File|Choose a file|Enter name of file to save to.*)$" },
     float = true,
-    size  = "800 600",
+    size  = "monitor_w*0.4 monitor_h*0.6",
+    center = true,
+})
+
+-- File pickers from browsers etc. go through xdg-desktop-portal-gtk
+hl.window_rule({
+    name  = "float-portal-dialogs",
+    match = { class = "^xdg-desktop-portal-gtk$" },
+    float = true,
+    size  = "monitor_w*0.4 monitor_h*0.6",
+    center = true,
+})
+
+-- Firefox/Zen sub-windows: Downloads/Library, "Opening <file>" prompt, about dialog
+hl.window_rule({
+    name  = "float-browser-dialogs",
+    match = { class = "^(zen|firefox)$", title = "^(Library|Opening .*|About .*|Page Info.*)$" },
+    float = true,
+    size  = "monitor_w*0.35 monitor_h*0.5",
     center = true,
 })
 

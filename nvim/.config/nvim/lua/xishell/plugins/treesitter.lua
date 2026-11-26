@@ -10,59 +10,65 @@ return {
     },
     version = false,
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
-    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+    lazy = false, -- main branch does not support lazy-loading
     config = function()
-        require("nvim-treesitter").setup({
-            ensure_installed = {
-                "bash",
-                "bibtex",
-                "c",
-                "comment",
-                "diff",
-                "git_config",
-                "git_rebase",
-                "gitcommit",
-                "gitignore",
-                "html",
-                "java",
-                "javascript",
-                "jsdoc",
-                "json",
-                "latex",
-                "lua",
-                "luadoc",
-                "make",
-                "markdown",
-                "markdown_inline",
-                "python",
-                "regex",
-                "toml",
-                "tsx",
-                "typescript",
-                "typst",
-                "vim",
-                "vimdoc",
-                "yaml",
-            },
-            auto_install = true,
+        local ts = require("nvim-treesitter")
+        -- main branch: setup() only takes install_dir, installs go through install()
+        ts.install({
+            "bash",
+            "bibtex",
+            "c",
+            "comment",
+            "diff",
+            "git_config",
+            "git_rebase",
+            "gitcommit",
+            "gitignore",
+            "html",
+            "java",
+            "javascript",
+            "jsdoc",
+            "json",
+            "latex",
+            "lua",
+            "luadoc",
+            "make",
+            "markdown",
+            "markdown_inline",
+            "python",
+            "regex",
+            "toml",
+            "tsx",
+            "typescript",
+            "typst",
+            "vim",
+            "vimdoc",
+            "yaml",
         })
 
-        -- Enable treesitter highlight and indent (now built-in to Neovim)
+        local disable_hl = { latex = true, bibtex = true, asm = true }
+        local disable_indent = { asm = true }
+
+        local function attach(buf, lang)
+            if not vim.api.nvim_buf_is_valid(buf) or not vim.treesitter.language.add(lang) then return end
+            local ft = vim.bo[buf].filetype
+            if not disable_hl[ft] then
+                pcall(vim.treesitter.start, buf, lang)
+            end
+            -- without an indents query the expr returns 0 for every line; keep the Vim indent then
+            if not disable_indent[ft] and vim.treesitter.query.get(lang, "indents") then
+                vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            end
+        end
+
         vim.api.nvim_create_autocmd("FileType", {
             callback = function(args)
-                local disable_hl = { latex = true, bibtex = true, asm = true }
-                local disable_indent = { asm = true }
-                local ft = vim.bo[args.buf].filetype
-                local lang = vim.treesitter.language.get_lang(ft)
+                local lang = vim.treesitter.language.get_lang(args.match)
                 if not lang then return end
-                local ok = pcall(vim.treesitter.language.add, lang)
-                if not ok then return end
-                if not disable_hl[ft] then
-                    pcall(vim.treesitter.start, args.buf, lang)
-                end
-                if not disable_indent[ft] then
-                    vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                if vim.treesitter.language.add(lang) then
+                    attach(args.buf, lang)
+                elseif vim.tbl_contains(ts.get_available(), lang) then
+                    ts.install(lang):await(function() vim.schedule(function() attach(args.buf, lang) end) end)
                 end
             end,
         })

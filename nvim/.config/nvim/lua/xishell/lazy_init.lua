@@ -15,4 +15,5 @@ require('lazy').setup({
   { import = 'xishell.plugins' },    -- pulls every file under lua/xishell/plugins/
 }, {
   change_detection = { notify = false },
+  rocks = { enabled = false }, -- no plugin in the spec needs luarocks
 })

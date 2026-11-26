@@ -88,5 +88,5 @@ tooltip label { font-size: 12px; }
 #bar .tray .item { padding: 0 3px; }
 
 /* status icons: colour by module name (Pango colour in a label would need a ## escape) */
-#bell { color: {{ comment }}; }
+#bell, #awake-off { color: {{ comment }}; }
 #bell-off, #awake { color: {{ yellow }}; }
